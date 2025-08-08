@@ -1,14 +1,11 @@
-import React, {useEffect , useState } from "react";
-import styled from "styled-components";
-import { GlobalStyle } from "../assets/styles/StyledComponents";
+// src/pages/Home.jsx
+import LikeButton from "../components/LikeButton";  
 
-
-function Home () {
+export default function Home() {
   return (
-    <>
+    <main className="p-6">
       <h1>Home Page</h1>
-    </>
-  )
+      <LikeButton />
+    </main>
+  );
 }
-
-export default Home;
