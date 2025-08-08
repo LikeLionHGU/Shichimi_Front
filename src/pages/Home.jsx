@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import LikeButton from "../components/LikeButton";  
 
 export default function Home() {
