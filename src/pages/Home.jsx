@@ -1,7 +1,4 @@
-import React, {useEffect , useState } from "react";
-import styled from "styled-components";
-import { GlobalStyle } from "../assets/styles/StyledComponents";
-
+import LikeButton from "../components/LikeButton";  
 import MapComponents from "../components/MapComponents";
 import PopularContainer from "../components/PopularContainer";
 import MainTmi_btn from "../components/common/Tmi_btn";
@@ -33,10 +30,11 @@ function Home () {
         <Right_Coponent>
           <PopularContainer/>
           <MainTmi_btn/>
-        </Right_Coponent>
+          //<LikeButton />    
+        </Right_Coponent>  
       </Page>
     </>
   )
 }
-
 export default Home;
+
