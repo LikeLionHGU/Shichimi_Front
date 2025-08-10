@@ -7,14 +7,14 @@ const NoCenterHorizontal = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: ${themeColors.gray.color};
-  height: 84px;
+  margin: 3% 0 0 10%;
 `;
 
 const LogoImg = styled.button`
   display : flex;
   align-items : center;
-  margin: 0 0 0 88px;
+  width: 100px;
+  height: 40px;
 `;
 
 
