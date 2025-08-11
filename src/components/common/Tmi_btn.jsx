@@ -37,7 +37,7 @@ function Main_Tmi_btn () {
     <>
       <Tmi_box>
         <TmiBtn as={Link} to="/add" style={{textDecoration: "none"}}>
-          <p>TMI 작성</p>
+          <p>비지토리 작성</p>
         </TmiBtn>
       </Tmi_box>
     </>
