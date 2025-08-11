@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import LikeButton from "../components/LikeButton";  
 import MapComponents from "../components/MapComponents";
 import PopularContainer from "../components/PopularContainer";
