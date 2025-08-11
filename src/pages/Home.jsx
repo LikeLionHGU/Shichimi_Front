@@ -32,7 +32,7 @@ function Home () {
         <Right_Coponent>
           <PopularContainer/>
           <MainTmi_btn/>
-          //<LikeButton />    
+          {/*<LikeButton />  ->   좋아요 기능 - 잠시 주석처리!! */}    
         </Right_Coponent>  
       </Page>
     </>
