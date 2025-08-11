@@ -26,9 +26,7 @@ const TmiBtn = styled.button`
   &:hover{
     cursor: pointer;
     box-shadow: 0 2px 0 ${themeColors.gray.color};
-    transform: translateY(2px);
   } 
-  
 `;
 
 
