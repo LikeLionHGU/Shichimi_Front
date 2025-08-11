@@ -42,7 +42,12 @@ const Map_Name = styled.img`
 const Store_btn = styled(Link).attrs(props => ({
   to: `/${props.id}`
 }))`
+  display: flex;
   text-decoration: none;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
   width: 6vw;
   height: 3vh;
   background-color: transparent;
@@ -69,8 +74,8 @@ const Row1_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 14%;
-  left: 8%;
+  top: 16%;
+  left: 4%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -81,8 +86,8 @@ const Row2_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 33%;
-  left: 8%;
+  top: 37%;
+  left: 4%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -93,8 +98,8 @@ const Row3_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 49%;
-  left: 8%;
+  top: 53%;
+  left:4%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -105,8 +110,8 @@ const Row4_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 69%;
-  left: 8%;
+  top: 71%;
+  left: 4%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -117,8 +122,8 @@ const Row5_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 88%;
-  left: 8%;
+  top: 90%;
+  left:4%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
