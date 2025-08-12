@@ -35,7 +35,7 @@ const Top_Circle = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 50%;
 
-  font-size: 30px;
+  font-size: 1.4vw;
   font-weight: 800;
 `;
 
@@ -48,13 +48,13 @@ const Bottom_PopContainer = styled.div`
   border-top: none;
   border-radius: 0 0 16px 16px;
   width: 23vw;
-  height: 55vh;
+  height: 59vh;
 `;
 
 const Mini_title = styled.div`
   display: flex;
   align-items: center;
-  margin: 4% 3% 3% 3%;
+  margin: 4% 3% 4% 3%;
   gap: 10px;
 `;
 
@@ -66,7 +66,7 @@ const Mini_icon = styled.img`
 
 const Mini_Text =styled.h2`
   margin: 0;
-
+  font-size: 1.05vw;
   font-weight: 800;
   line-height: 1;
   color: ${themeColors.black.color};
@@ -95,13 +95,15 @@ const SectionPost = styled.div`
 
   h3 {
     margin: 2% 0 1% 0;
+    font-size: 0.85vw;
     font-weight: 600;
     line-height: 1;
-    
   }
 
   p {
     margin: 1% 0 2% 0;
+
+    font-size: 0.7vw;
     display: block;
     align-self: stretch;
     font-weight: 600;
