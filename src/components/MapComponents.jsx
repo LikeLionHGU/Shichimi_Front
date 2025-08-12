@@ -153,11 +153,11 @@ function Map () {
           </Store_btn>
           <Store_btn>
             <Store_icon src={car} alt="주차장1"/>
-            <Store_name>죽도시장 공영P</Store_name>
+            <Store_name>죽도시장 P</Store_name>
           </Store_btn>
           <Store_btn>
             <Store_icon src={car} alt="주차장2"/>
-            <Store_name>죽도어시장 공영P</Store_name>
+            <Store_name>죽도어시장 P</Store_name>
           </Store_btn>
         </Row1_icon>
 
