@@ -90,15 +90,13 @@ const SectionPost = styled.div`
 
   &:hover {
     background-color: #F27533;
-
+    color: ${themeColors.white.color};
   }
 
   h3 {
     margin: 2% 0 1% 0;
     font-weight: 600;
     line-height: 1;
-    color: ${themeColors.black.color};
-  
     
   }
 
@@ -108,7 +106,6 @@ const SectionPost = styled.div`
     align-self: stretch;
     font-weight: 600;
     line-height: 1;
-    color: ${themeColors.black.color};
     
     white-space: nowrap;
     overflow: hidden;
