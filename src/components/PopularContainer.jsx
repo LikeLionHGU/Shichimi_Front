@@ -15,12 +15,28 @@ const Pop_Box= styled.div`
 
 const Top_PopContainer = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   background-color: ${themeColors.red.color};
   border: 1px solid ${themeColors.red.color};
   border-radius: 16px 16px 0 0;
   width: 23vw;
   height: 10vh;
+`;
+
+const Top_Circle = styled.div`
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+
+  width: 40%;
+  height: 80%;
+  background-color: ${themeColors.white.color};
+  border-radius: 50%;
+
+  font-size: 30px;
+  font-weight: 800;
 `;
 
 const Bottom_PopContainer = styled.div`
@@ -60,7 +76,7 @@ const Mini_Text =styled.h2`
 //   height: 1px;
 //   background-color: ${themeColors.gray.color};
 //   width: 92%;
-//   margin: 1% 4% 0 4%;
+//   margin: 0 4% 0 4%;
 // `;
 
 const SectionPost = styled.div`
@@ -116,7 +132,9 @@ function PopularContainer () {
     <>
       <Pop_Box>
         <Top_PopContainer>
-          인기글
+          <Top_Circle>
+            인기글
+          </Top_Circle>
         </Top_PopContainer>
         
         <Bottom_PopContainer>
