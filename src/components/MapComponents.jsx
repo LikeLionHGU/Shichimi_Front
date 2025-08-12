@@ -24,6 +24,7 @@ const MapContainer = styled.div`
   position: relative;
   display: block;
 `;
+
 const MapImg = styled.img`
   display:block;
   position: relative;
@@ -32,12 +33,41 @@ const MapImg = styled.img`
   height: auto;
 `;
 
-const Map_Name = styled.img`
+const Map_Top = styled.div`
   display: flex;
-  margin: 2% 0 1.5% 4%;
-  width: 37vw;
-  height: auto;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  img{
+    position: absolute;
+    margin: 2% 0 3% 0;
+    width: 36vw;
+    height: auto;
+  }
+
+  h2{
+    position: relative;
+    font-size: 1.5vw;
+    font-weight: 800;
+  }
 `;
+
+// const Map_Name = styled.img`
+//   display: flex;
+//   position: absolute;
+//   margin: 2% 0 1.5% 5%;
+//   width: 36vw;
+//   height: auto;
+// `;
+
+// const Map_Name_Text = styled.h2`
+//   display: block;
+//   position: relative;
+
+//   font-size: 1.8vw;
+//   font-weight: 800;
+// `;
 
 const Store_btn = styled(Link).attrs(props => ({
   to: `/${props.id}`
@@ -60,12 +90,13 @@ const Store_btn = styled(Link).attrs(props => ({
 `;
 
 const Store_icon = styled.img`
-  width: auto;
+  width: 2.3vw;
   height: auto;
-
 `;
+
 const Store_name = styled.div`
-  margin-top: 1%;
+  margin-top: 3%;
+  font-size: 0.8vw;
 `;
 
 /* 가로로 1~5열 */
@@ -133,7 +164,12 @@ function Map () {
   return (
     <>
       <MapContainer>
-        <Map_Name src={Map_name} alt="MAPNAME"/>
+        <Map_Top>
+          <img src={Map_name} alt="MAPNAME"/>
+          <h2>죽도시장 지도</h2>
+        </Map_Top>
+        {/* <Map_Name src={Map_name} alt="MAPNAME"/>  
+        <Map_Name_Text>죽도시장 시장</Map_Name_Text> */}
         <Row1_icon>
           <Store_btn>
             <Store_icon src={crab} alt="어시장1"/>

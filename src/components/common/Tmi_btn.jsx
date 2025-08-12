@@ -21,7 +21,7 @@ const TmiBtn = styled.button`
   height: 7vh;
   color: ${themeColors.white.color};
   font-weight: bold;
-  font-size: 25px;
+  font-size: 1vw;
 
   &:hover{
     cursor: pointer;
