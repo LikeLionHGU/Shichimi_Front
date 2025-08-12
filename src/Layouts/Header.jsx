@@ -6,7 +6,6 @@ import { themeColors  } from "../assets/styles/StyledComponents";
 const NoCenterHorizontal = styled.div`
   display: flex;
   align-items: center;
-  width: 100%;
   margin: 3% 0 0 10%;
 `;
 

@@ -8,7 +8,7 @@ import MainTmi_btn from "../components/common/Tmi_btn";
 const Page = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 9%;
+  gap: 7%;
 `;
 
 const Left_Coponent = styled.div`
