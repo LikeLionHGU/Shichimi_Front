@@ -21,14 +21,12 @@ const TmiBtn = styled.button`
   height: 7vh;
   color: ${themeColors.white.color};
   font-weight: bold;
-  font-size: large;
+  font-size: 25px;
 
   &:hover{
     cursor: pointer;
     box-shadow: 0 2px 0 ${themeColors.gray.color};
-    transform: translateY(2px);
   } 
-  
 `;
 
 
@@ -37,7 +35,7 @@ function Main_Tmi_btn () {
     <>
       <Tmi_box>
         <TmiBtn as={Link} to="/add" style={{textDecoration: "none"}}>
-          <p>TMI 작성</p>
+          <p>비지토리 작성하기</p>
         </TmiBtn>
       </Tmi_box>
     </>
