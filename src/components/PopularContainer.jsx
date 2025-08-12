@@ -27,7 +27,6 @@ const Bottom_PopContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-content: center;
   align-items: center;
   border: 2px solid ${themeColors.black.color};
   border-top: none;
@@ -39,6 +38,7 @@ const Bottom_PopContainer = styled.div`
 const Mini_title = styled.div`
   display: flex;
   align-items: center;
+  margin: 4% 3% 3% 3%;
   gap: 10px;
 `;
 
@@ -48,15 +48,60 @@ const Mini_icon = styled.img`
   flex: 0 0 auto;
 `;
 
-const Mini_Text =styled.h3`
+const Mini_Text =styled.h2`
   margin: 0;
-  font-size: 18px;
+
   font-weight: 800;
   line-height: 1;
   color: ${themeColors.black.color};
 `;
 
-function SectionTitle({leftIcon,rightIcon, alt, children}) {
+// const DividerLine = styled.div`
+//   height: 1px;
+//   background-color: ${themeColors.gray.color};
+//   width: 92%;
+//   margin: 1% 4% 0 4%;
+// `;
+
+const SectionPost = styled.div`
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  /* border-bottom: 1px solid ${themeColors.gray.color}; */
+  padding: 0 4% 0 4%;
+
+  &:hover {
+    background-color: #F27533;
+
+  }
+
+  h3 {
+    margin: 2% 0 1% 0;
+    font-weight: 600;
+    line-height: 1;
+    color: ${themeColors.black.color};
+  
+    
+  }
+
+  p {
+    margin: 1% 0 2% 0;
+    display: block;
+    align-self: stretch;
+    font-weight: 600;
+    line-height: 1;
+    color: ${themeColors.black.color};
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
+
+
+function SectionTitle({leftIcon, rightIcon, alt, children}) {
   return(
     <Mini_title>
       <Mini_icon src={leftIcon} alt={alt} />
@@ -78,14 +123,39 @@ function PopularContainer () {
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
             가장 널리 퍼진 이야기 (조회수 1등)
           </SectionTitle>
+          <SectionPost>
+            <h3>인기글 제목 와랄ㄹ라</h3>
+            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+          </SectionPost>
+          {/* <DividerLine/> */}
+          <SectionPost>
+            <h3>인기글 제목 와랄ㄹ라</h3>
+            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+          </SectionPost>
 
           <SectionTitle leftIcon={row2Left} rightIcon={row2Right} alt="중요">
             가장 널리 퍼진 이야기 (좋아요 1등)
           </SectionTitle>
+          <SectionPost>
+            <h3>인기글 제목 와랄ㄹ라</h3>
+            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+          </SectionPost>
+          <SectionPost>
+            <h3>인기글 제목 와랄ㄹ라</h3>
+            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+          </SectionPost>
 
           <SectionTitle leftIcon={row3Left} rightIcon={row3Right} alt="대박">
             가장 최근 게시된 이야기
           </SectionTitle>
+          <SectionPost>
+            <h3>인기글 제목 와랄ㄹ라</h3>
+            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+          </SectionPost>
+          <SectionPost>
+            <h3>인기글 제목 와랄ㄹ라</h3>
+            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+          </SectionPost>
 
         </Bottom_PopContainer>
       </Pop_Box>
