@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useMemo, useState } from "react";
+import styled, { createGlobalStyle } from "styled-components";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { themeColors } from "../assets/styles/StyledComponents";
@@ -8,15 +8,23 @@ import rectangle184Url from "../assets/images/Rectangle 184.svg?url";
 import infoCircleUrl from "../assets/images/info.svg?url";
 import infoGlyphUrl from "../assets/images/info1.svg?url";
 
+// 전역 배경 컬러를 페이지 전체에 적용
+const GlobalStyle = createGlobalStyle`
+  html, body, #root { min-height: 100%; background: #FFFDF5; }
+  body { margin: 0; }
+`;
+
 // 페이지 메인 래퍼
 const Page = styled.main`
   display: grid;
   background: var(--white, #FFFDF5);
-  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
-  padding: clamp(16px, 3vw, 32px);
-  max-width: 1100px;
-  margin: 0 auto;
+  width: 1720px;
+  height: 1080px;
+  max-width: 1200px;        /* 픽셀 고정 */
+  min-width: 1200px;        /* 래핑 방지 */
+  padding: 24px 0;          /* 상하 여백만 */
+  margin: 0 auto;           /* 중앙 정렬 */
 `;
 
 // 상단 헤더(타이틀, 정보아이콘)
@@ -43,10 +51,12 @@ const TitleBadgeOuter = styled.div`
 `;
 const TitleBadgeInner = styled.div`
   position: absolute; inset: 10px 18px;
-  background-image: url(${ellipse21Url});
+  background-color: #FFFDF5; /* 흰 타원 기본색 */
+  background-image: url(${ellipse21Url}); /* 엘립스 이미지 겹치기 */
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: contain; /* 이미지 있을 때만 표시 */
+  border-radius: 9999px; /* 이미지 없을 때도 타원 유지 */
   display: grid; place-items: center;
 `;
 
@@ -72,21 +82,31 @@ const Rectangle184 = styled.div`
 
 // 정보 툴팁 아이콘 버튼
 const InfoIcon = styled.button`
+  position: relative;
   width: 22px;
   height: 22px;
+  padding: 0;
+  border: 0;
   border-radius: 9999px;
-  border: 0; /* 바깥 원은 SVG로 렌더링하므로 보더 제거 */
-  background-color: transparent;
-  /* 위: i 글리프, 아래: 바깥 원 */
-  background-image: url(${infoGlyphUrl}), url(${infoCircleUrl});
-  background-repeat: no-repeat, no-repeat;
-  background-position: center, center;
-  background-size: 12px 12px, 100% 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   cursor: help;
-  color: transparent;
+  background-color: #FFFDF5; /* 배경색 깔아줌 */
+  box-shadow: inset 0 0 0 1px ${themeColors.gray.color}; /* 항상 보이는 얇은 테두리 */
+  overflow: hidden;
+`;
+
+const InfoCircleImg = styled.img`
+  position: absolute;
+  left: 0px; top: 0px;
+  width: 22px; height: 22px;
+  object-fit: contain; pointer-events: none;
+  z-index: 0;
+`;
+const InfoGlyphImg = styled.img`
+  position: absolute;
+  left: 4px; top: 4px;
+  width: 14px; height: 14px;
+  object-fit: contain; pointer-events: none;
+  z-index: 1;
 `;
 
 // 카드 래퍼(폼 박스)
@@ -101,18 +121,24 @@ const Card = styled.section`
 // 좌우 2열 그리드 레이아웃
 const Grid = styled.div`
   display: grid;
-  gap: 20px;
-  grid-template-columns: 1fr;
-  @media (min-width: 980px) {
-    grid-template-columns: 1fr 1.2fr;
-    align-items: start;
-  }
+  grid-template-columns: 520px 640px; /* 픽셀 고정 컬럼 */
+  column-gap: 40px;                   /* 픽셀 간격 */
+  row-gap: 20px;
+  align-items: start;
 `;
 
 // 단일 폼 필드 컨테이너
 const Field = styled.div`
   display: grid;
   gap: 8px;
+`;
+
+// 라벨과 보조설명을 한 줄에 정렬
+const InlineRow = styled.div`
+  display: flex;
+  align-items: baseline; /* 텍스트 기준선 정렬 */
+  gap: 8px;
+  flex-wrap: nowrap; /* 한 줄 유지 */
 `;
 
 // 필드 라벨 텍스트
@@ -128,47 +154,43 @@ const Label = styled.label`
 
 // 보조 설명 텍스트
 const Helper = styled.p`
-  display: flex;
-  width: 310px;
-  height: 22px;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  color: var(--gray, #BABABA);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 150%;
-  letter-spacing: 0.48px;
   margin: 0;
+  color: var(--gray, #BABABA);
+  font-family: Pretendard;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;        /* 한 줄로 */
+  overflow: hidden;           /* 넘치면 숨김 */
+  text-overflow: ellipsis;    /* 말줄임표 */
+  min-width: 0;               /* flex 줄바꿈 방지용 */
+  flex: 0 1 auto;             /* 수축 허용 */
 `;
 
 // 에러 메시지 텍스트
 const ErrorText = styled.p`
-  font-size: 0.875rem;
+  font-size: 14px;
   color: ${themeColors.red.color};
   margin: 0;
 `;
 
 // 텍스트 입력 컴포넌트
 const Input = styled.input`
+  flex-shrink: 0;
+  padding: 0 12px;
+  width: 400px;
+  height: 42px;
+  border-radius: 8px;
+  border: 2px solid var(--black, #2C2C2C);
+  flex-shrink: 0;
+`;
+
+// 셀렉트 박스
+const Select = styled.select`
   width: 400px;
   height: 42px;
   flex-shrink: 0;
   border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
-  padding: 0 12px;
-`;
-
-// 셀렉트 박스
-const Select = styled.select`
-  width: 100%;
-  height: 44px;
-  border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
   background: #fff;
   color: ${themeColors.black?.color || "#111"};
@@ -179,15 +201,22 @@ const Select = styled.select`
 
 // 본문 입력 텍스트영역
 const Textarea = styled.textarea`
-  border: 1px solid ${themeColors.gray.color};
+  width: 640px;
+  border: 2px solid var(--black, #2C2C2C);
   background: ${themeColors.white.color};
   color: ${themeColors.black?.color || "#111"};
   border-radius: 12px;
   padding: 12px 14px;
   min-height: 220px;
-  font-size: 1rem;
+  font-size: 16px;
   resize: vertical;
   &:focus-visible { outline: 3px solid ${themeColors.gray.color}; outline-offset: 2px; }
+`;
+
+// 텍스트 영역 컨테이너(카운터 우하단 고정)
+const TextareaBox = styled.div`
+  position: relative;
+  display: grid;
 `;
 
 // 폼 하단 버튼 영역
@@ -223,27 +252,27 @@ const Button = styled.button`
     border-color: ${themeColors.gray.color};
   }
 
-  &:disabled{ opacity: 0.5; cursor: not-allowed; }
+  &:disabled{ cursor: not-allowed; }
+  &[data-variant="primary"]:disabled{ background: #CFCFCF; border-color: #CFCFCF; color: ${themeColors.white.color}; opacity: 1; }
   &:hover:not(:disabled){ transform: translateY(-1px); }
 `;
 
 // 입력 + 아이콘 정렬 행
 const RowH = styled.div`
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 476px 32px;
   gap: 8px;
 `;
 
 // 셀렉트 내부에 아이콘을 넣기 위한 래퍼
 const SelectWrap = styled.div`
   position: relative;
-  width: 100%;
+  width: 520px;
 `;
 const InlineIconBtn = styled.button`
   position: absolute;
-  top: 50%;
+  top: 6px; /* (44 - 32) / 2 */
   right: 6px;
-  transform: translateY(-50%);
   width: 32px;
   height: 32px;
   border: 0;
@@ -270,6 +299,7 @@ const ChipWrap = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-top: 8px; /* 라벨/헬퍼와 간격 */
 `;
 
 // 카테고리 칩 버튼
@@ -284,10 +314,11 @@ const Chip = styled.button`
 
 // 글자수 카운터
 const Counter = styled.span`
-  display: inline-block;
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
   font-size: 12px;
   color: ${themeColors.gray.color};
-  margin-left: auto;
 `;
 
 // Fake API replace with real services
@@ -313,13 +344,13 @@ function createPost(payload){
 
 // 모달 배경
 const Backdrop = styled.div`
-  position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+  position: fixed; inset: 0px; background: rgba(0,0,0,0.35);
   display: grid; place-items: center; z-index: 40;
 `;
 
 // 모달 컨테이너
 const Dialog = styled.div`
-  width: min(680px, 92vw);
+  width: 680px;
   background: ${themeColors.white.color};
   border: 1px solid ${themeColors.gray.color};
   border-radius: 16px;
@@ -384,6 +415,14 @@ export default function AddTmiPage(){
 
   const bodyCount = body.length;
 
+  // 제출 가능 여부: 필수값 + 이메일/동의 조건 충족 시 활성화
+  const emailOk = useMemo(() => !email.trim() || /.+@.+[.].+/.test(email), [email]);
+  const canSubmit = useMemo(() => {
+    const requiredOk = title.trim() && place.id && body.trim() && bodyCount <= MAX_BODY;
+    const consentOk = !email.trim() || (emailOk && consent);
+    return !!(requiredOk && consentOk);
+  }, [title, place, body, bodyCount, email, consent, emailOk]);
+
   function validate(){
     const e = {};
     if(!title.trim()) e.title = "제목을 입력해주세요.";
@@ -434,7 +473,9 @@ export default function AddTmiPage(){
   }
 
   return (
-    <Page>
+    <>
+      <GlobalStyle />
+      <Page>
       <Header>
         <TitleBadge>
           <TitleBadgeOuter />
@@ -442,10 +483,13 @@ export default function AddTmiPage(){
             <Title>비지토리 작성</Title>
           </TitleBadgeInner>
         </TitleBadge>
-        <InfoIcon aria-label="도움말" title="카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다." />
+        <InfoIcon aria-label="도움말" title="카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다.">
+          <InfoCircleImg src={infoCircleUrl} alt="" />
+          <InfoGlyphImg src={infoGlyphUrl} alt="" />
+        </InfoIcon>
       </Header>
 
-      <Card>
+      <>
         <form onSubmit={onSubmit} noValidate>
           <Grid>
             <div style={{ display: 'grid', gap: 16 }}>
@@ -486,8 +530,10 @@ export default function AddTmiPage(){
 
             <div style={{ display: 'grid', gap: 16 }}>
               <Field>
-                <Label>어떤 유형의 글인가요?</Label>
-                <Helper>(선택하지 않으면 AI가 본문을 분석해서 선택해줘요)</Helper>
+                <InlineRow>
+                  <Label>어떤 유형의 글인가요?</Label>
+                  <Helper>(선택하지 않으면 AI가 본문을 분석해서 선택해줘요)</Helper>
+                </InlineRow>
                 <ChipWrap>
                   {CATEGORIES.map((c)=> (
                     <Chip key={c} type="button" data-active={category === c} onClick={()=> setCategory((prev)=> prev === c ? "" : c)}>
@@ -499,22 +545,20 @@ export default function AddTmiPage(){
 
               <Field>
                 <Label htmlFor="body">이야기를 입력해주세요</Label>
-                <div style={{ position: 'relative', display: 'grid', gap: 6 }}>
+                <TextareaBox>
                   <Textarea id="body" placeholder="비지토리를 작성해주세요. (최대 400자)" value={body} onChange={(e)=> setBody(e.target.value)} maxLength={MAX_BODY+50} />
-                  <div style={{ display:'flex' }}>
-                    <Counter>{Math.min(bodyCount, MAX_BODY)}/{MAX_BODY}</Counter>
-                  </div>
-                </div>
+                  <Counter>{Math.min(bodyCount, MAX_BODY)}/{MAX_BODY}</Counter>
+                </TextareaBox>
                 {errors.body && <ErrorText>{errors.body}</ErrorText>}
               </Field>
             </div>
           </Grid>
 
           <Actions>
-            <Button type="submit" data-variant="primary" disabled={submitting}>{submitting ? "저장 중…" : "완료"}</Button>
+            <Button type="submit" data-variant="primary" disabled={!canSubmit || submitting}>{submitting ? "저장 중…" : "완료"}</Button>
           </Actions>
         </form>
-      </Card>
+      </>
 
       <PlaceSearchDialog
         open={openPlaceModal}
@@ -522,5 +566,6 @@ export default function AddTmiPage(){
         onSelect={(p)=> setPlace(p)}
       />
     </Page>
+    </>
   );
 }
