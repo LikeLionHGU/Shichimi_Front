@@ -3,8 +3,11 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { themeColors } from "../assets/styles/StyledComponents";
-import ellipse21Url from "../assets/images/Ellipse 21.svg";
-import rectangle184Url from "../assets/images/Rectangle 184.svg";
+import ellipse21Url from "../assets/images/Ellipse 21.svg?url";
+import rectangle184Url from "../assets/images/Rectangle 184.svg?url";
+import infoUrl from "../assets/images/info.svg?url";
+import infoUrl2 from "../assets/images/info1.svg?url";
+
 
 // 페이지 메인 래퍼
 const Page = styled.main`
@@ -33,12 +36,21 @@ const TitleBadge = styled.div`
 `;
 const TitleBadgeOuter = styled.div`
   position: absolute; inset: 0;
-  background: url(${rectangle184Url}) center/contain no-repeat;
+  background-color: #588B49; /* 이미지 로드 실패 대비 색상 */
+  background-image: url(${rectangle184Url});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 `;
 const TitleBadgeInner = styled.div`
   position: absolute; inset: 10px 18px;
-  background: url(${ellipse21Url}) center/contain no-repeat;
+  background-image: url(${ellipse21Url});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
   display: grid; place-items: center;
+  border-radius: 270px;
+  background: var(--white, #FFFDF5);
 `;
 
 // 페이지 제목 텍스트 (Ellipse 안에 들어감)
@@ -66,15 +78,20 @@ const InfoIcon = styled.button`
   width: 22px;
   height: 22px;
   border-radius: 9999px;
-  border: 1px solid ${themeColors.gray.color};
-  background: ${themeColors.white.color};
-  font-size: 12px;
-  line-height: 1;
+  border: 0; /* 바깥 원은 SVG로 렌더링하므로 보더 제거 */
+  background-color: transparent;
+  /* 위: i 글리프, 아래: 바깥 원 */
+  background-image: url(${infoGlyphUrl}), url(${infoCircleUrl});
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+  background-size: 12px 12px, 100% 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: help;
+  color: transparent;
 `;
+
 
 // 카드 래퍼(폼 박스)
 const Card = styled.section`
