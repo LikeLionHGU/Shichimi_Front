@@ -3,15 +3,20 @@ import {Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { themeColors  } from "../assets/styles/StyledComponents";
 
+import MainLogo from "../assets/images/Group 141.svg";
+
 const NoCenterHorizontal = styled.div`
   display: flex;
   align-items: center;
-  margin: 3% 0 0 10%;
+  margin: 3% 0 0 12%;
 `;
 
-const LogoImg = styled.button`
+const LogoBtn = styled.button`
   display : flex;
   align-items : center;
+
+  background-color: transparent;
+  border: none;
   width: 100px;
   height: 40px;
 `;
@@ -22,9 +27,11 @@ const Header = () => {
     <>
       <header>
         <NoCenterHorizontal>
-          <LogoImg>
-            <Link to='/'>Logo</Link>
-          </LogoImg>
+          <LogoBtn>
+            <Link to='/' style={{ textDecoration: 'none' }}>
+              <img src={MainLogo} alt="LOGO" />
+            </Link>
+          </LogoBtn>
         </NoCenterHorizontal>
       </header>
     </>

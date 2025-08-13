@@ -53,22 +53,6 @@ const Map_Top = styled.div`
   }
 `;
 
-// const Map_Name = styled.img`
-//   display: flex;
-//   position: absolute;
-//   margin: 2% 0 1.5% 5%;
-//   width: 36vw;
-//   height: auto;
-// `;
-
-// const Map_Name_Text = styled.h2`
-//   display: block;
-//   position: relative;
-
-//   font-size: 1.8vw;
-//   font-weight: 800;
-// `;
-
 const Store_btn = styled(Link).attrs(props => ({
   to: `/${props.id}`
 }))`
