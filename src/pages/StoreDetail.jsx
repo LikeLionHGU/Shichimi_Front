@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
 import Detail_Tmi_Btn from "../components/common/detail_Tmi_btn";
-import Hist_Board from "../components/common/Details_hist_Board";
-import Visit_Board from "../components/common/Details_Visit_Board";
+import Hist_Board from "../components/Details_hist_Board";
+import Visit_Board from "../components/Details_Visit_Board";
 
 // const BackgroundPageImg = styled.img`
 //   height: auto;
@@ -16,9 +16,6 @@ const TotalPage = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 7%;
-
-  background-color: ${themeColors.gray.color};
-  height: 100vh;
 `;
 
 const Detail_Left = styled.div`

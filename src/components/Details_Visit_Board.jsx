@@ -1,7 +1,10 @@
 import React, {useEffect , useState } from "react";
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
-import { GlobalStyle, themeColors } from "../../assets/styles/StyledComponents";
+import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
+
+import ScrollBar from "./common/ScrollBar";
+import TmiCard from "./tmiCard";
 
 const TopBoard = styled.div`
   display: flex;
@@ -24,24 +27,32 @@ const BottomBoard = styled.div`
   align-items: center;
   align-content: center;
 
+  /* 곧 없앨거 */
+  border: 1px solid ${themeColors.black.color}; 
+
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
-  width: 23vw;
+  width: 43vw;
   height: 60vh;
 `;
 
 
 
-function Details_History() {
+function Detail_Visitory() {
   return(
     <>
-      <TopBoard>가게 히스토리</TopBoard>
+      <TopBoard>비지토리 게시판</TopBoard>
       <BottomBoard>
+        <ScrollBar>
+          {[...Array(10)].map((i) => (
+            <TmiCard key={i}/>
+        ))}
 
 
+        </ScrollBar>
       </BottomBoard>
     </>
   )
 }
 
-export default Details_History;
+export default Detail_Visitory;

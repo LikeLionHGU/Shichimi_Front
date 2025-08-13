@@ -1,7 +1,7 @@
 import React, {useEffect , useState } from "react";
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
-import { GlobalStyle, themeColors } from "../../assets/styles/StyledComponents";
+import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
 const TopBoard = styled.div`
   display: flex;
@@ -24,18 +24,21 @@ const BottomBoard = styled.div`
   align-items: center;
   align-content: center;
 
+  /* 곧 없앨거 */
+  border: 1px solid ${themeColors.black.color}; 
+  
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
-  width: 43vw;
+  width: 23vw;
   height: 60vh;
 `;
 
 
 
-function Detail_Visitory() {
+function Details_History() {
   return(
     <>
-      <TopBoard>비지토리 게시판</TopBoard>
+      <TopBoard>가게 히스토리</TopBoard>
       <BottomBoard>
 
 
@@ -44,4 +47,4 @@ function Detail_Visitory() {
   )
 }
 
-export default Detail_Visitory;
+export default Details_History;
