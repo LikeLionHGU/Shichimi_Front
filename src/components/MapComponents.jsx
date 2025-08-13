@@ -53,22 +53,6 @@ const Map_Top = styled.div`
   }
 `;
 
-// const Map_Name = styled.img`
-//   display: flex;
-//   position: absolute;
-//   margin: 2% 0 1.5% 5%;
-//   width: 36vw;
-//   height: auto;
-// `;
-
-// const Map_Name_Text = styled.h2`
-//   display: block;
-//   position: relative;
-
-//   font-size: 1.8vw;
-//   font-weight: 800;
-// `;
-
 const Store_btn = styled(Link).attrs(props => ({
   to: `/${props.id}`
 }))`
@@ -187,7 +171,7 @@ function Map () {
             <Store_icon src={fish} alt="어시장4"/>
             <Store_name>동양횟집</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn style={{marginLeft: '14px'}}>
             <Store_icon src={car} alt="주차장1"/>
             <Store_name>죽도시장 P</Store_name>
           </Store_btn>
@@ -214,11 +198,11 @@ function Map () {
             <Store_icon src={fish} alt="어시장4"/>
             <Store_name>골드과메기</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn  style={{marginLeft: '14px'}}>
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn style={{marginLeft: '6px'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
@@ -233,7 +217,7 @@ function Map () {
             <Store_icon src={fish} alt="어시장2"/>
             <Store_name>삼일과메기</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn  style={{marginLeft: '14px'}}>
             <Store_icon src={squid} alt="어시장3"/>
             <Store_name>미소과메기</Store_name>
           </Store_btn>
@@ -241,11 +225,11 @@ function Map () {
             <Store_icon src={squid} alt="어시장4"/>
             <Store_name>골드과메기</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn >
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn style={{marginLeft: '6px'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
@@ -272,7 +256,7 @@ function Map () {
             <Store_icon src={soup} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn  style={{marginLeft: '20px'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
@@ -299,7 +283,7 @@ function Map () {
             <Store_icon src={pan} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn>
+          <Store_btn  style={{marginLeft: '20px'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
