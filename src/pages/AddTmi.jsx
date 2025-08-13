@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { themeColors } from "../assets/styles/StyledComponents";
 import ellipse21Url from "../assets/images/Ellipse 21.svg?url";
 import rectangle184Url from "../assets/images/Rectangle 184.svg?url";
-import infoUrl from "../assets/images/info.svg?url";
-import infoUrl2 from "../assets/images/info1.svg?url";
-
+import infoCircleUrl from "../assets/images/info.svg?url";
+import infoGlyphUrl from "../assets/images/info1.svg?url";
 
 // 페이지 메인 래퍼
 const Page = styled.main`
@@ -49,8 +48,6 @@ const TitleBadgeInner = styled.div`
   background-repeat: no-repeat;
   background-size: contain;
   display: grid; place-items: center;
-  border-radius: 270px;
-  background: var(--white, #FFFDF5);
 `;
 
 // 페이지 제목 텍스트 (Ellipse 안에 들어감)
@@ -92,7 +89,6 @@ const InfoIcon = styled.button`
   color: transparent;
 `;
 
-
 // 카드 래퍼(폼 박스)
 const Card = styled.section`
   background: var(--white, #FFFDF5);
@@ -108,7 +104,7 @@ const Grid = styled.div`
   gap: 20px;
   grid-template-columns: 1fr;
   @media (min-width: 980px) {
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 1fr 1.2fr;
     align-items: start;
   }
 `;
@@ -446,7 +442,7 @@ export default function AddTmiPage(){
             <Title>비지토리 작성</Title>
           </TitleBadgeInner>
         </TitleBadge>
-        <InfoIcon aria-label="도움말" title="카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다.">i</InfoIcon>
+        <InfoIcon aria-label="도움말" title="카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다." />
       </Header>
 
       <Card>
