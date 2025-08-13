@@ -8,39 +8,40 @@ import rectangle184Url from "../assets/images/Rectangle 184.svg?url";
 import infoCircleUrl from "../assets/images/info.svg?url";
 import infoGlyphUrl from "../assets/images/info1.svg?url";
 
-// 전역 배경 컬러를 페이지 전체에 적용
+// GlobalStyle — html, body, #root 전역 배경/리셋 (#FFFDF5, min-height:100%)
 const GlobalStyle = createGlobalStyle`
   html, body, #root { min-height: 100%; background: #FFFDF5; }
   body { margin: 0; }
 `;
 
-// 페이지 메인 래퍼
+// Page — 메인 레이아웃 컨테이너(1200px 고정, 중앙 정렬, 배경 #FFFDF5)
 const Page = styled.main`
   display: grid;
   background: var(--white, #FFFDF5);
   gap: 16px;
-  width: 1720px;
-  height: 1080px;
+  width: 1200px;            /* 픽셀 고정 */
   max-width: 1200px;        /* 픽셀 고정 */
   min-width: 1200px;        /* 래핑 방지 */
-  padding: 24px 0;          /* 상하 여백만 */
+  padding: 8px 0;          /* 상하 여백 축소 */
   margin: 0 auto;           /* 중앙 정렬 */
 `;
 
-// 상단 헤더(타이틀, 정보아이콘)
+// Header — 타이틀 배지 + 정보 아이콘 가로 정렬(좌측 정렬, 간격 12px)
 const Header = styled.header`
   display: flex;
   align-items: center;
   gap: 12px;
   justify-content: flex-start;
+  margin: 8px 0 8px; /* 타이틀 위/아래 간격 축소 */
 `;
 
-// 타이틀 배지: 초록 직사각형 안에 Ellipse + 텍스트
+// TitleBadge — 초록 직사각형 안에 흰 타원 + "비지토리 작성" 텍스트 컨테이너(286×92)
 const TitleBadge = styled.div`
   position: relative;
   width: 286px;
   height: 92px;
 `;
+// TitleBadgeOuter: 초록 사각형(184.svg) 레이어 — 이미지 실패 시 #588B49로 표시
 const TitleBadgeOuter = styled.div`
   position: absolute; inset: 0;
   background-color: #588B49; /* 이미지 로드 실패 대비 색상 */
@@ -49,8 +50,9 @@ const TitleBadgeOuter = styled.div`
   background-repeat: no-repeat;
   background-size: contain;
 `;
+// TitleBadgeInner: 흰 타원(21.svg) + 텍스트 중앙 정렬 — inset으로 내부 여백 조절
 const TitleBadgeInner = styled.div`
-  position: absolute; inset: 10px 18px;
+  position: absolute; inset: 6px 18px; /* 타원 상하 여백 축소 */
   background-color: #FFFDF5; /* 흰 타원 기본색 */
   background-image: url(${ellipse21Url}); /* 엘립스 이미지 겹치기 */
   background-position: center;
@@ -60,7 +62,7 @@ const TitleBadgeInner = styled.div`
   display: grid; place-items: center;
 `;
 
-// 페이지 제목 텍스트 (Ellipse 안에 들어감)
+// Title — 페이지 타이틀 텍스트("비지토리 작성", BM HANNA 35px)
 const Title = styled.h1`
   color: var(--black, #2C2C2C);
   text-align: center;
@@ -68,11 +70,11 @@ const Title = styled.h1`
   font-size: 35px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1;
   margin: 0;
 `;
 
-// (선택) 사각형 장식 이미지
+// Rectangle184 — 초록 직사각형 이미지(장식용, 현재 미사용)
 const Rectangle184 = styled.div`
   width: 286px;
   height: 92px;
@@ -80,7 +82,7 @@ const Rectangle184 = styled.div`
   background: var(--green, #588B49) url(${rectangle184Url}) center/contain no-repeat;
 `;
 
-// 정보 툴팁 아이콘 버튼
+// InfoIcon — 정보 툴팁 버튼(22×22). 내부에 info.svg(원)+info1.svg(i) 겹침
 const InfoIcon = styled.button`
   position: relative;
   width: 22px;
@@ -94,6 +96,7 @@ const InfoIcon = styled.button`
   overflow: hidden;
 `;
 
+// InfoCircleImg: info.svg — 바깥 원(전체 채움)
 const InfoCircleImg = styled.img`
   position: absolute;
   left: 0px; top: 0px;
@@ -101,15 +104,16 @@ const InfoCircleImg = styled.img`
   object-fit: contain; pointer-events: none;
   z-index: 0;
 `;
+// InfoGlyphImg: info1.svg — 중앙 'i' 글리프(14×14)
 const InfoGlyphImg = styled.img`
   position: absolute;
-  left: 4px; top: 4px;
+  left: 4px; top: 4px; /* 가운데 배치: (22-14)/2 */
   width: 14px; height: 14px;
   object-fit: contain; pointer-events: none;
   z-index: 1;
 `;
 
-// 카드 래퍼(폼 박스)
+// Card — (레거시) 폼 박스 래퍼. 현재 페이지 배경 위에 직결 배치
 const Card = styled.section`
   background: var(--white, #FFFDF5);
   border: none;
@@ -118,7 +122,7 @@ const Card = styled.section`
   padding: clamp(16px, 2vw, 24px);
 `;
 
-// 좌우 2열 그리드 레이아웃
+// Grid — 2열 고정 그리드(좌 520px / 우 640px, 간격 40px)
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 520px 640px; /* 픽셀 고정 컬럼 */
@@ -127,13 +131,13 @@ const Grid = styled.div`
   align-items: start;
 `;
 
-// 단일 폼 필드 컨테이너
+// Field — 라벨+입력 한 묶음(세로 간격 8px)
 const Field = styled.div`
   display: grid;
   gap: 8px;
 `;
 
-// 라벨과 보조설명을 한 줄에 정렬
+// InlineRow — 라벨 + 보조설명 한 줄 정렬(기준선 정렬, 줄바꿈 없음)
 const InlineRow = styled.div`
   display: flex;
   align-items: baseline; /* 텍스트 기준선 정렬 */
@@ -141,7 +145,7 @@ const InlineRow = styled.div`
   flex-wrap: nowrap; /* 한 줄 유지 */
 `;
 
-// 필드 라벨 텍스트
+// Label — 필드 라벨 텍스트(18px/600)
 const Label = styled.label`
   color: var(--black, #2C2C2C);
   font-family: Pretendard;
@@ -152,7 +156,7 @@ const Label = styled.label`
   letter-spacing: 0.9px;
 `;
 
-// 보조 설명 텍스트
+// Helper — 보조설명(14px, 회색, 넘치면 말줄임)
 const Helper = styled.p`
   margin: 0;
   color: var(--gray, #BABABA);
@@ -166,31 +170,28 @@ const Helper = styled.p`
   flex: 0 1 auto;             /* 수축 허용 */
 `;
 
-// 에러 메시지 텍스트
+// ErrorText — 검증 실패 메시지(빨강 14px)
 const ErrorText = styled.p`
   font-size: 14px;
   color: ${themeColors.red.color};
   margin: 0;
 `;
 
-// 텍스트 입력 컴포넌트
+// Input — 단일행 입력(520×42, 2px 보더)
 const Input = styled.input`
-  flex-shrink: 0;
-  padding: 0 12px;
-  width: 400px;
+  width: 520px;
   height: 42px;
+  flex-shrink: 0;
   border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
-  flex-shrink: 0;
+  padding: 0 12px;
 `;
 
-// 셀렉트 박스
+// Select — 장소 선택 셀렉트(520×44, 우측 내부 검색아이콘 자리 확보)
 const Select = styled.select`
-  width: 400px;
-  height: 42px;
-  flex-shrink: 0;
+  width: 520px;
+  height: 44px;
   border-radius: 8px;
-  border: 2px solid var(--black, #2C2C2C);
   border: 2px solid var(--black, #2C2C2C);
   background: #fff;
   color: ${themeColors.black?.color || "#111"};
@@ -199,7 +200,7 @@ const Select = styled.select`
   &:focus-visible { outline: 3px solid ${themeColors.gray.color}; outline-offset: 2px; }
 `;
 
-// 본문 입력 텍스트영역
+// Textarea — 본문 입력(640px 폭, 최소 220px 높이, 2px 보더)
 const Textarea = styled.textarea`
   width: 640px;
   border: 2px solid var(--black, #2C2C2C);
@@ -213,13 +214,13 @@ const Textarea = styled.textarea`
   &:focus-visible { outline: 3px solid ${themeColors.gray.color}; outline-offset: 2px; }
 `;
 
-// 텍스트 영역 컨테이너(카운터 우하단 고정)
+// TextareaBox — 글자수 카운터 우하단 고정용 래퍼
 const TextareaBox = styled.div`
   position: relative;
   display: grid;
 `;
 
-// 폼 하단 버튼 영역
+// Actions — 폼 하단 버튼 영역(오른쪽 정렬)
 const Actions = styled.div`
   display: flex;
   gap: 12px;
@@ -227,7 +228,7 @@ const Actions = styled.div`
   margin-top: 12px;
 `;
 
-// 기본 버튼
+// Button — 기본 버튼. data-variant="primary"만 사용(완료 버튼)
 const Button = styled.button`
   display: inline-flex;
   align-items: center;
@@ -257,18 +258,19 @@ const Button = styled.button`
   &:hover:not(:disabled){ transform: translateY(-1px); }
 `;
 
-// 입력 + 아이콘 정렬 행
+// RowH — (레거시) 입력+아이콘 2열 그리드. 현재 SelectWrap 사용으로 미사용
 const RowH = styled.div`
   display: grid;
   grid-template-columns: 476px 32px;
   gap: 8px;
 `;
 
-// 셀렉트 내부에 아이콘을 넣기 위한 래퍼
+// SelectWrap — 셀렉트 박스 내부 우측에 검색 아이콘 절대 배치용 래퍼(폭 520px)
 const SelectWrap = styled.div`
   position: relative;
   width: 520px;
 `;
+// InlineIconBtn — 셀렉트 내부 우측 검색 버튼(32×32, 🔍)
 const InlineIconBtn = styled.button`
   position: absolute;
   top: 6px; /* (44 - 32) / 2 */
@@ -282,7 +284,7 @@ const InlineIconBtn = styled.button`
   line-height: 1;
 `;
 
-// 돋보기 아이콘 버튼
+// IconBtn — (레거시) 일반 아이콘 버튼. 현재 미사용
 const IconBtn = styled.button`
   display: inline-flex;
   align-items: center;
@@ -294,7 +296,7 @@ const IconBtn = styled.button`
   background: ${themeColors.white.color};
 `;
 
-// 카테고리 칩 래퍼
+// ChipWrap — 카테고리 칩 컨테이너(랩, 간격 8px)
 const ChipWrap = styled.div`
   display: flex;
   gap: 8px;
@@ -302,7 +304,7 @@ const ChipWrap = styled.div`
   margin-top: 8px; /* 라벨/헬퍼와 간격 */
 `;
 
-// 카테고리 칩 버튼
+// Chip — 카테고리 토글 칩 버튼
 const Chip = styled.button`
   border-radius: 9999px;
   padding: 8px 12px;
@@ -312,7 +314,7 @@ const Chip = styled.button`
   color: ${(p)=> p["data-active"] ? themeColors.white.color : themeColors.black?.color || "#111"};
 `;
 
-// 글자수 카운터
+// Counter — 본문 글자수 표시(우하단 12px)
 const Counter = styled.span`
   position: absolute;
   right: 12px;
@@ -321,7 +323,10 @@ const Counter = styled.span`
   color: ${themeColors.gray.color};
 `;
 
-// Fake API replace with real services
+// Fake API — 샘플 데이터/검색/저장 모의 (실서비스 시 백엔드 API로 대체)
+// - fakePlaces: 샘플 장소 목록
+// - searchPlaces: 부분 일치 검색(300ms 지연)
+// - createPost: 저장 모의(500ms 지연)
 const fakePlaces = [
   { id: "1", name: "죽도시장 횟집 101호" },
   { id: "2", name: "죽도시장 김밥천국" },
@@ -342,13 +347,13 @@ function createPost(payload){
   return new Promise((resolve)=> setTimeout(()=> resolve({ id: "temp-123", ...payload }), 500));
 }
 
-// 모달 배경
+// Backdrop — 모달 오버레이(반투명 검정)
 const Backdrop = styled.div`
   position: fixed; inset: 0px; background: rgba(0,0,0,0.35);
   display: grid; place-items: center; z-index: 40;
 `;
 
-// 모달 컨테이너
+// Dialog — 모달 컨테이너(680px)
 const Dialog = styled.div`
   width: 680px;
   background: ${themeColors.white.color};
@@ -359,6 +364,7 @@ const Dialog = styled.div`
   display: grid; gap: 12px;
 `;
 
+// PlaceSearchDialog — 장소 검색 모달 (open/onClose/onSelect props)
 function PlaceSearchDialog({ open, onClose, onSelect }){
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -376,8 +382,11 @@ function PlaceSearchDialog({ open, onClose, onSelect }){
   return createPortal(
     <Backdrop onClick={onClose}>
       <Dialog onClick={(e)=> e.stopPropagation()}>
+        {/* 모달 라벨 텍스트: "가게/장소 검색" */}
         <Label htmlFor="place-search">가게/장소 검색</Label>
+        {/* 모달 입력 placeholder: "상호명으로 검색" */}
         <Input id="place-search" placeholder="상호명으로 검색" value={query} onChange={(e)=> setQuery(e.target.value)} />
+        {/* 모달 상태 텍스트: "검색 중…" */}
         {loading && <Helper>검색 중…</Helper>}
         <div style={{ display: 'grid', gap: 8, maxHeight: 260, overflow: 'auto' }}>
           {results.map((p)=> (
@@ -385,9 +394,11 @@ function PlaceSearchDialog({ open, onClose, onSelect }){
               {p.name}
             </Button>
           ))}
+          {/* 모달 결과 없음 텍스트: "검색 결과가 없습니다." */}
           {!loading && results.length === 0 && <Helper>검색 결과가 없습니다.</Helper>}
         </div>
         <Actions>
+          {/* 모달 닫기 버튼 텍스트: "닫기" */}
           <Button data-variant="ghost" onClick={onClose}>닫기</Button>
         </Actions>
       </Dialog>
@@ -396,9 +407,12 @@ function PlaceSearchDialog({ open, onClose, onSelect }){
   );
 }
 
+// MAX_BODY — 본문 최대 글자수 제한
 const MAX_BODY = 400;
+// 카테고리 칩 텍스트 목록: "썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"
 const CATEGORIES = ["썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
 
+// AddTmiPage — 비지토리 작성 페이지 (폼 상태/검증/자동 분류/제출)
 export default function AddTmiPage(){
   const nav = useNavigate();
 
@@ -480,9 +494,11 @@ export default function AddTmiPage(){
         <TitleBadge>
           <TitleBadgeOuter />
           <TitleBadgeInner>
+            {/* 페이지 타이틀 텍스트: "비지토리 작성" */}
             <Title>비지토리 작성</Title>
           </TitleBadgeInner>
         </TitleBadge>
+        {/* 정보 아이콘 툴팁(title): "카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다." */}
         <InfoIcon aria-label="도움말" title="카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다.">
           <InfoCircleImg src={infoCircleUrl} alt="" />
           <InfoGlyphImg src={infoGlyphUrl} alt="" />
@@ -494,18 +510,22 @@ export default function AddTmiPage(){
           <Grid>
             <div style={{ display: 'grid', gap: 16 }}>
               <Field>
+                {/* 라벨 텍스트: "제목을 입력해주세요" */}
                 <Label htmlFor="title">제목을 입력해주세요</Label>
+                {/* 입력 placeholder: "글의 핵심이 잘 드러나도록 작성해주세요." */}
                 <Input id="title" placeholder="글의 핵심이 잘 드러나도록 작성해주세요." value={title} onChange={(e)=> setTitle(e.target.value)} />
                 {errors.title && <ErrorText>{errors.title}</ErrorText>}
               </Field>
 
               <Field>
+                {/* 라벨 텍스트: "장소를 입력해주세요" */}
                 <Label htmlFor="place">장소를 입력해주세요</Label>
                 <SelectWrap>
                   <Select id="place" value={place.id} onChange={(e)=>{
                     const opt = fakePlaces.find(p=> p.id === e.target.value);
                     setPlace(opt ? opt : { id: "", name: "" });
                   }}>
+                    {/* 셀렉트 placeholder: "해당 이야기가 일어난 가게를 입력해주세요." */}
                     <option value="">해당 이야기가 일어난 가게를 입력해주세요.</option>
                     {fakePlaces.map((p)=> <option key={p.id} value={p.id}>{p.name}</option>)}
                   </Select>
@@ -515,11 +535,15 @@ export default function AddTmiPage(){
               </Field>
 
               <Field>
+                {/* 라벨 텍스트: "인기글에 선정되면 할인쿠폰을 드려요" */}
                 <Label htmlFor="email">인기글에 선정되면 할인쿠폰을 드려요</Label>
+                {/* 입력 placeholder: "할인쿠폰을 받을 이메일 주소를 입력해주세요." */}
                 <Input id="email" placeholder="할인쿠폰을 받을 이메일 주소를 입력해주세요." value={email} onChange={(e)=> setEmail(e.target.value)} />
+                {/* 보조 설명 텍스트: "상품 수령을 위한 개인정보(이메일) 수집 및 이용에 동의합니다" */}
                 <Helper>
                   상품 수령을 위한 <a href="#" onClick={(e)=> e.preventDefault()}>개인정보(이메일) 수집 및 이용</a>에 동의합니다
                 </Helper>
+                {/* 체크박스 라벨 텍스트: "동의합니다" */}
                 <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                   <input type="checkbox" checked={consent} onChange={(e)=> setConsent(e.target.checked)} /> 동의합니다
                 </label>
@@ -531,7 +555,9 @@ export default function AddTmiPage(){
             <div style={{ display: 'grid', gap: 16 }}>
               <Field>
                 <InlineRow>
+                  {/* 섹션 라벨 텍스트: "어떤 유형의 글인가요?" */}
                   <Label>어떤 유형의 글인가요?</Label>
+                  {/* 보조 설명 텍스트: "(선택하지 않으면 AI가 본문을 분석해서 선택해줘요)" */}
                   <Helper>(선택하지 않으면 AI가 본문을 분석해서 선택해줘요)</Helper>
                 </InlineRow>
                 <ChipWrap>
@@ -544,8 +570,10 @@ export default function AddTmiPage(){
               </Field>
 
               <Field>
+                {/* 라벨 텍스트: "이야기를 입력해주세요" */}
                 <Label htmlFor="body">이야기를 입력해주세요</Label>
                 <TextareaBox>
+                  {/* 입력 placeholder: "비지토리를 작성해주세요. (최대 400자)" */}
                   <Textarea id="body" placeholder="비지토리를 작성해주세요. (최대 400자)" value={body} onChange={(e)=> setBody(e.target.value)} maxLength={MAX_BODY+50} />
                   <Counter>{Math.min(bodyCount, MAX_BODY)}/{MAX_BODY}</Counter>
                 </TextareaBox>
@@ -555,6 +583,7 @@ export default function AddTmiPage(){
           </Grid>
 
           <Actions>
+            {/* 제출 버튼 텍스트: 기본 "완료" / 로딩 시 "저장 중…" */}
             <Button type="submit" data-variant="primary" disabled={!canSubmit || submitting}>{submitting ? "저장 중…" : "완료"}</Button>
           </Actions>
         </form>
