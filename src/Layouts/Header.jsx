@@ -5,10 +5,11 @@ import { themeColors  } from "../assets/styles/StyledComponents";
 
 import MainLogo from "../assets/images/Group 141.svg";
 
-const NoCenterHorizontal = styled.div`
-  display: flex;
+const NoCenterHorizontal = styled.header`
+  display: block;
   align-items: center;
   margin: 3% 0 0 12%;
+  background-color: transparent;
 `;
 
 const LogoBtn = styled.button`
@@ -25,15 +26,13 @@ const LogoBtn = styled.button`
 const Header = () => {
   return(
     <>
-      <header>
-        <NoCenterHorizontal>
-          <LogoBtn>
-            <Link to='/' style={{ textDecoration: 'none' }}>
-              <img src={MainLogo} alt="LOGO" />
-            </Link>
-          </LogoBtn>
-        </NoCenterHorizontal>
-      </header>
+      <NoCenterHorizontal>
+        <LogoBtn>
+          <Link to='/' style={{ textDecoration: 'none' }}>
+            <img src={MainLogo} alt="LOGO" />
+          </Link>
+        </LogoBtn>
+      </NoCenterHorizontal>
     </>
   );
 };
