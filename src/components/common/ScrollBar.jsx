@@ -7,7 +7,8 @@ const Scroll_bar = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  width: 100%;
+  margin: 0 3% 0 3%;
+  width: 42vw;
   height: 100%;
   gap: 10px;
   

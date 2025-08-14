@@ -5,6 +5,7 @@ import { GlobalStyle, themeColors } from "../../assets/styles/StyledComponents";
 
 const Tmi_box= styled.div`
   display: flex;
+  
 `;
 
 const GrayTmiBtn = styled.button`
