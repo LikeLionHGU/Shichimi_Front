@@ -4,13 +4,18 @@ import {Link, NavLink } from "react-router-dom";
 
 const Card =styled.div`
   display: block;
+  background-color: #ECF0ED;
+  border-radius: 8px;
+  width: 90%;
 
   h3{
+    margin: 2% 5% 1% 5%;
     font-size: 0.8vw;
     font-weight: 800;
   }
 
   p{
+    margin: 2% 5% 2% 5%;
     font-size: 0.8vw;
     font-weight: 400;
 
@@ -20,7 +25,8 @@ const Card =styled.div`
   }
 
   &:hover{
-    mix-blend-mode: multiply;
+    background-color: #C4D7DB;
+    cursor: pointer;
   }
 
 `;
@@ -31,7 +37,7 @@ function TmiCard() {
     <>
       <Card>
         <h3>이 상점에 등록된 글의 제목</h3>
-        <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+        <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
       </Card>
     </>
   )

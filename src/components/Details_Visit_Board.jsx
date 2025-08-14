@@ -5,6 +5,7 @@ import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
 import ScrollBar from "./common/ScrollBar";
 import TmiCard from "./tmiCard";
+import Detail_Tmi_Btn from "../components/common/detail_Tmi_btn";
 
 const TopBoard = styled.div`
   display: flex;
@@ -23,6 +24,7 @@ const TopBoard = styled.div`
 `;
 const BottomBoard = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   align-content: center;
@@ -36,6 +38,13 @@ const BottomBoard = styled.div`
   height: 60vh;
 `;
 
+const ThisTmi = styled.div`
+  display: flex;
+
+  width: 43vw;
+  height: 50vh;
+  margin: 10% 2% 0 5%;
+`;
 
 
 function Detail_Visitory() {
@@ -43,13 +52,14 @@ function Detail_Visitory() {
     <>
       <TopBoard>비지토리 게시판</TopBoard>
       <BottomBoard>
-        <ScrollBar>
-          {[...Array(10)].map((i) => (
-            <TmiCard key={i}/>
-        ))}
-
-
-        </ScrollBar>
+        <ThisTmi>
+          <ScrollBar>
+            {[...Array(10)].map((i) => (
+              <TmiCard key={i}/>
+          ))}
+          </ScrollBar>
+        </ThisTmi>
+        <Detail_Tmi_Btn/>
       </BottomBoard>
     </>
   )
