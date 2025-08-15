@@ -24,15 +24,12 @@ const BottomBoard = styled.div`
   align-items: center;
   align-content: center;
 
-  /* 곧 없앨거 */
-  border: 1px solid ${themeColors.black.color}; 
   
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 23vw;
   height: 60vh;
 `;
-
 
 
 function Details_History() {

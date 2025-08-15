@@ -4,29 +4,68 @@ import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
 import Hist_Board from "../components/Details_hist_Board";
 import Visit_Board from "../components/Details_Visit_Board";
+import crab from "../assets/images/Frame 35.svg";
 
-// const BackgroundPageImg = styled.img`
-//   height: auto;
-//   min-height: 100%;
-//   padding-bottom: 200px;
-// `; 
+import Ex from "../assets/images/Back01.svg";
 
 const TotalPage = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 7%;
+
+  min-height: 100vh;
+  background:
+    linear-gradient(0deg,rgba(0,0,0,0.35),rgba(0,0,0,0.35)),
+        url(${Ex});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 `;
 
 const Detail_Left = styled.div`
   flex: 0 0 auto;
   margin-left: 12%;
-  margin-top: 10%;
 `;
 
 const Detail_Right = styled.div`
   flex: 0 0 40vw;
   margin-right: 9%;
-  margin-top: 10%;
+  margin-top: 7%;
+`;
+
+const StoreTitle = styled.div`
+  display: flex;
+  margin: 7% 0 5% 0;
+`;
+
+const StoreTitle_left_icon = styled.div`
+  width: 5vw;
+  height: 9vh;
+  
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  border-radius: 15px 0 0 15px;
+  background-color: ${themeColors.white.color};
+  border: none;
+
+`;
+const StoreTitle_right_name = styled.div`
+  width: 8vw;
+  height: 9vh;
+
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+
+  font-size: 1.4vw;
+  border-radius: 0 15px 15px 0;
+  background-color: ${themeColors.blue.color};
+  color: ${themeColors.white.color};
+  border: none;
 `;
 
 function StoreDetail(){
@@ -34,6 +73,10 @@ function StoreDetail(){
     <>
       <TotalPage>
         <Detail_Left>
+          <StoreTitle>
+            <StoreTitle_left_icon><img src={crab} alt="ICON" /></StoreTitle_left_icon>
+            <StoreTitle_right_name>포항대게</StoreTitle_right_name>
+          </StoreTitle>
           <Hist_Board />
         </Detail_Left>
         
