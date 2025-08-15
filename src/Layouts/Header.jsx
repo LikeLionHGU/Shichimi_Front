@@ -8,8 +8,8 @@ import MainLogo from "../assets/images/Group 141.svg";
 const NoCenterHorizontal = styled.header`
   display: block;
   align-items: center;
-  margin: 3% 0 0 12%;
-  background-color: transparent;
+  margin: 2% 0 1% 12%;
+  background: transparent !important;
 `;
 
 const LogoBtn = styled.button`

@@ -9,13 +9,13 @@ const Card =styled.div`
   width: 90%;
 
   h3{
-    margin: 2% 5% 1% 5%;
+    margin: 2% 5% 1% 2%;
     font-size: 0.8vw;
     font-weight: 800;
   }
 
   p{
-    margin: 2% 5% 2% 5%;
+    margin: 2% 5% 2% 2%;
     font-size: 0.8vw;
     font-weight: 400;
 

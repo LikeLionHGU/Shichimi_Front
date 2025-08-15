@@ -4,8 +4,10 @@ import Home from './pages/Home';
 import StoreDetail from './pages/StoreDetail';
 import MainLayout from './Layouts/MainLayout';
 
+
 export default function App() {
   return (
+    <>
     <BrowserRouter>
         <Routes>
           <Route element={<MainLayout/>}> 
@@ -14,5 +16,6 @@ export default function App() {
           </Route>
         </Routes>
     </BrowserRouter>
+    </>
   );
 }

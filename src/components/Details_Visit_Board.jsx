@@ -1,4 +1,6 @@
 import React, {useEffect , useState } from "react";
+import { get, Api } from "../server/apis/api";
+import axois from 'axios';
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
@@ -29,9 +31,6 @@ const BottomBoard = styled.div`
   align-items: center;
   align-content: center;
 
-  /* 곧 없앨거 */
-  border: 1px solid ${themeColors.black.color}; 
-
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
@@ -56,7 +55,7 @@ const CateChip_Container = styled.div`
   width: 40vw;
   gap: 8px;
   flex-wrap: wrap;
-  margin: 10% 0 3% 5%
+  margin: 10% 0 3% 2%
 `;
 
 const CateChip = styled.button`
