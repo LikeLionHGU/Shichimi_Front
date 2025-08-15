@@ -15,7 +15,7 @@ const NoCenterHorizontal = styled.header`
 const LogoBtn = styled.button`
   display : flex;
   align-items : center;
-
+  
   background-color: transparent;
   border: none;
   width: 100px;
