@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
@@ -49,17 +49,21 @@ const TitleBadgeOuter = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  border-radius: 8px;           /* 바깥 녹색 박스 모서리 라운드 */
+  overflow: hidden;             /* 내부 컨텐츠가 모서리를 넘지 않도록 */
 `;
 // TitleBadgeInner: 흰 타원(21.svg) + 텍스트 중앙 정렬 — inset으로 내부 여백 조절
 const TitleBadgeInner = styled.div`
-  position: absolute; inset: 6px 18px; /* 타원 상하 여백 축소 */
-  background-color: #FFFDF5; /* 흰 타원 기본색 */
-  background-image: url(${ellipse21Url}); /* 엘립스 이미지 겹치기 */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain; /* 이미지 있을 때만 표시 */
-  border-radius: 9999px; /* 이미지 없을 때도 타원 유지 */
+  position: absolute; inset: 7px 10px; /* 타원 상하/좌우 여백 조정 */
+  border-radius: 9999px;        /* 완전한 타원 */
+  background-color: #FFFDF5;    /* 흰 타원 색 */
   display: grid; place-items: center;
+  overflow: hidden;             /* 타원 경계 밖 잘라냄 */
+  /* 참고: 엘립스 이미지를 타원에 맞춰 100%로 채움 (없는 경우에도 타원 유지) */
+  background-image: url(${ellipse21Url});
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
 `;
 
 // Title — 페이지 타이틀 텍스트("비지토리 작성", BM HANNA 35px)
@@ -113,13 +117,87 @@ const InfoGlyphImg = styled.img`
   z-index: 1;
 `;
 
+// Info tooltip overlay/background (click outside to close)
+const InfoOverlay = styled.div`
+  position: fixed; inset: 0px; background: transparent; z-index: 70;
+`;
+// Wrapper that will be absolutely positioned via inline style near the anchor
+const InfoBubbleWrap = styled.div`
+  position: absolute; z-index: 71;
+`;
+// Speech-bubble box
+const InfoBubble = styled.div`
+  position: relative;
+  max-width: 560px;
+  background: #FFFDF5;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+  padding: 16px 44px 16px 16px; /* 우측 닫기 버튼 공간 */
+  color: #2C2C2C;
+  font-size: 16px; line-height: 24px;
+`;
+// Bubble left arrow
+const InfoBubbleArrow = styled.div`
+  position: absolute; left: -10px; top: 22px;
+  width: 20px; height: 20px; transform: rotate(45deg);
+  background: #FFFDF5;
+  box-shadow: -3px 3px 8px rgba(0,0,0,0.06);
+`;
+// Close button (X)
+const InfoCloseBtn = styled.button`
+  position: absolute; right: 10px; top: 10px;
+  width: 24px; height: 24px;
+  border: 0; border-radius: 9999px; background: transparent; cursor: pointer;
+  font-size: 18px; line-height: 1; color: #2C2C2C;
+`;
+
+// Tooltip component rendered in a portal, positioned next to the anchor
+function InfoTooltip({ anchorRef, onClose }){
+  const [pos, setPos] = React.useState({ top: 0, left: 0 });
+
+  React.useEffect(()=>{
+    const update = () => {
+      const el = anchorRef?.current;
+      if(!el) return;
+      const r = el.getBoundingClientRect();
+      const top = r.top + window.scrollY - 6;     // 살짝 위로 정렬
+      const left = r.right + window.scrollX + 12; // 아이콘 오른쪽 12px
+      setPos({ top, left });
+    };
+    const onKey = (e) => { if(e.key === 'Escape') onClose(); };
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, { passive: true });
+    document.addEventListener('keydown', onKey);
+    return ()=>{
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [anchorRef, onClose]);
+
+  return createPortal(
+    <InfoOverlay onClick={onClose}>
+      <InfoBubbleWrap style={{ top: pos.top + 'px', left: pos.left + 'px' }} onClick={(e)=> e.stopPropagation()}>
+        <InfoBubble role="dialog" aria-modal="false">
+          <InfoBubbleArrow />
+          <p style={{ margin: 0 }}>비지토리는 죽도시장에 다녀온 여러분의(visitor) 이야기(story)를 말해요.</p>
+          <p style={{ margin: '6px 0 0 0' }}>죽도시장에서 경험한 다양한 이야기를 들려주세요!</p>
+          <InfoCloseBtn aria-label="닫기" onClick={onClose}>×</InfoCloseBtn>
+        </InfoBubble>
+      </InfoBubbleWrap>
+    </InfoOverlay>,
+    document.body
+  );
+}
+
 // Card — (레거시) 폼 박스 래퍼. 현재 페이지 배경 위에 직결 배치
 const Card = styled.section`
   background: var(--white, #FFFDF5);
   border: none;
   border-radius: 0;
   box-shadow: none;
-  padding: clamp(16px, 2vw, 24px);
+  padding: 16px;
 `;
 
 // Grid — 2열 고정 그리드(좌 520px / 우 640px, 간격 40px)
@@ -417,6 +495,8 @@ export default function AddTmiPage(){
   const nav = useNavigate();
 
   const [title, setTitle] = useState("");
+  const [infoOpen, setInfoOpen] = useState(false);
+  const infoBtnRef = useRef(null);
   const [place, setPlace] = useState({ id: "", name: "" });
   const [openPlaceModal, setOpenPlaceModal] = useState(false);
   const [category, setCategory] = useState("");
@@ -499,11 +579,15 @@ export default function AddTmiPage(){
           </TitleBadgeInner>
         </TitleBadge>
         {/* 정보 아이콘 툴팁(title): "카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다." */}
-        <InfoIcon aria-label="도움말" title="카테고리를 고르지 않으면 본문을 분석해 자동 분류합니다.">
+        <InfoIcon ref={infoBtnRef} onClick={()=> setInfoOpen(true)}>
           <InfoCircleImg src={infoCircleUrl} alt="" />
           <InfoGlyphImg src={infoGlyphUrl} alt="" />
         </InfoIcon>
       </Header>
+
+      {infoOpen && (
+        <InfoTooltip anchorRef={infoBtnRef} onClose={()=> setInfoOpen(false)} />
+      )}
 
       <>
         <form onSubmit={onSubmit} noValidate>
