@@ -9,6 +9,16 @@ import infoCircleUrl from "../assets/images/info.svg?url";
 import infoGlyphUrl from "../assets/images/info1.svg?url";
 import checkUrl from "../assets/images/check.svg?url";
 import xUrl from "../assets/images/x.svg?url";
+import searchUrl from "../assets/images/search.svg?url";
+
+
+// ------ 환경변수로 API 베이스 설정(끝 슬래시 제거) ------
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+function apiUrl(path) {
+  if (!API_BASE) throw new Error("VITE_API_BASE_URL이 비어 있습니다.");
+  return `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 
 /* GlobalStyle — html, body, #root 전역 배경/리셋 (#FFFDF5, min-height:100%) */
 const GlobalStyle = createGlobalStyle`
@@ -227,18 +237,26 @@ const Label = styled.label`
   letter-spacing: 0.9px;
 `;
 
-/* Helper */
+  /* Helper */
 const Helper = styled.p`
-  margin: 0;
-  color: var(--gray, #BABABA);
-  font-family: Pretendard;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: nowrap;
+  display: flex;
+  width: 400px;
+  height: 22px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
   overflow: hidden;
+  color: var(--gray, #BABABA);
   text-overflow: ellipsis;
-  min-width: 0;
-  flex: 0 1 auto;
+  white-space: nowrap;
+
+  /* 본문 */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 24px */
+  letter-spacing: 0.48px;
 `;
 
 /* ErrorText */
@@ -250,7 +268,7 @@ const ErrorText = styled.p`
 
 /* Input */
 const Input = styled.input`
-  width: 520px;
+  width: 400px;
   height: 42px;
   border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
@@ -259,19 +277,20 @@ const Input = styled.input`
 
 /* Textarea */
 const Textarea = styled.textarea`
-  width: 640px;
+  width: 624px;
+  height: 222px;
+  flex-shrink: 0;
+  border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
+
   background: ${themeColors.white.color};
   color: ${themeColors.black?.color || "#111"};
-  border-radius: 12px;
+
   padding: 12px 14px;
   height: 220px;
-  min-height: 220px;
-  max-height: 220px;
   font-size: 16px;
   resize: none;
   box-sizing: border-box;
-  &:focus-visible { outline: 3px solid ${themeColors.gray.color}; outline-offset: 2px; }
 `;
 
 /* TextareaBox — 글자수 카운터 우하단 고정용 래퍼 */
@@ -321,12 +340,12 @@ const Button = styled.button`
 /* 장소 선택 입력/패널 */
 const SelectWrap = styled.div`
   position: relative;
-  width: 420px;
+  width: 400px;
 `;
 const InlineIconBtn = styled.button`
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: -15px;
   width: 32px;
   height: 32px;
   border: 0;
@@ -335,49 +354,43 @@ const InlineIconBtn = styled.button`
   font-size: 18px;
   line-height: 1;
 `;
+// (기존 StatusBadge 전체 교체)
 const StatusBadge = styled.span`
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background: ${(p)=> p.$ok ? "#4F8A4A" : "#E25C2F"};
-  &::before{
-    content: "";
-    width: 16px;
-    height: 16px;
-    background-image: url(${(p)=> p.$icon || ""});
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 16px 16px;
-    display: block;
+
+  /* 안에 들어가는 아이콘 이미지 크기 고정 */
+  & > img {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
   }
 `;
+
 const StatusPos = styled.div`
   position: absolute;
-  top: 6px;
-  right: -44px;
+  top: 8px;
+  right: -70px;
 `;
 const PlaceInput = styled.input`
-  width: 420px;
+  width: 400px;
   height: 44px;
   border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
   background: #fff;
-  padding: 0 44px 0 12px;
+  padding: 0 12px 0 12px;
   cursor: text;
 `;
 const PlacePanel = styled.div`
   position: absolute;
-  top: 52px;
+  top: 0px;
   left: 0;
-  width: 420px;
-  max-height: 380px;
-  background: #edf6ee;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+
+  width: 400px;
+  height: 229px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: #F0F8ED;
+
   padding: 16px;
   z-index: 60;
   display: grid;
@@ -388,25 +401,30 @@ const PlaceSearchRow = styled.div`
   position: relative;
 `;
 const PlaceSearchInput = styled.input`
-  width: 100%;
   border: 0;
   background: transparent;
   outline: none;
-  font-size: 20px;
+  font-size: 16px;
   color: #2C2C2C;
   padding-right: 32px;
   &::placeholder{ color:#9CB0A1; }
 `;
 const PlaceSearchIcon = styled.span`
-  position: absolute; right: 0; top: 0; font-size: 22px; color: #4a7e44;
+  position: absolute; right: 0; top: 0;
+  width: 24.593px;
+  height: 24.593px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
 `;
 const PlaceList = styled.div`
   overflow: auto; padding-right: 8px;
 `;
 const PlaceItem = styled.button`
-  width: 100%; text-align: left; border: 0; background: transparent;
-  padding: 14px 8px; border-radius: 8px; font-size: 20px; cursor: pointer;
+  width: 100%; height: 22px; text-align: left; border: 0; background: transparent;
+  padding: 0px 12px; border-radius: 8px; font-size: 16px; cursor: pointer;
   color: #2C2C2C;
+  align-items: center; 
+  min-height: 40px;    
   &:hover{ background: rgba(0,0,0,0.05); }
 `;
 
@@ -427,7 +445,7 @@ const ChipWrap = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 8px;
+  margin-top: -15px;
 `;
 const Chip = styled.button`
   border-radius: 9999px;
@@ -441,10 +459,17 @@ const Chip = styled.button`
 /* Counter — 본문 글자수 표시 */
 const Counter = styled.span`
   position: absolute;
-  right: 12px;
+  right: 30px;
   bottom: 8px;
   font-size: 12px;
-  color: ${themeColors.gray.color};
+  color: var(--gray, #BABABA);
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 21px */
+  letter-spacing: 0.42px;
 `;
 
 /* Fake API */
@@ -458,9 +483,9 @@ const fakePlaces = [
   { id: "7", name: "대화식당" },
   { id: "8", name: "동양횟집" },
   { id: "9", name: "미소과메기" },
-  { id: "10", name: "밀밥분식" },
+  { id: "10", name: "밀밭분식" },
   { id: "11", name: "바다건어물" },
-  { id: "12", name: "벤엘건어물" },
+  { id: "12", name: "벧엘건어물" },
   { id: "13", name: "부산밀면" },
   { id: "14", name: "삼일과메기" },
   { id: "15", name: "수정농산물" },
@@ -471,9 +496,9 @@ const fakePlaces = [
   { id: "20", name: "웰빙농산물" },
   { id: "21", name: "은아건어물" },
   { id: "22", name: "장기식당" },
-  { id: "23", name: "죽도어시장 공연 P" },
+  { id: "23", name: "죽도시장 공영 P" },
   { id: "24", name: "죽도어시장 공영 P" },
-  { id: "25", name: "죽도포" },
+  { id: "25", name: "죽도포포" },
   { id: "26", name: "진분식" },
   { id: "27", name: "태성청과" },
   { id: "28", name: "포원청과" },
@@ -491,18 +516,24 @@ function searchPlaces(q){
 }
 
 /* API 명세: POST /tmi/records */
+/* API 명세: POST /tmi/records (절대 URL + 환경변수 사용) */
 async function createPost(payload){
-  const res = await fetch('/tmi/records', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-  if(!res.ok){
-    const msg = await res.text().catch(()=> '');
-    throw new Error(`POST /tmi/records failed: ${res.status} ${msg}`);
-  }
-  return res.json();
-}
+   const url = apiUrl("/tmi/records");
+   const res = await fetch(url, {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify(payload),
+     // (쿠키 인증이 필요하면) 아래 주석 해제 + 백엔드 CORS에 Credentials 허용:
+     // credentials: "include",
+   });
+   if (!res.ok) {
+     const msg = await res.text().catch(() => "");
+     throw new Error(`POST ${url} failed: ${res.status} ${msg}`);
+   }
+   // 204/빈 본문 대비
+   const txt = await res.text().catch(() => "");
+   return txt ? JSON.parse(txt) : null;
+ }
 
 /* 공용 모달 베이스 */
 const Backdrop = styled.div`
@@ -783,17 +814,18 @@ export default function AddTmiPage(){
                       onChange={(e)=>{ setPlaceText(e.target.value); setPlaceQuery(e.target.value); setPlaceOpen(true); }}
                       onClick={()=> setPlaceOpen(true)}
                     />
-                    <InlineIconBtn type="button" aria-label="장소 검색 열기" onClick={()=> setPlaceOpen(v=>!v)} title="검색">🔍</InlineIconBtn>
+                    <InlineIconBtn type="button" aria-label="장소 검색 열기" onClick={()=> setPlaceOpen(v=>!v)} title="검색">
+                      <img src = {searchUrl}/>
+                    </InlineIconBtn>
 
                     {placeText.trim() !== '' && (
                       <StatusPos>
-                        {place.id ? (
-                          <StatusBadge $ok $icon={checkUrl} />
-                        ) : (
-                          <StatusBadge $ok={false} $icon={xUrl} />
-                        )}
+                        <StatusBadge $ok={!!place.id}>
+                          <img src={place.id ? checkUrl : xUrl} alt="" aria-hidden="true" />
+                        </StatusBadge>
                       </StatusPos>
                     )}
+
 
                     {placeOpen && (
                       <PlacePanel>
@@ -804,7 +836,9 @@ export default function AddTmiPage(){
                             onChange={(e)=> setPlaceQuery(e.target.value)}
                             autoFocus
                           />
-                          <PlaceSearchIcon>🔍</PlaceSearchIcon>
+                          <PlaceSearchIcon>
+                            <img src = {searchUrl}/>
+                          </PlaceSearchIcon>
                         </PlaceSearchRow>
                         <PlaceList>
                           {filteredPlaces.map(p => (
