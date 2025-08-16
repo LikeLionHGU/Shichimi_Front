@@ -901,7 +901,7 @@ export default function AddTmiPage(){
                 </Field>
 
                 <Field>
-                  <Label htmlFor="body">이야기를 입력해주세요</Label>
+                  <Label htmlFor="body">이야기를 입력해주세요*</Label>
                   <TextareaBox>
                     <Textarea id="body" placeholder="비지토리를 작성해주세요. (최대 400자)" value={body} onChange={(e)=> setBody(e.target.value)} maxLength={MAX_BODY+50} />
                     <Counter>{Math.min(bodyCount, MAX_BODY)}/{MAX_BODY}</Counter>
