@@ -1,6 +1,6 @@
 import React, {useEffect , useState } from "react";
-import { get, Api } from "../server/apis/api";
-import axois from 'axios';
+import { get,api } from "../server/apis/api";
+import axios from 'axios';
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
@@ -65,6 +65,8 @@ const CateChip = styled.button`
 
   &:hover {
     cursor: pointer;
+  }
+  &[data-active = "true"]{
     background-color: ${themeColors.blue.color};
     color: ${themeColors.white.color};
     border: 1px solid ${themeColors.blue.color};
