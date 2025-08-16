@@ -74,8 +74,8 @@ const CateChip = styled.button`
 `;
 
 
-function Detail_Visitory({marketId}) {
-
+function Detail_Visitory() {
+  const [category, setCategory] = useState("전체");
 
   return(
     <>
