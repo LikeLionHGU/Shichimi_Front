@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
   body { margin: 0; }
 `;
 
-/* Page — 메인 레이아웃 컨테이너 (1720×1080 고정, 중앙 정렬, 배경 #FFFDF5) */
+/* Page — 메인 레이아웃 컨테이너 (1720×1080 고정, 정렬, 배경 #FFFDF5) */
 const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
