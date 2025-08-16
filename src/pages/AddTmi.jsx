@@ -42,7 +42,7 @@ const Stage = styled.div`
   width: 1200px;
   margin: 0 auto;
   display: grid;
-  row-gap: 24px;
+  row-gap: 60px;
 `;
 
 /* Header — 타이틀 배지 + 정보 아이콘 가로 정렬 */
@@ -51,52 +51,59 @@ const Header = styled.header`
   align-items: center;
   gap: 12px;
   justify-content: flex-start;
-  margin: 8px 0 8px;
-`;
+  margin: 50px 0 8px;
 
-/* TitleBadge — 초록 직사각형 안에 흰 타원 + "비지토리 작성" 텍스트 컨테이너(286×92) */
+`;
+/* 컨테이너: 크기와 상대배치만 */
 const TitleBadge = styled.div`
   position: relative;
   width: 286px;
   height: 92px;
 `;
 
-/* TitleBadgeOuter: 초록 사각형(184.svg) 레이어 — 이미지 실패 시 #588B49로 표시 */
-const TitleBadgeOuter = styled.div`
-  position: absolute; inset: 0;
-  background-color: #588B49;
-  background-image: url(${rectangle184Url});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  border-radius: 8px;
-  overflow: hidden;
+
+/* 1층: 초록 사각형 이미지 */
+const TitleBadgeOuter = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;   /* 비율 유지 원하면 contain */
+  z-index: 0;
+  pointer-events: none;
 `;
 
-/* TitleBadgeInner: 흰 타원(21.svg) + 텍스트 중앙 정렬 */
+/* 2층 래퍼: 안쪽 여백만 담당 */
 const TitleBadgeInner = styled.div`
-  position: absolute; inset: 7px 10px;
-  border-radius: 9999px;
-  background-color: #FFFDF5;
-  display: grid; place-items: center;
-  overflow: hidden;
-  background-image: url(${ellipse21Url});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+  position: absolute;
+  inset: 7px 10px;    /* 상하 7, 좌우 10 → 초록 테두리 두께 */
+  display: grid;
+  place-items: center;
+  z-index: 1;
 `;
 
-/* Title — 페이지 타이틀 텍스트 */
+/* 2층: 흰 타원 이미지 */
+const TitleBadgeInnerImg = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;   /* 비율 유지 원하면 contain */
+  pointer-events: none;
+`;
+
+/* 3층: 텍스트 */
 const Title = styled.h1`
-  color: var(--black, #2C2C2C);
-  text-align: center;
+  margin: 0;
+  color: #2C2C2C;
   font-family: "BM HANNA 11yrs old OTF";
   font-size: 35px;
-  font-style: normal;
   font-weight: 400;
   line-height: 1;
-  margin: 0;
+  position: relative; /* 래퍼 기준 */
+  z-index: 2;         /* 타원 위로 */
 `;
+
 
 /* InfoIcon — 정보 툴팁 버튼(22×22) */
 const InfoIcon = styled.button`
@@ -208,14 +215,14 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 520px 640px;
   column-gap: 40px;
-  row-gap: 20px;
-  align-items: start;
+  row-gap: 28px;
+  align-items: baseline;
 `;
 
 /* Field */
 const Field = styled.div`
   display: grid;
-  gap: 8px;
+  gap: 16px;
 `;
 
 /* InlineRow */
@@ -242,7 +249,7 @@ const Helper = styled.p`
   display: flex;
   width: 400px;
   height: 22px;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
@@ -789,12 +796,13 @@ export default function AddTmiPage(){
       <Page>
         <Stage>
           <Header>
-            <TitleBadge>
-              <TitleBadgeOuter />
-              <TitleBadgeInner>
-                <Title>비지토리 작성</Title>
-              </TitleBadgeInner>
-            </TitleBadge>
+          <TitleBadge>
+      <TitleBadgeOuter src={rectangle184Url} alt="" />
+      <TitleBadgeInner>
+        <TitleBadgeInnerImg src={ellipse21Url} alt="" />
+        <Title>비지토리 작성</Title>
+      </TitleBadgeInner>
+    </TitleBadge>
             <InfoIcon ref={infoBtnRef} onClick={()=> setInfoOpen(true)}>
               <InfoCircleImg src={infoCircleUrl} alt="" />
               <InfoGlyphImg src={infoGlyphUrl} alt="" />
@@ -807,15 +815,15 @@ export default function AddTmiPage(){
 
           <form onSubmit={onSubmit} noValidate>
             <Grid>
-              <div style={{ display: 'grid', gap: 16 }}>
+              <div style={{ display: 'grid', gap: 80 }}>
                 <Field>
-                  <Label htmlFor="title">제목을 입력해주세요</Label>
+                  <Label htmlFor="title">제목을 입력해주세요*</Label>
                   <Input id="title" placeholder="글의 핵심이 잘 드러나도록 작성해주세요." value={title} onChange={(e)=> setTitle(e.target.value)} />
                   {errors.title && <ErrorText>{errors.title}</ErrorText>}
                 </Field>
 
                 <Field>
-                  <Label htmlFor="place">장소를 입력해주세요</Label>
+                  <Label htmlFor="place">장소를 입력해주세요*</Label>
                   <SelectWrap ref={placeWrapRef}>
                     <PlaceInput
                       id="place"
@@ -877,7 +885,7 @@ export default function AddTmiPage(){
                 </Field>
               </div>
 
-              <div style={{ display: 'grid', gap: 16 }}>
+              <div style={{ display: 'grid', gap: 90 }}>
                 <Field>
                   <InlineRow>
                     <Label>어떤 유형의 글인가요?</Label>
