@@ -3,7 +3,7 @@ import styled from "styled-components";
 import LikeButton from "../components/LikeButton";  
 import MapComponents from "../components/MapComponents";
 import PopularContainer from "../components/PopularContainer";
-import MainTmi_btn from "../components/common/Tmi_btn";
+import MainTmi_btn from "../components/common/main_Tmi_btn";
 
 const Page = styled.div`
   display: flex;
