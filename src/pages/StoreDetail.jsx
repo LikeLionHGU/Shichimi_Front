@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
-import Hist_Board from "../components/Details_hist_Board";
+import Hist_Board from "../components/Details_Hist_Board";
 import Visit_Board from "../components/Details_Visit_Board";
 import crab from "../assets/images/Frame 35.svg";
 
