@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import StoreDetail from './pages/StoreDetail';
 import MainLayout from './Layouts/MainLayout';
+import AddTmi from "./pages/AddTmi"; 
 
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
           <Route element={<MainLayout/>}> 
             <Route path="/" element={<Home />} />
             <Route path="/store" element={<StoreDetail />} />
+            <Route path="/add" element={<AddTmi />} />
           </Route>
         </Routes>
     </BrowserRouter>
