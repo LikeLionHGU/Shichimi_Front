@@ -305,21 +305,31 @@ const Actions = styled.div`
   gap: 12px;
   justify-content: flex-end;
   margin-top: 12px;
+  margin-right: 16px;
 `;
 
 /* Button */
 const Button = styled.button`
+  width: 150px;
+  height: 60px;
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 18px;
   min-height: 44px;
   border-radius: 12px;
   font-weight: 700;
   border: 1px solid transparent;
   transition: transform 120ms ease, box-shadow 120ms ease;
   cursor: pointer;
+  color: var(--white, #FFFDF5);
+  text-align: center;
+  font-family: "BM HANNA 11yrs old OTF";
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 
   &[data-variant="primary"]{
     background: ${themeColors.red.color};
