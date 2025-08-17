@@ -2,6 +2,8 @@ import React, {useEffect , useState } from "react";
 import {Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
+import axios from "axios";
+
 
 import row3Left from "../assets/images/Group 94.svg"
 import row3Right from "../assets/images/Group 95.svg"
@@ -128,6 +130,56 @@ function SectionTitle({leftIcon, rightIcon, alt, children}) {
 }
 
 function PopularContainer () {
+
+  const [tops, setTops] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
+  
+  const getTops = async () => {
+    try{
+      const response = await axios.get(`https://kihari.shop/api/tops`);
+      
+      console.log("API 호출 성공:", response.data);
+      
+      const showTops = response.data.show_Top || [];
+      const formattedTops = showTops.map((info) => ({
+        id: info?.id ?? "",
+        title: info?.title ?? "제목 없음",
+        content: info?.content ?? "내용 없음",  
+      }));
+      setFormat(formattedTops);
+      console.log("기본 데이터:",formattedTops);
+      return formattedTops;
+    }catch(err){
+      console.error("API 호출 실패:", err.message);
+      console.error("응답 데이터:", err.response.data);
+      setErr("정보를 불러오지 못했습니다.");
+    }finally{
+      setLoading(false);
+    }
+  };
+
+  const topByView = tops.slice(0, 2);
+  const topByLike = tops.slice(2, 4);
+  const latest    = tops.slice(4, 6);
+
+  const renderPosts = (items, fallbackKeyPrefix) => {
+    if (loading) 
+      return <p>불러오는 중...</p>
+    if (err)     
+      return <p>데이터를 불러오지 못했습니다.</p>;
+    
+    return items.map((post) => (
+      <SectionPost key={post.id} onClick={Navigate(`/api/records/${tmiId}`)}>
+        <h3>{post.title}</h3>
+        <p>{post.content}</p>
+      </SectionPost>
+    ));
+  };
+  useEffect(() => {
+    getTops();
+  }, [])
+
   return (
     <>
       <Pop_Box>
@@ -141,39 +193,17 @@ function PopularContainer () {
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
             가장 널리 퍼진 이야기 (조회수 1등)
           </SectionTitle>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
-          {/* <DividerLine/> */}
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
+          {renderPosts(topByView, "mostView")}
 
           <SectionTitle leftIcon={row2Left} rightIcon={row2Right} alt="중요">
             가장 널리 퍼진 이야기 (좋아요 1등)
-          </SectionTitle>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
+          </SectionTitle>  
+          {renderPosts(topByLike, "mostLike")}
 
           <SectionTitle leftIcon={row3Left} rightIcon={row3Right} alt="대박">
             가장 최근 게시된 이야기
           </SectionTitle>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
+          {renderPosts(latest, "mostRecent")}
 
         </Bottom_PopContainer>
       </Pop_Box>

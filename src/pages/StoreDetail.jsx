@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
+import NextDoor_Board from "../components/Detail_NextDoor";
+import Tops_Board from "../components/Details_Tops";
 import Hist_Board from "../components/Details_Hist_Board";
 import Visit_Board from "../components/Details_Visit_Board";
 import crab from "../assets/images/Frame 35.svg";
@@ -78,10 +80,12 @@ function StoreDetail(){
             <StoreTitle_right_name>포항대게</StoreTitle_right_name>
           </StoreTitle>
           <Hist_Board />
+          <Tops_Board />
         </Detail_Left>
         
         <Detail_Right>
           <Visit_Board />
+          <NextDoor_Board />
         </Detail_Right>
       </TotalPage>
     </>

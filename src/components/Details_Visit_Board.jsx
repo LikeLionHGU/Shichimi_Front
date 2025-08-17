@@ -53,7 +53,7 @@ const CateChip_Container = styled.div`
   display: flex;
   flex-direction: row;
   width: 40vw;
-  gap: 8px;
+  gap: 0.7%;
   flex-wrap: wrap;
   margin: 10% 0 3% 2%
 `;
