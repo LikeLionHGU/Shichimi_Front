@@ -15,6 +15,7 @@ const TotalPage = styled.div`
   align-items: flex-start;
   gap: 7%;
 
+  padding-top: 4.5%;
   min-height: 100vh;
   background:
     linear-gradient(0deg,rgba(0,0,0,0.35),rgba(0,0,0,0.35)),

@@ -6,9 +6,15 @@ import { themeColors  } from "../assets/styles/StyledComponents";
 import MainLogo from "../assets/images/Group 141.svg";
 
 const NoCenterHorizontal = styled.header`
-  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
   align-items: center;
-  margin: 1.5% 0 1% 12%;
+  padding: 1.5% 0 1% 12%;
+  height: 72px;
   background: transparent !important;
 `;
 
