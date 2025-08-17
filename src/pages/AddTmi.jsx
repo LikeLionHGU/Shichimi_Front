@@ -48,7 +48,7 @@ const Stage = styled.div`
 /* Header — 타이틀 배지 + 정보 아이콘 가로 정렬 */
 const Header = styled.header`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   justify-content: flex-start;
   margin: 50px 0 8px;
@@ -124,12 +124,7 @@ const InfoCircleImg = styled.img`
   object-fit: contain; pointer-events: none;
   z-index: 0;
 `;
-const InfoGlyphImg = styled.img`
-  position: absolute; left: 4px; top: 4px;
-  width: 14px; height: 14px;
-  object-fit: contain; pointer-events: none;
-  z-index: 1;
-`;
+
 
 /* Info tooltip overlay/background (click outside to close) */
 const InfoOverlay = styled.div`
@@ -149,7 +144,7 @@ const InfoBubble = styled.div`
   font-size: 16px; line-height: 24px;
 `;
 const InfoBubbleArrow = styled.div`
-  position: absolute; left: -10px; top: 22px;
+  position: absolute; left: -6px; top: 1.5;
   width: 20px; height: 20px; transform: rotate(45deg);
   background: #FFFDF5;
   box-shadow: -3px 3px 8px rgba(0,0,0,0.06);
@@ -247,19 +242,18 @@ const Label = styled.label`
   /* Helper */
 const Helper = styled.p`
   display: flex;
-  width: 400px;
+  width: 420px;
   height: 22px;
   flex-direction: row;
-  justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  color: var(--gray, #BABABA);
+  color: var(--black, #2C2C2C);
   text-overflow: ellipsis;
   white-space: nowrap;
 
   /* 본문 */
   font-family: Pretendard;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 150%; /* 24px */
@@ -280,6 +274,7 @@ const Input = styled.input`
   border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
   padding: 0 12px;
+  background: var(--white, #FFFDF5);
 `;
 
 /* Textarea */
@@ -339,20 +334,95 @@ const Button = styled.button`
   line-height: normal;
 
   &[data-variant="primary"]{
-    background: ${themeColors.red.color};
+    background: var(--green, #588B49);
     color: ${themeColors.white.color};
-    border-color: ${themeColors.red.color};
+    border-color: ${themeColors.black.color};
+    width: 200px;
+    height: 54px;
+    flex-shrink: 0;
+    color: var(--black, #2C2C2C);
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
   }
   &[data-variant="ghost"]{
     background: ${themeColors.white.color};
-    color: ${themeColors.black?.color || "#111"};
-    border-color: ${themeColors.gray.color};
+    color: ${themeColors.white.color};
+    border-color: ${themeColors.black.color};
+    width: 200px;
+    height: 54px;
+    flex-shrink: 0;
+    color: var(--black, #2C2C2C);
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  &[data-variant="submit"]{
+  background: var(--green, #588B49);
+  color: ${themeColors.white.color};
+  border-color: ${themeColors.black.color};
+  border-radius: 8px;
+  width: 150px;
+  height: 60px;
+  flex-shrink: 0;
+  color: var(--black, #2C2C2C);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
   }
 
   &:disabled{ cursor: not-allowed; }
   &[data-variant="primary"]:disabled{ background: #CFCFCF; border-color: #CFCFCF; color: ${themeColors.white.color}; opacity: 1; }
   &:hover:not(:disabled){ transform: translateY(-1px); }
 `;
+
+const PageButton = styled.button`
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 150px; height: 60px; min-height: 44px; padding: 0 16px;
+  border-radius: 12px; border: 1.5px solid transparent;
+  font-family: "BM HANNA 11yrs old OTF"; font-size: 22px; font-weight: 400; line-height: 1;
+  cursor: pointer; transition: transform 120ms ease, background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+
+  /* 비활성(회색) */
+  background: #CFCFCF; color: #FFFFFF; border-color: #CFCFCF;
+
+  /* 활성화되면 초록 */
+  &:not(:disabled){
+    background: #588B49; color: #FFFDF5; border-color: #3D5F33;
+  }
+
+  &:hover:not(:disabled){ transform: translateY(-1px); }
+  &:disabled{ cursor: not-allowed; opacity: 1; }
+`;
+
+const DialogButton = styled.button`
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 200px; height: 54px; padding: 0 16px;
+  border-radius: 12px; border: 1.5px solid #2C2C2C;
+  background: #FFFFFF; color: #2C2C2C;
+  font-family: Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-size: 16px; font-weight: 700; line-height: 1;
+  cursor: pointer; transition: transform 120ms ease, background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+
+  &:hover:not(:disabled){
+    background: #588B49; color: #FFFDF5; border-color: #3D5F33;
+    transform: translateY(-1px);
+  }
+  &:disabled{
+    cursor: not-allowed; background: #F3F3F3; color: #A0A0A0; border-color: #D0D0D0;
+    transform: none;
+  }
+`;
+
 
 /* 장소 선택 입력/패널 */
 const SelectWrap = styled.div`
@@ -393,8 +463,8 @@ const PlaceInput = styled.input`
   height: 44px;
   border-radius: 8px;
   border: 2px solid var(--black, #2C2C2C);
-  background: #fff;
-  padding: 0 12px 0 12px;
+  background: var(--white, #FFFDF5);
+    padding: 0 12px 0 12px;
   cursor: text;
 `;
 const PlacePanel = styled.div`
@@ -559,13 +629,17 @@ const Backdrop = styled.div`
   z-index: 1000; /* 최상단에 뜨도록 충분히 크게 */
 `;
 const Dialog = styled.div`
-  width: 680px;
+  width: 500px;
+  height: 280px;
+  flex-shrink: 0;
+  justify-content: center;
   background: ${themeColors.white.color};
   border: 1px solid ${themeColors.gray.color};
   border-radius: 16px;
-  padding: 16px;
+  padding: 26px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.12);
   display: grid; gap: 12px;
+  
 `;
 
 /* 개인정보 팝오버 */
@@ -638,18 +712,19 @@ function ConfirmDialog({ open, onCancel, onConfirm, busy }){
   return createPortal(
     <Backdrop onClick={onCancel}>
       <Dialog role="dialog" aria-modal="true" onClick={(e)=> e.stopPropagation()}>
-        <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, textAlign: "center" }}>
+        <h3 style={{ marginTop: 40, marginBottom:-30, fontSize: 24, fontWeight: 600, textAlign: "center" }}>
           TMI 작성을 완료하시겠습니까?
         </h3>
         <p style={{ margin: "6px 0 0 0", textAlign: "center", color: "#555" }}>
           완료 시, 해당 글은 수정이 불가능합니다.
         </p>
         <Actions>
-          <Button data-variant="ghost" onClick={onCancel} disabled={busy}>취소</Button>
-          <Button data-variant="primary" onClick={onConfirm} disabled={busy}>
+          <DialogButton onClick={onCancel} disabled={busy}>취소</DialogButton>
+          <DialogButton onClick={onConfirm} disabled={busy}>
             {busy ? "저장 중…" : "확인"}
-          </Button>
+          </DialogButton>
         </Actions>
+
       </Dialog>
     </Backdrop>,
     document.body
@@ -805,7 +880,6 @@ export default function AddTmiPage(){
     </TitleBadge>
             <InfoIcon ref={infoBtnRef} onClick={()=> setInfoOpen(true)}>
               <InfoCircleImg src={infoCircleUrl} alt="" />
-              <InfoGlyphImg src={infoGlyphUrl} alt="" />
             </InfoIcon>
           </Header>
 
@@ -876,10 +950,9 @@ export default function AddTmiPage(){
                   <Input id="email" placeholder="할인쿠폰을 받을 이메일 주소를 입력해주세요." value={email} onChange={(e)=> setEmail(e.target.value)} />
                   <Helper>
                     상품 수령을 위한 <a href="#" ref={privacyAnchorRef} onClick={(e)=> { e.preventDefault(); setPrivacyOpen(true); }}>개인정보(이메일) 수집 및 이용</a>에 동의합니다
+                    <input type="checkbox" checked={consent} onChange={(e)=> setConsent(e.target.checked)} />
                   </Helper>
-                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                    <input type="checkbox" checked={consent} onChange={(e)=> setConsent(e.target.checked)} /> 동의합니다
-                  </label>
+              
                   {errors.email && <ErrorText>{errors.email}</ErrorText>}
                   {errors.consent && <ErrorText>{errors.consent}</ErrorText>}
                 </Field>
@@ -912,10 +985,11 @@ export default function AddTmiPage(){
             </Grid>
 
             <Actions>
-              <Button type="submit" data-variant="primary" disabled={!canSubmit || submitting}>
+              <PageButton type="submit" disabled={!canSubmit || submitting}>
                 완료
-              </Button>
+              </PageButton>
             </Actions>
+
           </form>
 
           {/* 개인정보 팝오버 */}
