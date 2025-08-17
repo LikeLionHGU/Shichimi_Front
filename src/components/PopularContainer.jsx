@@ -1,5 +1,5 @@
-import React, {useEffect , useState } from "react";
-import {Link, NavLink } from "react-router-dom";
+import React, {useDebugValue, useEffect , useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 import axios from "axios";
@@ -75,20 +75,12 @@ const Mini_Text =styled.h2`
   color: ${themeColors.black.color};
 `;
 
-// const DividerLine = styled.div`
-//   height: 1px;
-//   background-color: ${themeColors.gray.color};
-//   width: 92%;
-//   margin: 0 4% 0 4%;
-// `;
-
 const SectionPost = styled.div`
   align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
-  /* border-bottom: 1px solid ${themeColors.gray.color}; */
   padding: 0 4% 0 4%;
 
   &:hover {
@@ -105,7 +97,6 @@ const SectionPost = styled.div`
 
   p {
     margin: 1% 0 2% 0;
-
     font-size: 0.7vw;
     display: block;
     align-self: stretch;
@@ -129,56 +120,46 @@ function SectionTitle({leftIcon, rightIcon, alt, children}) {
   )
 }
 
+
 function PopularContainer () {
 
-  const [tops, setTops] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
   const [err, setErr] = useState(null);
-  
-  const getTops = async () => {
-    try{
-      const response = await axios.get(`https://kihari.shop/api/tops`);
-      
-      console.log("API 호출 성공:", response.data);
-      
-      const showTops = response.data.show_Top || [];
-      const formattedTops = showTops.map((info) => ({
-        id: info?.id ?? "",
-        title: info?.title ?? "제목 없음",
-        content: info?.content ?? "내용 없음",  
-      }));
-      setFormat(formattedTops);
-      console.log("기본 데이터:",formattedTops);
-      return formattedTops;
-    }catch(err){
-      console.error("API 호출 실패:", err.message);
-      console.error("응답 데이터:", err.response.data);
-      setErr("정보를 불러오지 못했습니다.");
-    }finally{
-      setLoading(false);
-    }
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const getPopPost = async() => {
+    const {data} = await axios.get('/api/tops', {timeout:20000});
+    const list = data?.show_Top ?? [];
+    return list.map((info, i) => ({
+      id: info?.id ?? `noid-${i}`,
+      title: (info?.title ?? "").trim() || "제목 없음",
+      content: (info?.content ?? "").trim() || "내용 없음",
+    }));
   };
 
-  const topByView = tops.slice(0, 2);
-  const topByLike = tops.slice(2, 4);
-  const latest    = tops.slice(4, 6);
-
-  const renderPosts = (items, fallbackKeyPrefix) => {
-    if (loading) 
-      return <p>불러오는 중...</p>
-    if (err)     
-      return <p>데이터를 불러오지 못했습니다.</p>;
     
-    return items.map((post) => (
-      <SectionPost key={post.id} onClick={Navigate(`/api/records/${tmiId}`)}>
-        <h3>{post.title}</h3>
-        <p>{post.content}</p>
-      </SectionPost>
-    ));
-  };
+
   useEffect(() => {
-    getTops();
-  }, [])
+    let alive = true;
+    (async () => {
+      try {
+        const formatted = await getPopPost();
+        if (alive) setPosts(formatted);
+      } catch (e) {
+        console.error("API 호출 실패:", e?.message, e?.response?.data);
+        if (alive) { setErr("정보를 불러오지 못했습니다."); setPosts([]); }
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
+  
+  if (loading)
+    return <>불러오는 중...</>;
+  if (err)
+    return <>{err}</>;
 
   return (
     <>
@@ -193,17 +174,32 @@ function PopularContainer () {
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
             가장 널리 퍼진 이야기 (조회수 1등)
           </SectionTitle>
-          {renderPosts(topByView, "mostView")}
+          { posts.slice(0,2).map((post) => (
+            <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+            </SectionPost>
+          ))}
 
           <SectionTitle leftIcon={row2Left} rightIcon={row2Right} alt="중요">
             가장 널리 퍼진 이야기 (좋아요 1등)
           </SectionTitle>  
-          {renderPosts(topByLike, "mostLike")}
+          { posts.slice(2,4).map((post) => (
+            <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+            </SectionPost>
+          ))}
 
           <SectionTitle leftIcon={row3Left} rightIcon={row3Right} alt="대박">
             가장 최근 게시된 이야기
           </SectionTitle>
-          {renderPosts(latest, "mostRecent")}
+          { posts.slice(4,6).map((post) => (
+            <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+            </SectionPost>
+          ))}
 
         </Bottom_PopContainer>
       </Pop_Box>
