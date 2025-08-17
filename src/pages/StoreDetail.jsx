@@ -15,11 +15,14 @@ const TotalPage = styled.div`
   align-items: flex-start;
   gap: 7%;
 
+  margin-top: -5%;
   padding-top: 4.5%;
+  padding-bottom: 5%;
+
   min-height: 100vh;
   background:
-    linear-gradient(0deg,rgba(0,0,0,0.35),rgba(0,0,0,0.35)),
-        url(${Ex});
+  linear-gradient(0deg,rgba(0,0,0,0.35),rgba(0,0,0,0.35)),url(${Ex});
+  
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
