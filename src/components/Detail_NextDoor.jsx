@@ -10,7 +10,7 @@ const TopBoard = styled.div`
   justify-content: center;
   align-items: center;
   align-content: center;
-  margin-top: 10%;
+  margin-top: 5.5%;
 
   border-radius: 12px 12px 0 0 ;
   width: 13vw;
@@ -30,7 +30,7 @@ const BottomBoard = styled.div`
 
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
-  width: 23vw;
+  width: 43vw;
   height: 35vh;
 `;
 

@@ -14,13 +14,14 @@ const GrayTmiBtn = styled.button`
   justify-content: center;
   align-content: center;
   align-items: center;
+
   margin-top: 3%;
-  border: 1px solid ${themeColors.gray.color};
-  border-radius: 16px;
-  background-color: ${themeColors.gray.color};
-  width: 15vw;
+  border: 1px solid ${themeColors.blue.color};
+  border-radius: 10px;
+  background-color: ${themeColors.blue.color};
+  width: 10vw;
   height: 6vh;
-  color: ${themeColors.black.color};
+  color: ${themeColors.white.color};
   font-weight: bold;
   font-size: 1vw;
 
