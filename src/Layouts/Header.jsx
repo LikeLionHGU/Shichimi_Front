@@ -8,7 +8,7 @@ import MainLogo from "../assets/images/Group 141.svg";
 const NoCenterHorizontal = styled.header`
   display: block;
   align-items: center;
-  margin: 2% 0 1% 12%;
+  margin: 1.5% 0 1% 12%;
   background: transparent !important;
 `;
 
