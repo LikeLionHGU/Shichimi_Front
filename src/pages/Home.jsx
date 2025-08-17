@@ -9,6 +9,8 @@ const Page = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 7%;
+
+  padding-top: 4.5%;
 `;
 
 const Left_Coponent = styled.div`
