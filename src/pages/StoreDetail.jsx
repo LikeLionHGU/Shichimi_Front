@@ -38,7 +38,7 @@ const Detail_Right = styled.div`
 
 const StoreTitle = styled.div`
   display: flex;
-  margin: 7% 0 5% 0;
+  margin: 5% 0 7% 0;
 `;
 
 const StoreTitle_left_icon = styled.div`
