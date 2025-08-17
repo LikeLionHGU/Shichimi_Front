@@ -31,7 +31,7 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
-  height: 35vh;
+  height: 40vh;
 `;
 
 function NextDoor_Board (){
