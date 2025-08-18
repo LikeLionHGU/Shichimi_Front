@@ -177,7 +177,7 @@ function PopularContainer () {
 
   const PostList = ({items}) => (
     <>
-      { items.slice(0,2).map((post) => (
+      { items.map((post) => (
           <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
             <h3>{post.title}</h3>
             <p>{post.content}</p>
