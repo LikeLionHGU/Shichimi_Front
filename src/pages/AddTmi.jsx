@@ -14,9 +14,9 @@ import searchUrl from "../assets/images/search.svg?url";
 
 // ------ 환경변수로 API 베이스 설정(끝 슬래시 제거) ------
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
-function apiUrl(path) {
-  if (!API_BASE) throw new Error("VITE_API_BASE_URL이 비어 있습니다.");
-  return `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+ function apiUrl(path) {
+   if (!API_BASE) throw new Error("VITE_API_BASE_URL이 비어 있습니다.");
+   return `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 
@@ -759,7 +759,7 @@ export default function AddTmiPage(){
   const placeWrapRef = useRef(null);
 
   const [categoryId, setCategoryId] = useState("");
-  const [body, setBody] = useState("");
+    const [body, setBody] = useState("");
 
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
@@ -818,24 +818,23 @@ export default function AddTmiPage(){
     return Object.keys(e).length === 0;
   }
 
-  /* 실제 저장 로직(모달 '확인'에서 호출) */
   const doSubmit = async () => {
     setSubmitting(true);
-    let finalCategoryId = categoryId;
-    if(!finalCategoryId){
-      const lowered = body.toLowerCase();
-      const pick = (label)=> CATEGORY_OPTIONS.find(o=> o.label === label)?.id || "1";
-      if(lowered.includes("?")) finalCategoryId = pick("질문");
-      else if(lowered.includes("리뷰")) finalCategoryId = pick("리뷰");
-      else finalCategoryId = pick("썰");
-    }
+  /* 실제 저장 로직(모달 '확인'에서 호출) */
+  let finalCategory = category;
+   if(!finalCategory){
+     const lowered = body.toLowerCase();
+     if(lowered.includes("?"))      finalCategory = "질문";
+      else if(lowered.includes("리뷰")) finalCategory = "리뷰";
+     else                           finalCategory = "전체";
+   }
     try {
       const payload = {
+        marketId: Number(place.id),               // 서버 요구 키
         title: title.trim(),
-        category: String(finalCategoryId),
-        location: String(place.id),
-        text: body.trim(),
-        ...(email.trim() ? { email: email.trim() } : {}),
+        content: body.trim(),                     // 서버 요구 키
+        category: finalCategory,                  // 문자열 전송
+        ...(email.trim() ? { email: email.trim() } : {}), // 서버가 email 수용하면 포함
       };
       await createPost(payload);
       nav("/", { replace: true, state: { flash: "게시글이 등록되었어요." } });
@@ -966,9 +965,10 @@ export default function AddTmiPage(){
                   </InlineRow>
                   <ChipWrap>
                     {CATEGORY_OPTIONS.map((opt)=> (
-                      <Chip key={opt.id} type="button" data-active={categoryId === opt.id} onClick={()=> setCategoryId(prev=> prev === opt.id ? "" : opt.id)}>
-                        {opt.label}
-                      </Chip>
+                      <Chip key={opt.id} type="button" data-active={category === opt.label}
+                         onClick={()=> setCategory(prev=> prev === opt.label ? "" : opt.label)}>
+                         {opt.label}
+                       </Chip>
                     ))}
                   </ChipWrap>
                 </Field>
