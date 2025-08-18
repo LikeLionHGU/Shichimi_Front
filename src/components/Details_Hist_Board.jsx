@@ -19,7 +19,7 @@ const TopBoard = styled.div`
   height: 4vh;
   padding: 0.5% 0;
 
-  background-color: ${themeColors.blue.color};
+  background-color:  ${({ $color }) => $color };
   color: ${themeColors.white.color};
   font-size: 1.1vw;
 
@@ -59,8 +59,7 @@ const HistText = styled.div`
 function Details_History() {
 
   const {marketId} = useParams();
-  const [marketImg, setMarketImg] = useState("");
-  const [history, setHistory] = useState("");
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
 
@@ -68,14 +67,10 @@ function Details_History() {
     let alive = true;
     (async()=>{
       try{
-        const { history, marketImg } = await getMarketInfo(marketId, {
-          select: ({history, marketImg}) => ({history, marketImg}),
-        });
-
-        if(!alive) return
-          setHistory(history || "히스토리 없음");
-          setMarketImg(marketImg || "");
+        const res = await getMarketInfo(marketId);
         
+        if(!alive) return
+          setData(res);
       }catch(e) {
         console.error("API 호출 실패:",e?.message, e?.response?.data);
         if(alive) setErr ("히스토리 정보를 불러오지 못했습니다."); setHistory("");
@@ -89,9 +84,16 @@ function Details_History() {
   if (loading) return <>불러오는 중...</>;
   if (err)     return <>{err}</>;
 
+  const {
+    history="",
+    marketImg="",
+    color = themeColors.blue?.color,
+  } = data ?? {};
+  
+  
   return(
     <>
-      <TopBoard>가게 히스토리</TopBoard>
+      <TopBoard $color={color}>가게 히스토리</TopBoard>
       <BottomBoard>
         <HistImg src={marketImg } alt ="가게 이미지"/>
         <HistText>
