@@ -15,7 +15,7 @@ import { getMarketInfo } from "../server/apis/api";
 const TotalPage = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 7%;
+  gap: 5%;
 
   margin-top: -5%;
   padding-top: 4.5%;
@@ -44,6 +44,7 @@ const Detail_Right = styled.div`
 
 const StoreTitle = styled.div`
   display: flex;
+  width: 100%;
   margin: 5% 0 7% 0;
 `;
 
@@ -77,6 +78,18 @@ const StoreTitle_right_name = styled.div`
   border: none;
 `;
 
+const StoreInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-left: 5%;
+  h3{
+    color: ${themeColors.white.color};
+    margin: 0;
+    font-size: 0.8vw;
+  }
+`;
+
 function StoreDetail(){
   const {marketId} = useParams();
   const [data, setData] = useState(null);
@@ -88,7 +101,7 @@ function StoreDetail(){
     (async() => {
       try{
         const res = await getMarketInfo(marketId);
-        
+        console.log(res);
         if(!alive) return
           setData(res);
       }catch(e){
@@ -108,14 +121,20 @@ function StoreDetail(){
     name= "",
     phoneNumber= "",
     address="",
+    info="",
     openTime= "",
     marketLogo="",
     foodMenuImg="",
     color = themeColors.blue?.color,
   } = data ?? {};
 
-  // console.log('api color:', color);
-
+  // // console.log('api color:', color);
+  // <StoreInfo>
+  //   <h3>운영시간: {openTime}</h3>
+  //   <h3>가게주소: {address}</h3>
+  //   <h3>전화번호: {phoneNumber || info }</h3>
+  // </StoreInfo>
+  
   return(
     <>
       <TotalPage $bg ={foodMenuImg}>
@@ -128,7 +147,6 @@ function StoreDetail(){
           <Hist_Board $color={color} />
           <Tops_Board $color={color} />
         </Detail_Left>
-        
         <Detail_Right>
           <Visit_Board />
           <NextDoor_Board $color={color} />

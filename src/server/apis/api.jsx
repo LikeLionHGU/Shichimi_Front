@@ -19,6 +19,7 @@ function normalize (data = {}){
     phoneNumber: clean(data.phoneNumber),
     address: clean(data.address),
     openTime: clean(data.openTime),
+    info: clean(data.info),
     marketImg: clean(data.marketImg),
     marketLogo: clean(data.marketLogo),
     foodMenuImg: clean(data.foodMenuImg),
