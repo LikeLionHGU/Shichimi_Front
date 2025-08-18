@@ -23,7 +23,7 @@ const TotalPage = styled.div`
 
   min-height: 100vh;
   background:
-  linear-gradient(0deg,rgba(0,0,0,0.35),rgba(0,0,0,0.35)),url(${Ex});
+  linear-gradient(0deg,rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(${({ $bg }) => $bg});
   
   background-size: cover;
   background-position: center;
@@ -61,8 +61,9 @@ const StoreTitle_left_icon = styled.div`
 
 `;
 const StoreTitle_right_name = styled.div`
-  width: 8vw;
+  width: auto;
   height: 9vh;
+  padding: 0 4%;
 
   display: flex;
   align-items: center;
@@ -113,17 +114,17 @@ function StoreDetail(){
     color = themeColors.blue?.color,
   } = data ?? {};
 
-  console.log('api color:', color);
+  // console.log('api color:', color);
 
   return(
     <>
-      <TotalPage>
+      <TotalPage $bg ={foodMenuImg}>
         <Detail_Left>
           <StoreTitle>
             <StoreTitle_left_icon><img src={marketLogo} alt="ICON" /></StoreTitle_left_icon>
             <StoreTitle_right_name $color={color}>{name}</StoreTitle_right_name>
           </StoreTitle>
-          
+
           <Hist_Board />
           <Tops_Board />
         </Detail_Left>
