@@ -19,9 +19,10 @@ const TopBoard = styled.div`
   width: 13vw;
   height: 4vh;
 
+  padding: 0.5% 0;
   background-color: ${themeColors.blue.color};
   color: ${themeColors.white.color};
-  font-size: 1.3vw;
+  font-size: 1.1vw;
 
 `;
 const BottomBoard = styled.div`
@@ -33,7 +34,7 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
-  height: 62vh;
+  height: 61.5vh;
 `;
 
 /* TMI 게시판 CARD 전체 Box */

@@ -13,12 +13,13 @@ const TopBoard = styled.div`
   margin-top: 10%;
 
   border-radius: 12px 12px 0 0 ;
-  width: 13vw;
+  width: 11vw;
   height: 4vh;
 
+  padding: 0.5% 0;
   background-color: ${themeColors.blue.color};
   color: ${themeColors.white.color};
-  font-size: 1.3vw;
+  font-size: 1.1vw;
 
 `;
 const BottomBoard = styled.div`

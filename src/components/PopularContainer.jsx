@@ -115,7 +115,7 @@ function SectionTitle({leftIcon, rightIcon, alt, children}) {
     <Mini_title>
       <Mini_icon src={leftIcon} alt={alt} />
       <Mini_Text>{children}</Mini_Text>
-      <Mini_icon src={rightIcon} alt={alt}/>
+      <Mini_icon src={rightIcon} alt=""/>
     </Mini_title>
   )
 }
@@ -123,19 +123,30 @@ function SectionTitle({leftIcon, rightIcon, alt, children}) {
 
 function PopularContainer () {
 
+  const [liked, setLiked] = useState([]);
+  const [viewed, setViewed] = useState([]);
+  const [latest, setLatest] = useState([]);
+
   const [posts, setPosts] = useState([]);
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const getPopPost = async() => {
-    const {data} = await axios.get('/api/tops', {timeout:20000});
-    const list = data?.show_Top ?? [];
-    return list.map((info, i) => ({
-      id: info?.id ?? `noid-${i}`,
-      title: (info?.title ?? "").trim() || "제목 없음",
-      content: (info?.content ?? "").trim() || "내용 없음",
+  const normalize = (arr = []) =>
+    arr.map((x, i) => ({
+      id: x?.tmiId ?? `noid-${i}`,
+      title: String(x?.title ?? "").trim() || "제목 없음",
+      content: String(x?.marketName ?? "").trim() || "시장 정보 없음",
     }));
+
+  const getPopPost = async() => {
+    const {data} = await axios.get(`https://kihari.shop/main/tops`, {timeout:20000});
+    
+    return {
+      liked: normalize(data?.topLikedPosts),
+      viewed: normalize(data?.topViewedPosts),
+      latest: normalize(data?.latestPosts),
+    };
   };
 
     
@@ -144,11 +155,14 @@ function PopularContainer () {
     let alive = true;
     (async () => {
       try {
-        const formatted = await getPopPost();
-        if (alive) setPosts(formatted);
+        const res = await getPopPost();
+        if (!alive) return;
+        setLiked(res.liked);
+        setViewed(res.viewed);
+        setLatest(res.latest);
       } catch (e) {
         console.error("API 호출 실패:", e?.message, e?.response?.data);
-        if (alive) { setErr("정보를 불러오지 못했습니다."); setPosts([]); }
+        if (alive) setErr("정보를 불러오지 못했습니다.");
       } finally {
         if (alive) setLoading(false);
       }
@@ -160,6 +174,18 @@ function PopularContainer () {
     return <>불러오는 중...</>;
   if (err)
     return <>{err}</>;
+
+  const PostList = ({items}) => (
+    <>
+      { items.slice(0,2).map((post) => (
+          <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+          </SectionPost>
+        ))
+      }
+    </>
+  )
 
   return (
     <>
@@ -174,32 +200,18 @@ function PopularContainer () {
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
             가장 널리 퍼진 이야기 (조회수 1등)
           </SectionTitle>
-          { posts.slice(0,2).map((post) => (
-            <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-            </SectionPost>
-          ))}
+          <PostList items={viewed}/>
+          
 
           <SectionTitle leftIcon={row2Left} rightIcon={row2Right} alt="중요">
             가장 널리 퍼진 이야기 (좋아요 1등)
           </SectionTitle>  
-          { posts.slice(2,4).map((post) => (
-            <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-            </SectionPost>
-          ))}
+          <PostList items={liked}/>
 
           <SectionTitle leftIcon={row3Left} rightIcon={row3Right} alt="대박">
             가장 최근 게시된 이야기
           </SectionTitle>
-          { posts.slice(4,6).map((post) => (
-            <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-            </SectionPost>
-          ))}
+          <PostList items={latest}/>
 
         </Bottom_PopContainer>
       </Pop_Box>
