@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const api = axios.create({
   baseURL: "https://kihari.shop",
-  timeout: 10000,
+  timeout: 20000,
 });
 
 export async function get(url, config = {}) {
@@ -10,3 +10,28 @@ export async function get(url, config = {}) {
   return response.data;
 }
 
+const clean = (v) => (v==="null" ? "" : v ?? "");
+
+function normalize (data = {}){
+  return {
+    id: data.id ?? null,
+    name: clean(data.name),
+    phoneNumber: clean(data.phoneNumber),
+    address: clean(data.openTime),
+    openTime: clean(data.marketImg),
+    marketImg: clean(data.marketImg),
+    marketLogo: clean(data.marketLogo),
+    foodMenuImg: clean(data.foodMenuImg),
+    info: clean(data.info),
+    color: clean(data.color),
+    history: clean(data.history),
+    tmiList: Array.isArray(data.tmiList) ? data.tmiList : [],
+    raw: data,
+  };
+}
+
+export async function getMarketInfo(marketId, {select}={}) {
+  const {data} = await api.get(`/market/info/${encodeURIComponent(marketId)}`);
+  const normalized = normalize(data);
+  return select ? select(normalized) : normalized;
+}

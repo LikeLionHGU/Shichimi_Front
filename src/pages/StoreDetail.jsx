@@ -75,6 +75,10 @@ const StoreTitle_right_name = styled.div`
 `;
 
 function StoreDetail(){
+
+  // const data = await getMarketInfo(marketId);
+
+
   return(
     <>
       <TotalPage>
