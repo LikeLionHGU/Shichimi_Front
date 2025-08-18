@@ -89,7 +89,7 @@ const Row1_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 16%;
+  top: 17%;
   left: 4%;
   justify-content: space-evenly;
   align-items: center;
@@ -151,7 +151,7 @@ function Map () {
 
   const handleStoreDetail = (id) => {
     if (id == null) return;
-    navigate(`/store/${id}`);
+    navigate(`/info/${encodeURIComponent(id)}`);
   };
 
   return (
@@ -164,137 +164,137 @@ function Map () {
         {/* <Map_Name src={Map_name} alt="MAPNAME"/>  
         <Map_Name_Text>죽도시장 시장</Map_Name_Text> */}
         <Row1_icon>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn onClick={() => handleStoreDetail(1)}>
             <Store_icon src={crab} alt="어시장1"/>
             <Store_name>포항대게</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn>
             <Store_icon src={crab} alt="어시장2"/>
-            <Store_name>영광회대게센타</Store_name>
+            <Store_name>영광회센타</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={fish} alt="어시장3"/>
             <Store_name>승리회맛집</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn>
             <Store_icon src={fish} alt="어시장4"/>
             <Store_name>동양횟집</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} style={{marginLeft: '14px'}}>
+          <Store_btn style={{marginLeft: '14px'}}>
             <Store_icon src={car} alt="주차장1"/>
             <Store_name>죽도시장 P</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
-            <Store_icon src={car} alt="주차장2"/>
+          <Store_btn >
+            <Store_icon onClick={ () => handleStoreDetail(4)} src={car} alt="주차장2"/>
             <Store_name>죽도어시장 P</Store_name>
           </Store_btn>
         </Row1_icon>
 
         <Row2_icon>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn onClick={() => handleStoreDetail(2)}>
             <Store_icon src={rice} alt="어시장1"/>
             <Store_name>대화식당</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={fish} alt="어시장2"/>
             <Store_name>삼일과메기</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={fish} alt="어시장3"/>
             <Store_name>미소과메기</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={fish} alt="어시장4"/>
             <Store_name>골드과메기</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} style={{marginLeft: '14px'}}>
+          <Store_btn style={{marginLeft: '14px'}}>
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} style={{marginLeft: '6px'}}>
+          <Store_btn  style={{marginLeft: '6px'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
         </Row2_icon>
 
         <Row3_icon>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn>
             <Store_icon src={rice} alt="어시장1"/>
-            <Store_name>대화식당</Store_name>
+            <Store_name>장기식당</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={fish} alt="어시장2"/>
-            <Store_name>삼일과메기</Store_name>
+            <Store_name>과메기마트</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} style={{marginLeft: '14px'}}>
+          <Store_btn style={{marginLeft: '14px'}}>
             <Store_icon src={squid} alt="어시장3"/>
-            <Store_name>미소과메기</Store_name>
+            <Store_name>바다건어물</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={squid} alt="어시장4"/>
-            <Store_name>골드과메기</Store_name>
+            <Store_name>벧엘건어물</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} >
+          <Store_btn >
             <Store_icon src={squid} alt="주차장1"/>
-            <Store_name>은아건어물</Store_name>
+            <Store_name>영일만건어물</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} style={{marginLeft: '6px'}}>
+          <Store_btn  style={{marginLeft: '6px'}}>
             <Store_icon src={apple} alt="주차장2"/>
-            <Store_name>포원청과</Store_name>
+            <Store_name>태원청과</Store_name>
           </Store_btn>
         </Row3_icon>
 
         <Row4_icon>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={cup} alt="어시장1"/>
-            <Store_name>대화식당</Store_name>
+            <Store_name>죽도포포</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn onClick={() => handleStoreDetail(3)}>
             <Store_icon src={soup} alt="어시장2"/>
-            <Store_name>삼일과메기</Store_name>
+            <Store_name>옥수수</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={soup} alt="어시장3"/>
-            <Store_name>미소과메기</Store_name>
+            <Store_name>밀밭분식</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={soup} alt="어시장4"/>
-            <Store_name>골드과메기</Store_name>
+            <Store_name>가족식당</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={soup} alt="주차장1"/>
-            <Store_name>은아건어물</Store_name>
+            <Store_name>진분식</Store_name>
           </Store_btn>
-          <Store_btn  onClick={handleStoreDetail} style={{marginLeft: '20px'}}>
+          <Store_btn   style={{marginLeft: '20px'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
-            <Store_name>포원청과</Store_name>
+            <Store_name>웰빙농산물</Store_name>
           </Store_btn>
         </Row4_icon>
 
         <Row5_icon>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={noodle} alt="어시장1"/>
-            <Store_name>대화식당</Store_name>
+            <Store_name>부산밀면</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={pan} alt="어시장2"/>
-            <Store_name>삼일과메기</Store_name>
+            <Store_name>경주전집</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={pan} alt="어시장3"/>
-            <Store_name>미소과메기</Store_name>
+            <Store_name>한성식품</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={pan} alt="어시장4"/>
-            <Store_name>골드과메기</Store_name>
+            <Store_name>강원전집</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail}>
+          <Store_btn >
             <Store_icon src={pan} alt="주차장1"/>
-            <Store_name>은아건어물</Store_name>
+            <Store_name>대동전집</Store_name>
           </Store_btn>
-          <Store_btn onClick={handleStoreDetail} style={{marginLeft: '20px'}}>
+          <Store_btn style={{marginLeft: '20px'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
-            <Store_name>포원청과</Store_name>
+            <Store_name>수정농산물</Store_name>
           </Store_btn>
         </Row5_icon>
 
