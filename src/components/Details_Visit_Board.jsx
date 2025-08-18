@@ -1,13 +1,14 @@
 import React, {useEffect , useState } from "react";
-import { get,api } from "../server/apis/api";
 import axios from 'axios';
 import styled from "styled-components";
-import {Link, NavLink } from "react-router-dom";
+import {Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 
 import ScrollBar from "./common/ScrollBar";
 import TmiCard from "./tmiCard";
 import Detail_Tmi_Btn from "../components/common/detail_Tmi_btn";
+
+import { getMarketInfo } from "../server/apis/api";
 
 const TopBoard = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const TopBoard = styled.div`
   height: 4vh;
 
   padding: 0.5% 0;
-  background-color: ${themeColors.blue.color};
+  background-color: ${({ $color }) => $color };
   color: ${themeColors.white.color};
   font-size: 1.1vw;
 
@@ -55,21 +56,23 @@ const CateChip_Container = styled.div`
   width: 40vw;
   gap: 0.7%;
   flex-wrap: wrap;
-  margin: 2% 0 2% 2%
+  margin: 2% 0 2% 2%;
 `;
 
 const CateChip = styled.button`
   border-radius: 9999px;
   padding: 1% 2%;
   font-size: 0.8vw;
-
+  background-color: ${themeColors.white.color};
+  border: 1px solid ${themeColors.black.color};
+  
   &:hover {
     cursor: pointer;
   }
   &[data-active = "true"]{
-    background-color: ${themeColors.blue.color};
+    background-color: ${({ $color }) => $color };
     color: ${themeColors.white.color};
-    border: 1px solid ${themeColors.blue.color};
+    border: 1px solid  ${({ $color }) => $color };
   }
 `;
 
@@ -82,17 +85,65 @@ const NoCenterHorizontalReverse = styled.div`
 `;
 
 function Detail_Visitory() {
+  const {marketId} = useParams();
+  const navigate = useNavigate();
+
   const [category, setCategory] = useState("전체");
+  const [totalPost, setTotalPost] = useState([]);
+  const [color, setColor] = useState("");
+
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
+
+  const normalize = (arr = []) =>
+    arr.map((x, i) => ({
+      id: x?.tmiId ?? `noid-${i}`,
+      title: String(x?.title ?? "").trim() || "제목 없음",
+      content: String(x?.content ?? "").trim() || "인기글 내용 없음",
+      category: String(x?.category ?? "").trim() || "카테고리 없음",
+    }));
+
+    const getMarketTotalPost = async(marketId) => {
+      const {data} = await axios.get(`https://kihari.shop/market/tmi/${encodeURIComponent(marketId)}`, {timeout:20000});
+      return normalize(data);
+    };
+
+    useEffect(() => {
+        let alive = true;
+        (async() => {
+          try{
+            const [postRes, infoRes] = await Promise.all([
+              getMarketTotalPost(marketId),
+              getMarketInfo(marketId, {select: (d) => ({color: d.color})}),
+            ]);
+            if(!alive) return;
+              setTotalPost(postRes);
+              setColor(infoRes.color);
+          }catch(e){
+            console.error("API 호출 실패:",e?.message, e?.response?.data);
+            if(alive) setErr("인기글 정보를 불러오지 못했습니다.");
+          }finally{
+            if(alive) setLoading(false);
+          }
+        })();
+        return () => {alive = false};
+      }, [marketId]);
+    
+      if (loading) return <>불러오는 중...</>;
+      if (err)     return <>{err}</>;
+
 
   return(
     <>
-      <TopBoard>비지토리 게시판</TopBoard>
+      <TopBoard $color={color}>비지토리 게시판</TopBoard>
       <BottomBoard>
         <CateChip_Container> 
             {TMICATEGORY.map((c) => (
-              <CateChip key={c} 
+              <CateChip 
+                $color={color}
+                key={c} 
                 data-active={category === c} 
-                onClick={() => setCategory((prev)=> prev === c ? "" : c)}
+                onClick={() => setCategory(c)}
               >
                 {c}
               </CateChip>              
@@ -101,13 +152,20 @@ function Detail_Visitory() {
         
         <ThisTmi>
           <ScrollBar>
-            {[...Array(10)].map((i) => (
-              <TmiCard key={i}/>
+            {totalPost.map((p) => (
+              <TmiCard 
+                key={p.id}
+                title={p.title}
+                content={p.content}
+                onClick ={()=> navigate(`/records/${p.id}`)}
+                $color={color}
+                
+              />
           ))}
           </ScrollBar>
         </ThisTmi>
         <NoCenterHorizontalReverse>
-          <Detail_Tmi_Btn/>
+          <Detail_Tmi_Btn $color={color}/>
         </NoCenterHorizontalReverse>
         </BottomBoard>
     </>

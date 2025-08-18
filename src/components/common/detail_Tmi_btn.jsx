@@ -16,9 +16,9 @@ const GrayTmiBtn = styled.button`
   align-items: center;
 
   margin-top: 3%;
-  border: 1px solid ${themeColors.blue.color};
+  border: 1px solid  ${({ $color }) => $color };
   border-radius: 10px;
-  background-color: ${themeColors.blue.color};
+  background-color:  ${({ $color }) => $color };
   width: 10vw;
   height: 6vh;
   color: ${themeColors.white.color};
@@ -27,17 +27,17 @@ const GrayTmiBtn = styled.button`
 
   &:hover{
     cursor: pointer;
-    box-shadow: 0 2px 0 ${themeColors.black.color};
+    box-shadow: 0 1px 0 ${themeColors.black.color};
   } 
 `;
 
 
 
-function Main_Tmi_btn () {
+function Main_Tmi_btn ({$color}) {
   return (
     <>
       <Tmi_box>
-        <GrayTmiBtn as={Link} to="/add" style={{textDecoration: "none"}}>
+        <GrayTmiBtn $color={$color} as={Link} to="/add" style={{textDecoration: "none"}}>
           <p>비지토리 작성하기</p>
         </GrayTmiBtn>
       </Tmi_box>
