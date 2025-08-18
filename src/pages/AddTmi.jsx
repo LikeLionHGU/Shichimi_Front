@@ -19,6 +19,9 @@ const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
    return `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+if (import.meta.env.DEV) {
+     console.info("[CONFIG] API_BASE =", API_BASE);
+  }
 
 /* GlobalStyle — html, body, #root 전역 배경/리셋 (#FFFDF5, min-height:100%) */
 const GlobalStyle = createGlobalStyle`
@@ -606,6 +609,7 @@ function searchPlaces(q){
 /* API 명세: POST /tmi/records (절대 URL + 환경변수 사용) */
 async function createPost(payload){
    const url = apiUrl("/tmi/records");
+   if (import.meta.env.DEV) console.debug("[DEBUG] POST", url, payload);
    const res = await fetch(url, {
      method: "POST",
      headers: { "Content-Type": "application/json" },
@@ -836,10 +840,12 @@ export default function AddTmiPage(){
         category: finalCategory,                  // 문자열 전송
         ...(email.trim() ? { email: email.trim() } : {}), // 서버가 email 수용하면 포함
       };
+      if (import.meta.env.DEV) console.debug("[DEBUG] payload ready", payload);
       await createPost(payload);
       nav("/", { replace: true, state: { flash: "게시글이 등록되었어요." } });
     } catch (err){
       alert("저장 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.");
+      console.error("[CREATE_POST_ERROR]", err);
     } finally {
       setSubmitting(false);
     }
