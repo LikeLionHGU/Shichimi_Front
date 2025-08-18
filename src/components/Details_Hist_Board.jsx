@@ -56,7 +56,7 @@ const HistText = styled.div`
   }
 `
 
-function Details_History() {
+function Details_History({$color}) {
 
   const {marketId} = useParams();
   const [data, setData] = useState(null);
@@ -87,13 +87,12 @@ function Details_History() {
   const {
     history="",
     marketImg="",
-    color = themeColors.blue?.color,
   } = data ?? {};
   
   
   return(
     <>
-      <TopBoard $color={color}>가게 히스토리</TopBoard>
+      <TopBoard $color={$color}>가게 히스토리</TopBoard>
       <BottomBoard>
         <HistImg src={marketImg } alt ="가게 이미지"/>
         <HistText>

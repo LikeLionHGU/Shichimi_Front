@@ -22,10 +22,8 @@ function normalize (data = {}){
     marketImg: clean(data.marketImg),
     marketLogo: clean(data.marketLogo),
     foodMenuImg: clean(data.foodMenuImg),
-    info: clean(data.info),
     color: clean(data.color),
     history: clean(data.history),
-    tmiList: Array.isArray(data.tmiList) ? data.tmiList : [],
     raw: data,
   };
 }

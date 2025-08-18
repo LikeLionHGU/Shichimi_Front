@@ -125,13 +125,13 @@ function StoreDetail(){
             <StoreTitle_right_name $color={color}>{name}</StoreTitle_right_name>
           </StoreTitle>
 
-          <Hist_Board />
-          <Tops_Board />
+          <Hist_Board $color={color} />
+          <Tops_Board $color={color} />
         </Detail_Left>
         
         <Detail_Right>
           <Visit_Board />
-          <NextDoor_Board />
+          <NextDoor_Board $color={color} />
         </Detail_Right>
       </TotalPage>
     </>
