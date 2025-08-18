@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { getMarketInfo } from "../server/apis/api";
 
-function hexToRgba(hex, alpha = 1) {
+export function hexToRgba(hex, alpha = 1) {
   let r = 0, g = 0, b = 0;
   hex = hex.replace('#', '');
   
@@ -109,6 +109,7 @@ function Details_Tops({p = []}) {
 
   const [posts, setPosts] = useState([]);
   const [color, setColor] = useState("");
+  
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
 

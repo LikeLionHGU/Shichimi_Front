@@ -73,7 +73,7 @@ function Details_History() {
           setData(res);
       }catch(e) {
         console.error("API 호출 실패:",e?.message, e?.response?.data);
-        if(alive) setErr ("히스토리 정보를 불러오지 못했습니다."); setHistory("");
+        if(alive) setErr ("히스토리 정보를 불러오지 못했습니다.");
       }finally{
         if(alive) setLoading(false)
       }
