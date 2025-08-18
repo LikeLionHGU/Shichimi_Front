@@ -2,8 +2,8 @@ import React, {useEffect , useState } from "react";
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const TopBoard = styled.div`
   display: flex;
@@ -17,17 +17,14 @@ const TopBoard = styled.div`
   width: 10vw;
   height: 4vh;
 
-  background-color: ${themeColors.blue.color};
+  background-color:${({ $color }) => $color };
   color: ${themeColors.white.color};
   font-size: 1.1vw;
 
 `;
 const BottomBoard = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  flex-direction: column;
+  flex-direction: row;
 
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
@@ -35,12 +32,119 @@ const BottomBoard = styled.div`
   height: 40vh;
 `;
 
-function NextDoor_Board (){
+const ThisTmi = styled.div`
+  display: flex;
+  width: 43vw;
+  height: 45vh;
+  margin: 0 1.5%;
+  gap: 2%;
+`;
+
+const NextPost = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 2%;
+  height: auto;
+
+  img{
+    display: flex;
+    width: 13vw;
+    height: 40%;
+    margin: 4% 0 4% 3%;
+    border: 2px solid black;
+    border-radius: 10px;
+  }
+  h2{
+    margin: 4% 0 4% 3%;
+    font-size: 1.1vw;
+    font-weight: bold;
+    color: ${({$color}) => $color};
+  }
+  p{
+    margin: 4% 0 4% 3%;
+    font-size: 0.8vw;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`
+
+
+function NextDoor_Board ({$color}){
+
+  const {marketId} = useParams();
+  const navigate = useNavigate();
+
+  const [nexts, setNexts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
+  const ABS = /^https?:\/\//i;
+  const BASE = "https://kihari.shop";
+  
+  const toAbs = (u) => {
+    const s = String(u ?? "").trim();
+    if (!s) return null;
+    if (ABS.test(s)) return s;
+    const slash = s.startsWith("/") ? "" : "/";
+    return `${BASE}${slash}${s}`;
+  };
+
+  const normalize = (arr = []) =>
+    arr.map((x, i) => ({
+      id: x?.id ?? `noid-${i}`,
+      name: String(x?.name ?? "").trim() || "이름 없음",
+      // title: String(x?.title ?? "").trim() || "제목 없음",
+      text: String(x?.text ?? "").trim() || "내용 없음",
+      marketImg: toAbs(x?.marketImg ?? x?.imageUrl),
+    }));
+
+  const getNextPost = async(marketId) => {
+    const {data} = await axios.get(`https://kihari.shop/market/neighbors/${encodeURIComponent(marketId)}`, {timeout:20000});
+    return normalize(data);
+  };
+
+  useEffect(() => {
+    let alive = true;
+    (async() => {
+      try{
+        const res = await getNextPost(marketId);
+        console.log(res);
+        if(!alive) return
+          setNexts(res);
+      }catch(e){
+        console.error("API 호출 실패:",e?.message, e?.response?.data);
+        if(alive) setErr("인기글 정보를 불러오지 못했습니다.");
+      }finally{
+        if(alive) setLoading(false);
+      }
+    })();
+    return () => {alive = false};
+  }, [marketId]);
+
+  if (loading) return <>불러오는 중...</>;
+  if (err)     return <>{err}</>;
+
+
   return (
     <>
-      <TopBoard>옆집 이야기</TopBoard>
+      <TopBoard $color={$color}>옆집 이야기</TopBoard>
       <BottomBoard>
-
+        <ThisTmi>
+          {nexts.map((n)=>(
+            <NextPost
+              key={n.id}
+              onClick={()=> navigate(`records/${n.id}`)}
+              $color={$color}
+            >
+              <img src={n.marketImg} alt="옆집"/>
+              <h2 >{n.name}</h2>
+              {/* <h3>{n.title}</h3> */}
+              <p>{n.text}</p>
+            </NextPost>
+          ))}
+        </ThisTmi>
+        
       </BottomBoard>
     </>
   )

@@ -102,14 +102,12 @@ const SectionPost = styled.div`
   }
 `;
 
-function Details_Tops({p = []}) {
+function Details_Tops({$color}) {
 
   const {marketId} = useParams();
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState([]);
-  const [color, setColor] = useState("");
-  
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
 
@@ -130,13 +128,9 @@ function Details_Tops({p = []}) {
     let alive = true;
     (async() => {
       try{
-        const [popRes, infoRes] = await Promise.all([
-          getMarketPop(marketId),
-          getMarketInfo(marketId, {select: (d) => ({color: d.color})}),
-        ]);
+        const res = await getMarketPop(marketId);
         if(!alive) return
-          setPosts(popRes);
-          setColor(infoRes.color);
+          setPosts(res);
       }catch(e){
         console.error("API 호출 실패:",e?.message, e?.response?.data);
         if(alive) setErr("인기글 정보를 불러오지 못했습니다.");
@@ -154,14 +148,14 @@ function Details_Tops({p = []}) {
 
   return(
     <>
-      <TopBoard $color={color}>인기글 TOP 3</TopBoard>
+      <TopBoard $color={$color}>인기글 TOP 3</TopBoard>
       <BottomBoard>
         <ThisTmi>
           {posts.map((post) => (
             <SectionPost 
               key={post.id} 
               onClick={() => navigate(`/records/${post.id}`)}
-              $color={color}
+              $color={$color}
             >
               <h3>{post.title}</h3>
               <p>{post.content}</p>
