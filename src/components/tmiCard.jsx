@@ -2,9 +2,11 @@ import React, {useEffect , useState } from "react";
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
 
+import { hexToRgba } from "../components/Details_Tops";
+
 const Card =styled.div`
   display: block;
-  background-color: #ECF0ED;
+  background-color: ${({ $color }) => hexToRgba($color, 0.1)};
   border-radius: 8px;
   width: 90%;
 
@@ -25,19 +27,19 @@ const Card =styled.div`
   }
 
   &:hover{
-    background-color: #C4D7DB;
+    background-color: ${({ $color }) => hexToRgba($color, 0.3)};
     cursor: pointer;
   }
 
 `;
 
 
-function TmiCard() {
+function TmiCard({title, content, onClick, $color}) {
   return (
     <>
-      <Card>
-        <h3>이 상점에 등록된 글의 제목</h3>
-        <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
+      <Card onClick={onClick} $color={$color} >
+        <h3>{title}</h3>
+        <p>{content}</p>
       </Card>
     </>
   )
