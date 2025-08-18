@@ -15,7 +15,7 @@ export default function App() {
           <Routes>
             <Route element={<MainLayout/>}> 
               <Route path="/" element={<Home />} />
-              <Route path="/store" element={<StoreDetail />} />
+              <Route path="/info/:marketId" element={<StoreDetail />} />
               <Route path="/add" element={<AddTmi />} />
             </Route>
           </Routes>
