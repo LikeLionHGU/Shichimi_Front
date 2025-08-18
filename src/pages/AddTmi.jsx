@@ -762,8 +762,8 @@ export default function AddTmiPage(){
   const [placeQuery, setPlaceQuery] = useState("");
   const placeWrapRef = useRef(null);
 
-  const [categoryId, setCategoryId] = useState("");
-    const [body, setBody] = useState("");
+  const [category, setCategory] = useState("");
+  const [body, setBody] = useState("");
 
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
