@@ -1,7 +1,9 @@
-import React, {useEffect , useState } from "react";
-import {Link, NavLink } from "react-router-dom";
+import React, {useDebugValue, useEffect , useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
+import axios from "axios";
+
 
 import row3Left from "../assets/images/Group 94.svg"
 import row3Right from "../assets/images/Group 95.svg"
@@ -73,20 +75,12 @@ const Mini_Text =styled.h2`
   color: ${themeColors.black.color};
 `;
 
-// const DividerLine = styled.div`
-//   height: 1px;
-//   background-color: ${themeColors.gray.color};
-//   width: 92%;
-//   margin: 0 4% 0 4%;
-// `;
-
 const SectionPost = styled.div`
   align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
-  /* border-bottom: 1px solid ${themeColors.gray.color}; */
   padding: 0 4% 0 4%;
 
   &:hover {
@@ -103,7 +97,6 @@ const SectionPost = styled.div`
 
   p {
     margin: 1% 0 2% 0;
-
     font-size: 0.7vw;
     display: block;
     align-self: stretch;
@@ -122,12 +115,78 @@ function SectionTitle({leftIcon, rightIcon, alt, children}) {
     <Mini_title>
       <Mini_icon src={leftIcon} alt={alt} />
       <Mini_Text>{children}</Mini_Text>
-      <Mini_icon src={rightIcon} alt={alt}/>
+      <Mini_icon src={rightIcon} alt=""/>
     </Mini_title>
   )
 }
 
+
 function PopularContainer () {
+
+  const [liked, setLiked] = useState([]);
+  const [viewed, setViewed] = useState([]);
+  const [latest, setLatest] = useState([]);
+
+  const [posts, setPosts] = useState([]);
+  const [err, setErr] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const normalize = (arr = []) =>
+    arr.map((x, i) => ({
+      id: x?.tmiId ?? `noid-${i}`,
+      title: String(x?.title ?? "").trim() || "제목 없음",
+      content: String(x?.marketName ?? "").trim() || "시장 정보 없음",
+    }));
+
+  const getPopPost = async() => {
+    const {data} = await axios.get(`https://kihari.shop/main/tops`, {timeout:20000});
+    
+    return {
+      liked: normalize(data?.topLikedPosts),
+      viewed: normalize(data?.topViewedPosts),
+      latest: normalize(data?.latestPosts),
+    };
+  };
+
+    
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await getPopPost();
+        if (!alive) return;
+        setLiked(res.liked);
+        setViewed(res.viewed);
+        setLatest(res.latest);
+      } catch (e) {
+        console.error("API 호출 실패:", e?.message, e?.response?.data);
+        if (alive) setErr("정보를 불러오지 못했습니다.");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
+  
+  if (loading)
+    return <>불러오는 중...</>;
+  if (err)
+    return <>{err}</>;
+
+  const PostList = ({items}) => (
+    <>
+      { items.slice(0,2).map((post) => (
+          <SectionPost key={post.id} onClick={() => navigate(`/records/${post.id}`)}>
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+          </SectionPost>
+        ))
+      }
+    </>
+  )
+
   return (
     <>
       <Pop_Box>
@@ -141,39 +200,18 @@ function PopularContainer () {
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
             가장 널리 퍼진 이야기 (조회수 1등)
           </SectionTitle>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
-          {/* <DividerLine/> */}
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
+          <PostList items={viewed}/>
+          
 
           <SectionTitle leftIcon={row2Left} rightIcon={row2Right} alt="중요">
             가장 널리 퍼진 이야기 (좋아요 1등)
-          </SectionTitle>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
+          </SectionTitle>  
+          <PostList items={liked}/>
 
           <SectionTitle leftIcon={row3Left} rightIcon={row3Right} alt="대박">
             가장 최근 게시된 이야기
           </SectionTitle>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
-          <SectionPost>
-            <h3>인기글 제목 와랄ㄹ라</h3>
-            <p>ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ</p>
-          </SectionPost>
+          <PostList items={latest}/>
 
         </Bottom_PopContainer>
       </Pop_Box>
