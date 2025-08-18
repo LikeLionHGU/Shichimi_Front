@@ -19,29 +19,29 @@ const TopBoard = styled.div`
   width: 13vw;
   height: 4vh;
 
+  padding: 0.5% 0;
   background-color: ${themeColors.blue.color};
   color: ${themeColors.white.color};
-  font-size: 1.3vw;
+  font-size: 1.1vw;
 
 `;
 const BottomBoard = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   align-content: center;
 
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
-  height: 60vh;
+  height: 61.5vh;
 `;
 
 /* TMI 게시판 CARD 전체 Box */
 const ThisTmi = styled.div`
   display: flex;
   width: 43vw;
-  height: 50vh;
+  height: 45vh;
   margin: 0 2% 0 5%;
 `;
 
@@ -53,9 +53,9 @@ const CateChip_Container = styled.div`
   display: flex;
   flex-direction: row;
   width: 40vw;
-  gap: 8px;
+  gap: 0.7%;
   flex-wrap: wrap;
-  margin: 10% 0 3% 2%
+  margin: 2% 0 2% 2%
 `;
 
 const CateChip = styled.button`
@@ -73,6 +73,13 @@ const CateChip = styled.button`
   }
 `;
 
+const NoCenterHorizontalReverse = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  margin-top: 1%;
+  width: 75%;
+`;
 
 function Detail_Visitory() {
   const [category, setCategory] = useState("전체");
@@ -99,9 +106,10 @@ function Detail_Visitory() {
           ))}
           </ScrollBar>
         </ThisTmi>
-        
-        <Detail_Tmi_Btn/>
-      </BottomBoard>
+        <NoCenterHorizontalReverse>
+          <Detail_Tmi_Btn/>
+        </NoCenterHorizontalReverse>
+        </BottomBoard>
     </>
   )
 }

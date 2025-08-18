@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL : import.meta.env.VITE_API_BASE_URL || '',
+  baseURL: "https://kihari.shop",
   timeout: 10000,
 });
 
-export async function get(url, {params, signal, headers} = {}) {
-  const response = await api.get(url, {params, signal, headers});
+export async function get(url, config = {}) {
+  const response = await api.get(url, config);
   return response.data;
 }
 
