@@ -11,46 +11,57 @@ import crab from "../assets/images/Frame 35.svg";
 
 import Ex from "../assets/images/Back01.svg";
 import { getMarketInfo } from "../server/apis/api";
-
 const TotalPage = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 5%;
+  display: grid;
+  grid-template-columns: 1fr 55vw;          
+  grid-template-areas:
+    "header header"
+    "left   right";
+  column-gap: 3%;
+  align-items: start;
 
   margin-top: -5%;
-  padding-top: 4.5%;
-  padding-bottom: 5%;
-
+  padding: 4.5% 0 5%;
   min-height: 100vh;
+
   background:
-  linear-gradient(0deg,rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(${({ $bg }) => $bg});
-  
+    linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url(${({ $bg }) => $bg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
 `;
 
+const DetailHeader = styled.div`
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  margin-top: 2%;
+  margin-left: 12.5%;
+  margin-bottom: 2%; 
+  width: 100%;
+`;
+
 const Detail_Left = styled.div`
-  flex: 0 0 auto;
-  margin-left: 12%;
+  grid-area: left;
+  margin-left: 30%;
 `;
 
 const Detail_Right = styled.div`
-  flex: 0 0 40vw;
-  margin-right: 9%;
-  margin-top: 7%;
+  grid-area: right;
 `;
+
 
 const StoreTitle = styled.div`
   display: flex;
-  width: 100%;
-  margin: 5% 0 7% 0;
+  width: auto;
 `;
 
 const StoreTitle_left_icon = styled.div`
-  width: 5vw;
+  min-width: 3vw;
   height: 9vh;
+  padding: 0 8%;
   
   display: flex;
   align-items: center;
@@ -64,8 +75,9 @@ const StoreTitle_left_icon = styled.div`
 const StoreTitle_right_name = styled.div`
   width: auto;
   height: 9vh;
-  padding: 0 4%;
+  padding: 0 5%;
 
+  white-space: nowrap;
   display: flex;
   align-items: center;
   align-content: center;
@@ -80,13 +92,15 @@ const StoreTitle_right_name = styled.div`
 
 const StoreInfo = styled.div`
   display: flex;
+  gap: 1%;
+  width: auto;
   flex-direction: column;
-  width: 100%;
-  margin-left: 5%;
+  margin-left: 6%;
   h3{
     color: ${themeColors.white.color};
     margin: 0;
     font-size: 0.8vw;
+    white-space: nowrap;
   }
 `;
 
@@ -128,25 +142,33 @@ function StoreDetail(){
     color = themeColors.blue?.color,
   } = data ?? {};
 
+  const isFeeCase = Number(marketId) === 4; 
+  const thirdLabel = isFeeCase ? "이용요금" : "전화번호";
+  const thirdValue = isFeeCase ? (info || "-") : (phoneNumber || "-");
+
   // // console.log('api color:', color);
-  // <StoreInfo>
-  //   <h3>운영시간: {openTime}</h3>
-  //   <h3>가게주소: {address}</h3>
-  //   <h3>전화번호: {phoneNumber || info }</h3>
-  // </StoreInfo>
-  
+
   return(
     <>
       <TotalPage $bg ={foodMenuImg}>
-        <Detail_Left>
+
+        <DetailHeader>
           <StoreTitle>
             <StoreTitle_left_icon><img src={marketLogo} alt="ICON" /></StoreTitle_left_icon>
             <StoreTitle_right_name $color={color}>{name}</StoreTitle_right_name>
           </StoreTitle>
-
+          <StoreInfo>
+            <h3>운영시간  {openTime}</h3>
+            <h3>가게주소  {address}</h3>
+            <h3>{thirdLabel}  {thirdValue}</h3>
+          </StoreInfo>            
+        </DetailHeader>
+        
+        <Detail_Left>
           <Hist_Board $color={color} />
           <Tops_Board $color={color} />
         </Detail_Left>
+
         <Detail_Right>
           <Visit_Board />
           <NextDoor_Board $color={color} />
