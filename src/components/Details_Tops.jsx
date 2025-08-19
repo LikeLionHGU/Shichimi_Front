@@ -50,14 +50,14 @@ const BottomBoard = styled.div`
 
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
-  width: 23vw;
+  width: 25vw;
   height: 40vh;
 `;
 
 const ThisTmi = styled.div`
   display: flex;
   flex-direction: column;
-  width: 23vw;
+  width: 25vw;
   height: 40vh;
   margin-top: 3%;
 `;
