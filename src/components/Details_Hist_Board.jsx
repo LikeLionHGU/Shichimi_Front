@@ -33,7 +33,7 @@ const BottomBoard = styled.div`
   
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
-  width: 23vw;
+  width: 25vw;
   height: 62vh;
 `;
 
