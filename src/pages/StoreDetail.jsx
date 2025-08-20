@@ -44,8 +44,10 @@ const TotalPage = styled.div`
     "left   right";
   column-gap: 3%;
   align-items: start;
+  
   margin-top: -5%;
   padding: 4.5% 0 5%;
+
   min-height: 100vh;
   position: relative;
   z-index: 1;
@@ -76,7 +78,7 @@ const StoreTitle = styled.div`
 `;
 
 const StoreTitle_left_icon = styled.div`
-  height: 8vh;
+  height: 9vh;
   width: 5vw;
   padding: 0 9%;
   
@@ -84,14 +86,16 @@ const StoreTitle_left_icon = styled.div`
   align-items: center;
   align-content: center;
   justify-content: center;
-  border-radius: 15px 0 0 15px;
+  border-radius: 11px 0 0 11px;
   background-color: ${themeColors.white.color};
   border: none;
+  img{
 
+  }
 `;
 const StoreTitle_right_name = styled.div`
   width: auto;
-  height: 8vh;
+  height: 9vh;
   padding: 0 6%;
 
   white-space: nowrap;
@@ -101,7 +105,7 @@ const StoreTitle_right_name = styled.div`
   justify-content: center;
 
   font-size: 1.4vw;
-  border-radius: 0 15px 15px 0;
+  border-radius: 0 11px 11px 0;
   background-color: ${({ $color }) => $color };   
   color: ${themeColors.white.color};
   border: none;

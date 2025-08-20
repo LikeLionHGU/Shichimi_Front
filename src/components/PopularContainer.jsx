@@ -200,13 +200,13 @@ function PopularContainer () {
         
         <Bottom_PopContainer >
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
-            가장 널리 퍼진 이야기 (조회수 1등)
+            가장 널리 퍼진 이야기
           </SectionTitle>
           <PostList items={viewed}/>
           
 
           <SectionTitle leftIcon={row2Left} rightIcon={row2Right} alt="중요">
-            가장 널리 퍼진 이야기 (좋아요 1등)
+            가장 공감을 많이 받은 이야기
           </SectionTitle>  
           <PostList items={liked}/>
 
