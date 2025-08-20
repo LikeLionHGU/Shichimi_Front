@@ -58,7 +58,6 @@ const DetailHeader = styled.div`
   margin-top: 2%;
   margin-left: 12.5%;
   margin-bottom: 2%; 
-  width: 100%;
 `;
 
 const Detail_Left = styled.div`
@@ -77,9 +76,9 @@ const StoreTitle = styled.div`
 `;
 
 const StoreTitle_left_icon = styled.div`
-  min-width: 3vw;
-  height: 9vh;
-  padding: 0 8%;
+  height: 8vh;
+  width: 5vw;
+  padding: 0 9%;
   
   display: flex;
   align-items: center;
@@ -92,8 +91,8 @@ const StoreTitle_left_icon = styled.div`
 `;
 const StoreTitle_right_name = styled.div`
   width: auto;
-  height: 9vh;
-  padding: 0 5%;
+  height: 8vh;
+  padding: 0 6%;
 
   white-space: nowrap;
   display: flex;
@@ -188,7 +187,7 @@ function StoreDetail(){
           </Detail_Left>
 
           <Detail_Right>
-            <Visit_Board />
+            <Visit_Board $color={color} />
             <NextDoor_Board $color={color} />
           </Detail_Right>
         </TotalPage>
