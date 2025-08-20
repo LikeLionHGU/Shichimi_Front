@@ -32,7 +32,7 @@ const TopBoard = styled.div`
   margin-top: 10%;
 
   border-radius: 12px 12px 0 0 ;
-  width: 11vw;
+  width: 9.5vw;
   height: 4vh;
 
   padding: 0.5% 0;
@@ -43,7 +43,6 @@ const TopBoard = styled.div`
 `;
 const BottomBoard = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   align-content: center;
   flex-direction: column;
@@ -57,9 +56,10 @@ const BottomBoard = styled.div`
 const ThisTmi = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 25vw;
   height: 40vh;
-  margin-top: 3%;
+
 `;
 
 const SectionPost = styled.div`
@@ -67,9 +67,10 @@ const SectionPost = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 2% 4% 1% 4%;
+  padding-top: 1%;
+  margin: 1% 4% 2.5% 4%;
   
-  min-height: 8vh;
+  min-height: 10vh;
   border-bottom: 1px solid ${hexToRgba(themeColors.gray.color, 0.5)} ;
   color: ${themeColors.black.color};
 
@@ -81,14 +82,14 @@ const SectionPost = styled.div`
   }
 
   h3{
-    margin: 3% 0 1% 3%;
+    margin: 3% 2% 1% 3%;
     font-size: 0.85vw;
     font-weight: 600;
     line-height: 1;
   }
 
   p {
-    margin: 1% 0 2% 3%;
+    margin: 1% 3% 2% 3%;
 
     font-size: 0.7vw;
     display: block;
