@@ -12,6 +12,7 @@ const Page = styled.div`
 
   margin-top: -5%;
   padding: 4.5% 0 5%;
+  
 `;
 
 const Left_Coponent = styled.div`

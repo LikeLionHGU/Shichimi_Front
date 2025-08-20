@@ -45,8 +45,6 @@ const ThisTmi = styled.div`
   margin: 0 2% 0 5%;
 `;
 
-/* 카테고리 설정 - 근데 아직 색상 선정 XXXX!!!  */
-
 const TMICATEGORY = ["전체","썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
 
 const CATEGORY_TO_SERVER = {
@@ -85,7 +83,7 @@ const NoCenterHorizontalReverse = styled.div`
   align-items: center;
   flex-direction: row-reverse;
   margin-top: 1%;
-  width: 75%;
+  width: 82%;
 `;
 
 function Detail_Visitory({$color, chipColor}) {
