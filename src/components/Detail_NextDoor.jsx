@@ -10,7 +10,7 @@ const TopBoard = styled.div`
   justify-content: center;
   align-items: center;
   align-content: center;
-  margin-top: 5.5%;
+  margin-top: 5%;
 
   border-radius: 12px 12px 0 0 ;
   padding: 0.5% 0;

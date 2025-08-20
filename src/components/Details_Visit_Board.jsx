@@ -15,7 +15,7 @@ const TopBoard = styled.div`
   align-content: center;
   
   border-radius: 12px 12px 0 0 ;
-  width: 13vw;
+  width: 12vw;
   height: 4vh;
 
   margin-top: -0.5%;
@@ -34,7 +34,7 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
-  padding-bottom: 2.5%;
+  padding-bottom: 2%;
 `;
 
 /* TMI 게시판 CARD 전체 Box */

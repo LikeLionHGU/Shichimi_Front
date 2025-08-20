@@ -15,7 +15,7 @@ const TopBoard = styled.div`
   align-content: center;
   
   border-radius: 12px 12px 0 0 ;
-  width: 11vw;
+  width: 9.5vw;
   height: 4vh;
   padding: 0.5% 0;
 
