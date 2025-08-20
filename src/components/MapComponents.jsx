@@ -102,7 +102,7 @@ const Row2_icon = styled.div`
   flex-direction: row;
 
   top: 37%;
-  left: 4%;
+  left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -114,7 +114,7 @@ const Row3_icon = styled.div`
   flex-direction: row;
 
   top: 53%;
-  left:4%;
+  left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -125,8 +125,8 @@ const Row4_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 71%;
-  left: 4%;
+  top: 72%;
+  left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -138,7 +138,7 @@ const Row5_icon = styled.div`
   flex-direction: row;
 
   top: 90%;
-  left:4%;
+  left: 3%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -195,7 +195,7 @@ function Map () {
             <Store_icon src={rice} alt="어시장1"/>
             <Store_name>대화식당</Store_name>
           </Store_btn>
-          <Store_btn >
+          <Store_btn style={{marginLeft: '1%'}}>
             <Store_icon src={fish} alt="어시장2"/>
             <Store_name>삼일과메기</Store_name>
           </Store_btn>
@@ -207,11 +207,11 @@ function Map () {
             <Store_icon src={fish} alt="어시장4"/>
             <Store_name>골드과메기</Store_name>
           </Store_btn>
-          <Store_btn style={{marginLeft: '14px'}}>
+          <Store_btn style={{marginLeft: '0.8vw'}}>
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn  style={{marginLeft: '6px'}}>
+          <Store_btn  style={{marginLeft: '0.5vw'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
@@ -222,11 +222,11 @@ function Map () {
             <Store_icon src={rice} alt="어시장1"/>
             <Store_name>장기식당</Store_name>
           </Store_btn>
-          <Store_btn >
+          <Store_btn style={{marginLeft: '1%'}}>
             <Store_icon src={fish} alt="어시장2"/>
             <Store_name>과메기마트</Store_name>
           </Store_btn>
-          <Store_btn style={{marginLeft: '14px'}}>
+          <Store_btn style={{marginLeft: '0.7vw'}}>
             <Store_icon src={squid} alt="어시장3"/>
             <Store_name>바다건어물</Store_name>
           </Store_btn>
@@ -238,7 +238,7 @@ function Map () {
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>영일만건어물</Store_name>
           </Store_btn>
-          <Store_btn  style={{marginLeft: '6px'}}>
+          <Store_btn  style={{marginLeft: '0.5vw'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>태원청과</Store_name>
           </Store_btn>
@@ -249,7 +249,7 @@ function Map () {
             <Store_icon src={cup} alt="어시장1"/>
             <Store_name>죽도포포</Store_name>
           </Store_btn>
-          <Store_btn onClick={() => handleStoreDetail(3)}>
+          <Store_btn style={{marginLeft: '3%'}} onClick={() => handleStoreDetail(3)}>
             <Store_icon src={soup} alt="어시장2"/>
             <Store_name>옥수수</Store_name>
           </Store_btn>
@@ -265,7 +265,7 @@ function Map () {
             <Store_icon src={soup} alt="주차장1"/>
             <Store_name>진분식</Store_name>
           </Store_btn>
-          <Store_btn   style={{marginLeft: '20px'}}>
+          <Store_btn  style={{marginLeft: '1.2vw'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
             <Store_name>웰빙농산물</Store_name>
           </Store_btn>
@@ -276,23 +276,23 @@ function Map () {
             <Store_icon src={noodle} alt="어시장1"/>
             <Store_name>부산밀면</Store_name>
           </Store_btn>
-          <Store_btn >
+          <Store_btn  style={{marginLeft: '5%', marginTop: '1%'}}>
             <Store_icon src={pan} alt="어시장2"/>
             <Store_name>경주전집</Store_name>
           </Store_btn>
-          <Store_btn >
+          <Store_btn style={{marginTop: '1%'}}>
             <Store_icon src={pan} alt="어시장3"/>
             <Store_name>한성식품</Store_name>
           </Store_btn>
-          <Store_btn >
+          <Store_btn style={{marginTop: '1%'}} >
             <Store_icon src={pan} alt="어시장4"/>
             <Store_name>강원전집</Store_name>
           </Store_btn>
-          <Store_btn >
+          <Store_btn style={{marginTop: '1%'}} >
             <Store_icon src={pan} alt="주차장1"/>
             <Store_name>대동전집</Store_name>
           </Store_btn>
-          <Store_btn style={{marginLeft: '20px'}}>
+          <Store_btn style={{marginLeft: '1.3vw'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
             <Store_name>수정농산물</Store_name>
           </Store_btn>

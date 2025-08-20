@@ -7,7 +7,6 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     min-height: 100%;
-    line-height: 1.5;
     background: transparent;
   }
 `;

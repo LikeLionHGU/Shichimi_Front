@@ -1,7 +1,7 @@
 import React, {useEffect , useState } from "react";
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
-
+import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 import { hexToRgba } from "../components/Details_Tops";
 
 const Card =styled.div`
@@ -32,13 +32,26 @@ const Card =styled.div`
   }
 
 `;
+const CateChip = styled.button`
+  border-radius: 9999px;
+  padding: 0.6% 1.1%;
+  margin-left: 2%;
+  font-size: 0.7vw;
+  background-color: transparent;
+  border: 1px solid ${({ $chipColor }) => $chipColor };
+  color:${({ $chipColor }) => $chipColor };
+`;
 
 
-function TmiCard({title, content, onClick, $color}) {
+
+function TmiCard({title, content, onClick, $color, chipColor, category}) {
+
+  console.log("TmiCard chipColor:", chipColor, "category:", category);
+
   return (
     <>
       <Card onClick={onClick} $color={$color} >
-        <h3>{title}</h3>
+        <h3>{title}<CateChip $color={$color} $chipColor={chipColor}>{category}</CateChip></h3>
         <p>{content}</p>
       </Card>
     </>
