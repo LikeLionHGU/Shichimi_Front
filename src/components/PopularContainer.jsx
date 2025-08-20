@@ -25,6 +25,8 @@ const Top_PopContainer = styled.div`
   border-radius: 16px 16px 0 0;
   width: 23vw;
   height: 10vh;
+
+  margin-top: -5.5%;
 `;
 
 const Top_Circle = styled.div`
@@ -51,13 +53,13 @@ const Bottom_PopContainer = styled.div`
   border-top: none;
   border-radius: 0 0 16px 16px;
   width: 23vw;
-  height: 59vh;
+  height: 64vh;
 `;
 
 const Mini_title = styled.div`
   display: flex;
   align-items: center;
-  margin: 4% 3% 4% 3%;
+  margin: 5.5% 3% 4% 3%;
   gap: 10px;
 `;
 
@@ -196,7 +198,7 @@ function PopularContainer () {
           </Top_Circle>
         </Top_PopContainer>
         
-        <Bottom_PopContainer>
+        <Bottom_PopContainer >
           <SectionTitle leftIcon={row1Left} rightIcon={row1Right} alt="핫태">
             가장 널리 퍼진 이야기 (조회수 1등)
           </SectionTitle>
