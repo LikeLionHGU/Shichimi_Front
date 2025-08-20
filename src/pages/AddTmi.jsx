@@ -648,10 +648,14 @@ const Dialog = styled.div`
 
 /* 개인정보 팝오버 */
 const PrivacyOverlay = styled.div`
-  position: fixed; inset: 0; background: transparent; z-index: 80;
+  position: fixed; 
+  inset: 0; 
+  background: transparent; z-index: 80;
 `;
 const PrivacyWrap = styled.div`
-  position: absolute; z-index: 81;
+  position: fixed; 
+  z-index: 81;
+
 `;
 const PrivacyCard = styled.div`
   width: 520px; max-width: 92vw; max-height: 70vh; overflow: auto;
@@ -671,8 +675,15 @@ function PrivacyModal({ open, onClose, anchorRef }){
     const update = ()=>{
       const el = anchorRef?.current; if(!el) return;
       const r = el.getBoundingClientRect();
-      const top = r.bottom + window.scrollY + 8;
-      const left = r.left + window.scrollX;
+      // viewport 좌표계로 계산 (scrollX/Y 더하지 않음)
+     let top = r.bottom + 8;
+     let left = r.left;
+
+     // (선택) 화면 밖으로 나가는 것 최소 보정
+     const padding = 8;
+     const maxLeft = window.innerWidth - 520 - padding; // 카드 폭이 520px인 경우
+     left = Math.max(padding, Math.min(left, maxLeft));
+
       setPos({ top, left });
     };
     update();
