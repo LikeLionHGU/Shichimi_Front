@@ -25,7 +25,7 @@ function normalize (data = {}){
     foodMenuImg: clean(data.foodMenuImg),
     color: clean(data.color),
     history: clean(data.history),
-    raw: data,
+    raw: clean(data),
   };
 }
 
