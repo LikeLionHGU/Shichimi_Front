@@ -13,7 +13,8 @@ const TmiBtn = styled.button`
   justify-content: center;
   align-content: center;
   align-items: center;
-  margin-top: 3%;
+
+  margin-top: 2%;
   border: 1px solid ${themeColors.red.color};
   border-radius: 16px;
   background-color: ${themeColors.red.color};
