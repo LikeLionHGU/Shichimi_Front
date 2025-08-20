@@ -138,7 +138,7 @@ const Row5_icon = styled.div`
   flex-direction: row;
 
   top: 90%;
-  left: 3%;
+  left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
@@ -211,7 +211,7 @@ function Map () {
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>은아건어물</Store_name>
           </Store_btn>
-          <Store_btn  style={{marginLeft: '0.5vw'}}>
+          <Store_btn  style={{marginLeft: '0.6vw'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>포원청과</Store_name>
           </Store_btn>
@@ -238,7 +238,7 @@ function Map () {
             <Store_icon src={squid} alt="주차장1"/>
             <Store_name>영일만건어물</Store_name>
           </Store_btn>
-          <Store_btn  style={{marginLeft: '0.5vw'}}>
+          <Store_btn  style={{marginLeft: '0.6vw'}}>
             <Store_icon src={apple} alt="주차장2"/>
             <Store_name>태원청과</Store_name>
           </Store_btn>
@@ -246,7 +246,7 @@ function Map () {
 
         <Row4_icon>
           <Store_btn >
-            <Store_icon src={cup} alt="어시장1"/>
+            <Store_icon style={{marginLeft:"4%"}} src={cup} alt="어시장1"/>
             <Store_name>죽도포포</Store_name>
           </Store_btn>
           <Store_btn style={{marginLeft: '3%'}} onClick={() => handleStoreDetail(3)}>
@@ -265,7 +265,7 @@ function Map () {
             <Store_icon src={soup} alt="주차장1"/>
             <Store_name>진분식</Store_name>
           </Store_btn>
-          <Store_btn  style={{marginLeft: '1.2vw'}}>
+          <Store_btn style={{marginLeft: '1.3vw'}}>
             <Store_icon src={cabbage} alt="주차장2"/>
             <Store_name>웰빙농산물</Store_name>
           </Store_btn>
@@ -276,7 +276,7 @@ function Map () {
             <Store_icon src={noodle} alt="어시장1"/>
             <Store_name>부산밀면</Store_name>
           </Store_btn>
-          <Store_btn  style={{marginLeft: '5%', marginTop: '1%'}}>
+          <Store_btn  style={{marginLeft: '4%', marginTop: '1%'}}>
             <Store_icon src={pan} alt="어시장2"/>
             <Store_name>경주전집</Store_name>
           </Store_btn>

@@ -14,7 +14,7 @@ const TopBoard = styled.div`
 
   border-radius: 12px 12px 0 0 ;
   padding: 0.5% 0;
-  width: 10vw;
+  width: 8vw;
   height: 4vh;
 
   background-color:${({ $color }) => $color };
@@ -59,18 +59,18 @@ const NextPost = styled.div`
     border-radius: 10px;
   }
   h2{
-    margin: 4% 0 4% 3%;
+    margin: 2% 0 2% 3%;
     font-size: 1.1vw;
     font-weight: bold;
     color: ${({$color}) => $color};
   }
   h3{
-    margin: 2% 0 2% 3%;
+    margin: 2% 0 2% 3.2%;
     font-size: 0.9vw;
     font-weight: bold;
   }
   p{
-    margin: 0 0 4% 3%;
+    margin: 0 0 4% 3.5%;
     font-size: 0.8vw;
 
     white-space: nowrap;
