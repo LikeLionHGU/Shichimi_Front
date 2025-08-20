@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   body, html {
-    background-color: #FFFDF5;
+    font-family: 'Pretendard-Regular';
     margin: 0;
     padding: 0;
     min-height: 100%;
