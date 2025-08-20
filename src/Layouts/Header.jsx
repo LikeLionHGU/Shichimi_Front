@@ -18,7 +18,7 @@ const NoCenterHorizontal = styled.header`
   padding-top: 1%;
   height: 72px;
   background: #fffdf5;
-  /* background: transparent !important; */
+  background: transparent !important;
 `;
 
 const LogoBtn = styled.button`
