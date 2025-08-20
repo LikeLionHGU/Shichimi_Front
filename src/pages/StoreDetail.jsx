@@ -157,7 +157,10 @@ function StoreDetail(){
     marketLogo="",
     foodMenuImg="",
     color = themeColors.blue?.color,
+    raw = {},
   } = data ?? {};
+
+  const chipColor = data?.chipColor ?? raw?.chipColor ?? "";
 
   const isFeeCase = Number(marketId) === 4; 
   const thirdLabel = isFeeCase ? "이용요금" : "전화번호";
@@ -182,7 +185,7 @@ function StoreDetail(){
           </DetailHeader>
           
           <Detail_Left>
-            <Hist_Board $color={color} />
+            <Hist_Board $color={color} chipColor={chipColor} />
             <Tops_Board $color={color} />
           </Detail_Left>
 

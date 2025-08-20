@@ -34,7 +34,7 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
-  padding-bottom: 2%;
+  padding-bottom: 2.5%;
 `;
 
 /* TMI 게시판 CARD 전체 Box */
@@ -88,7 +88,7 @@ const NoCenterHorizontalReverse = styled.div`
   width: 75%;
 `;
 
-function Detail_Visitory({$color}) {
+function Detail_Visitory({$color, chipColor}) {
 
   const {marketId} = useParams();
   const navigate = useNavigate();
@@ -110,17 +110,8 @@ function Detail_Visitory({$color}) {
     }));
 
 const getTmiCategory = async(marketId, categoryChip) => {
-  const totalEndPoint = encodeURIComponent(marketId);
-
-  if (categoryChip === "전체"){
-    const urlALL = `https://kihari.shop/market/tmi/${totalEndPoint}`;
-    const {data} = await axios.get(urlALL, {timeout: 20000});
-    const raw = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
-    return normalize(raw);
-  }
-
   const serverKey = CATEGORY_TO_SERVER[categoryChip] ?? categoryChip;
-  const urlCat = `https://kihari.shop/tmi/market/${totalEndPoint}/category/${encodeURIComponent(serverKey)}`;
+  const urlCat = `https://kihari.shop/tmi/market/${marketId}/category/${encodeURIComponent(serverKey)}`;
 
   const { data } = await axios.get(urlCat, { timeout: 20000 });
   const raw = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
@@ -136,9 +127,7 @@ const getTmiCategory = async(marketId, categoryChip) => {
         setLoading(true);
         setErr(null);
         const list = await getTmiCategory(marketId, category );
-
         console.log(list);
-
           if (canceled || myReqId !== reqIdRef.current) return;
           setItems(list);
         } catch (e) {
@@ -183,6 +172,8 @@ const getTmiCategory = async(marketId, categoryChip) => {
                 key={p.id}
                 title={p.title}
                 content={p.content}
+                chipColor={p.chipColor}
+                category={p.category}
                 onClick ={()=> navigate(`/records/${p.id}`)}
                 $color={$color}
                 

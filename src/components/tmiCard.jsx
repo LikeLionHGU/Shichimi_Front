@@ -32,32 +32,22 @@ const Card =styled.div`
   }
 
 `;
-const TMICATEGORY = ["전체","썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
-
 const CateChip = styled.button`
   border-radius: 9999px;
   padding: 1% 2%;
   font-size: 0.8vw;
   background-color: ${themeColors.white.color};
-  border: 1px solid ${themeColors.black.color};
+  border: 1px solid ${({ $chipColor }) => $chipColor };
   
-  &:hover {
-    cursor: pointer;
-  }
-  &[data-active = "true"]{
-    background-color: ${({ $color }) => $color };
-    color: ${themeColors.white.color};
-    border: 1px solid  ${({ $color }) => $color };
-  }
 `;
 
 
 
-function TmiCard({title, content, onClick, $color}) {
+function TmiCard({title, content, onClick, $color, $chipColor, category}) {
   return (
     <>
       <Card onClick={onClick} $color={$color} >
-        <h3>{title}</h3>
+        <h3>{title}<CateChip $chipColor={$chipColor}>{category}</CateChip></h3>
         <p>{content}</p>
       </Card>
     </>
