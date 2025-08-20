@@ -146,6 +146,7 @@ const getTmiCategory = async(marketId, categoryChip) => {
   if (loading) return <>불러오는 중...</>;
   if (err)     return <>{err}</>;
 
+    console.log("TmiCard chipColor:", chipColor);
 
   return(
     <>
@@ -172,7 +173,7 @@ const getTmiCategory = async(marketId, categoryChip) => {
                 key={p.id}
                 title={p.title}
                 content={p.content}
-                chipColor={p.chipColor}
+                chipColor={chipColor}
                 category={p.category}
                 onClick ={()=> navigate(`/records/${p.id}`)}
                 $color={$color}

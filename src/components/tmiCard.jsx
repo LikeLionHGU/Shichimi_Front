@@ -34,20 +34,24 @@ const Card =styled.div`
 `;
 const CateChip = styled.button`
   border-radius: 9999px;
-  padding: 1% 2%;
-  font-size: 0.8vw;
-  background-color: ${themeColors.white.color};
+  padding: 0.6% 1.1%;
+  margin-left: 2%;
+  font-size: 0.7vw;
+  background-color: transparent;
   border: 1px solid ${({ $chipColor }) => $chipColor };
-  
+  color:${({ $chipColor }) => $chipColor };
 `;
 
 
 
-function TmiCard({title, content, onClick, $color, $chipColor, category}) {
+function TmiCard({title, content, onClick, $color, chipColor, category}) {
+
+  console.log("TmiCard chipColor:", chipColor, "category:", category);
+
   return (
     <>
       <Card onClick={onClick} $color={$color} >
-        <h3>{title}<CateChip $chipColor={$chipColor}>{category}</CateChip></h3>
+        <h3>{title}<CateChip $color={$color} $chipColor={chipColor}>{category}</CateChip></h3>
         <p>{content}</p>
       </Card>
     </>
