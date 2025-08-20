@@ -1,12 +1,10 @@
 // src/pages/TmiDetailPage.jsx
-// - 라우트는 /records/:id (라우터 설정은 App.jsx에서)
-//    GET  /tmi/records/{tmiId}        (조회수 자동 증가)
-//    POST /tmi/{tmiId}/like
-//    POST /tmi/{tmiId}/comments   body: { content }
-// - 디자인은 absolute, position 사용 없이 전부 flex 레이아웃
-// - 댓글: 최신순(상단 정렬), 등록 시 스크롤 최상단으로 이동
-// - 좋아요: 중복 방지(localStorage), 실패 시 롤백
-// - 한국 로케일 날짜 포맷, 에러 메시지 정리
+// - 라우트: /records/:id
+// - API: GET /tmi/records/{tmiId} (조회수 자동 증가)
+//        POST /tmi/{tmiId}/like
+//        POST /tmi/{tmiId}/comments  body: { content }
+// - 전부 flex 레이아웃 / 댓글 최신순 상단 / 등록 시 스크롤 최상단 / 좋아요 중복 방지+롤백
+// - 한국 로케일 및 Asia/Seoul 고정 / 에러 메시지 정리
 
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -25,6 +23,7 @@ function cleanMsg(txt) {
 function fmtKST(iso) {
   try {
     return new Date(iso).toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -47,14 +46,12 @@ function sortCommentsDesc(list) {
 }
 
 /* ===================== API 호출 (스펙 고정) ===================== */
-// 상세조회(조회수 자동 증가)
 async function fetchTmi(tmiId) {
   const url = apiUrl(`/tmi/records/${tmiId}`);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`GET ${url} ${res.status}`);
   return res.json(); // { tmiId, title, content, category, email, likes, views, marketId, marketName, tmiCommentList: [...] }
 }
-// 좋아요
 async function likeTmi(tmiId) {
   const url = apiUrl(`/tmi/${tmiId}/like`);
   const res = await fetch(url, { method: "POST" });
@@ -64,7 +61,6 @@ async function likeTmi(tmiId) {
   }
   return res.json(); // 갱신된 TMI 객체
 }
-// 댓글 작성
 async function createComment(tmiId, content) {
   const url = apiUrl(`/tmi/${tmiId}/comments`);
   const res = await fetch(url, {
@@ -79,37 +75,35 @@ async function createComment(tmiId, content) {
   return res.json(); // { id, content, createdDate }
 }
 
-/* ===================== 스타일 (모두 flex 기반) ===================== */
+/* ===================== 스타일(모두 flex, 박스사이징 통일) ===================== */
 const Page = styled.main`
   min-height: 100vh;
   background: #fffdf5;
   display: flex;
   flex-direction: column;
-`;
-const Brand = styled.h1`
-  margin: 0;
-  padding: 34px 0 0 48px;
-  font-size: 44px;
-  line-height: 1;
-  letter-spacing: 1px;
-  color: #7b98ff;
-  -webkit-text-stroke: 1.25px #5e79e6;
-  text-shadow: 0 2px 0 rgba(94, 121, 230, 0.15);
-  font-family: "BM HANNA 11yrs old OTF", Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
-`;
-const Stage = styled.div`
-  width: 1200px;
-  max-width: 95vw;
-  margin: 24px auto 80px;
-  display: flex;
-  gap: 48px;
-  align-items: flex-start;
-  flex-wrap: wrap; /* 화면 줄면 세로 스택 */
+  font-family: Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
 `;
 
-/* 좌측 큰 카드 (flex만 사용, 코너는 배경 conic-gradient로 표현) */
+const Stage = styled.div`
+  /* 디자인 컨테이너: 폭은 이미지 기준으로 최적화, 작은 화면에서는 1열로 스택 */
+  width: min(1100px, 95vw);
+  margin: 24px auto 80px;
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;                 /* 시안 간격 */
+  flex-wrap: nowrap;         /* 2열 배치 강제 */
+  box-sizing: border-box;
+`;
+
+/* 좌측 카드: 패딩/보더 포함 폭 계산을 위해 border-box 명시 */
 const PostCard = styled.article`
-  flex: 0 1 720px;
+  background: #fffdf5;
+width: 760px;
+height: 618px;
+flex-shrink: 0;
+  box-sizing: border-box;
+  flex: 1 1 0;               /* 남는 공간을 전부 사용 */
+  min-width: 620px;          /* 댓글 패널이 옆에 붙을 때의 최소 폭 */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -118,24 +112,39 @@ const PostCard = styled.article`
   border-radius: 16px;
   padding: 36px 44px 56px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-  background:
-    /* 좌상단 코너 */
-    conic-gradient(from 0deg, #588b49 0 90deg, transparent 0) left 0 top 0/36px 36px no-repeat,
-    /* 우하단 코너 */
-    conic-gradient(from 180deg, #588b49 0 90deg, transparent 0) right 0 bottom 0/36px 36px no-repeat,
-    #ffffff;
+  
 `;
 
-/* 제목 줄: 왼쪽 스페이서 / 가운데 제목 / 오른쪽 원형뱃지 → flex로 중앙 정렬 유지 */
+/* 제목 줄: 좌측 스페이서 · 중앙 제목 · 우측 원형 배지 */
 const TitleBar = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
 `;
+
+const PlaceBar = styled.div`
+    display: flex;
+    flex-direction: row-reverse
+`
+;
+
+const place = styled.div`
+color: var(--black, #2C2C2C);
+text-align: right;
+
+/* 본문 제목 */
+font-family: Pretendard;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+letter-spacing: 0.9px;
+`
+;
+
 const Spacer = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
+display: flex;
+flex-direction: row-reverse
 `;
 const Title = styled.h2`
   flex: 1 1 auto;
@@ -146,44 +155,57 @@ const Title = styled.h2`
   line-height: 1.35;
   letter-spacing: 0.1px;
   font-weight: 700;
-  font-family: Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+
 `;
-const CircleBadge = styled.span`
+const CircleBadge = styled.div`
+display: flex;
   width: 32px;
   height: 32px;
   border-radius: 9999px;
-  background: #ffffff;
-  border: 1.5px solid #2c2c2c;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #2c2c2c;
+  border-radius: 100px;
+border: 1px solid rgba(44, 44, 44, 0.50);
+background: var(--white, #FFFDF5);
+color: rgba(44, 44, 44, 0.50);
+text-align: right;
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+letter-spacing: 0.7px;
 `;
-const SubMeta = styled.div`
-  width: 100%;
-  text-align: center;
-  color: #7b7b7b;
-  font-size: 13px;
-  margin: 4px 0 0 0;
-`;
+
+
 const Body = styled.div`
-  color: #2c2c2c;
-  font-size: 16px;
-  line-height: 1.85;
-  white-space: pre-wrap;
-  text-align: left;
-  margin-top: 8px;
+width: 529px;
+max-width: 600px;
+margin-top: 100px;
+height: 232px;
+flex-shrink: 0;
+overflow: hidden;
+color: var(--black, #2C2C2C);
+text-overflow: ellipsis;
+white-space: nowrap;
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 180%; /* 28.8px */
+letter-spacing: 0.48px;
 `;
+
 const BottomRow = styled.div`
-  margin-top: auto; /* 카드 하단으로 밀기 */
+  margin-top: auto; /* 카드 하단 고정 */
   display: flex;
   align-items: center;
   gap: 8px;
   color: #7fa889;
   font-size: 14px;
 `;
+
 const HeartBtn = styled.button`
   display: inline-flex;
   align-items: center;
@@ -210,26 +232,32 @@ function HeartIcon({ size = 18 }) {
   );
 }
 
-/* 우측 댓글 패널 (flex column) */
+/* 우측 댓글 패널: 고정폭 + border-box 로 합산폭 정확히 맞춤 */
 const Panel = styled.aside`
-  flex: 0 1 420px;
+width: 424px;
+height: 618px;
+flex-shrink: 0;
+  box-sizing: border-box;
+  flex: 0 0 360px;           /* 패딩/보더 포함 폭 360px로 고정(시안 느낌) */
   display: flex;
   flex-direction: column;
 
-  background: #ffffff;
+  background: #fffdf5;
   border: 1.5px solid #2c2c2c;
   border-radius: 16px;
-  padding: 16px 16px 20px;
+  padding: 16px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
   height: 700px;
-  max-height: 75vh;
+  max-height: 618px;
 `;
+
 const PanelTitle = styled.h3`
-  margin: 4px 6px 10px;
+  margin: 6px 6px 10px;
   font-size: 18px;
   color: #2c2c2c;
   font-weight: 700;
 `;
+
 const List = styled.div`
   flex: 1 1 auto;
   overflow: auto;
@@ -238,6 +266,7 @@ const List = styled.div`
   gap: 10px;
   padding: 6px;
 `;
+
 const Bubble = styled.div`
   background: #e8f1e7;
   color: #2c2c2c;
@@ -246,12 +275,14 @@ const Bubble = styled.div`
   font-size: 15px;
   line-height: 1.55;
 `;
+
 const InputRow = styled.form`
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 6px;
 `;
+
 const CommentInput = styled.textarea`
   flex: 1 1 auto;
   height: 44px;
@@ -265,6 +296,7 @@ const CommentInput = styled.textarea`
   &::placeholder { color: #b7b7b7; }
   &:focus { box-shadow: 0 0 0 3px rgba(88, 139, 73, 0.15); }
 `;
+
 const SendBtn = styled.button`
   flex: 0 0 44px;
   width: 44px;
@@ -284,7 +316,7 @@ const SendBtn = styled.button`
 
 /* ===================== 페이지 ===================== */
 export default function TmiDetailPage() {
-  const { id: paramId } = useParams();         // 라우트: /records/:id
+  const { id: paramId } = useParams();
   const tmiId = String(paramId);
   const nav = useNavigate();
 
@@ -321,7 +353,6 @@ export default function TmiDetailPage() {
         setViews(data?.views ?? 0);
         const initial = Array.isArray(data?.tmiCommentList) ? data.tmiCommentList : [];
         setComments(sortCommentsDesc(initial));
-        // 목록 최상단으로
         requestAnimationFrame(() => {
           listRef.current?.scrollTo({ top: 0 });
         });
@@ -340,7 +371,7 @@ export default function TmiDetailPage() {
     if (liking || liked) return;
     setLiking(true);
     const prev = likes;
-    setLikes(prev + 1); // 낙관적
+    setLikes(prev + 1);       // 낙관적 업데이트
     setLiked(true);
     localStorage.setItem(likedKey, "1");
     try {
@@ -350,7 +381,7 @@ export default function TmiDetailPage() {
       setTmi((p) => (updated ? { ...(p || {}), ...updated } : p));
     } catch (e) {
       console.error(e);
-      setLikes(prev);
+      setLikes(prev);         // 롤백
       setLiked(false);
       localStorage.removeItem(likedKey);
       alert("좋아요 처리에 실패했습니다. 잠시 후 다시 시도해주세요.");
@@ -384,7 +415,6 @@ export default function TmiDetailPage() {
   if (loading) {
     return (
       <Page>
-        <Brand>마케토리</Brand>
         <Stage>
           <PostCard>
             <TitleBar>
@@ -394,6 +424,7 @@ export default function TmiDetailPage() {
             </TitleBar>
             <Body>글 내용을 불러오고 있어요.</Body>
           </PostCard>
+
           <Panel>
             <PanelTitle>댓글</PanelTitle>
             <List ref={listRef} />
@@ -410,7 +441,6 @@ export default function TmiDetailPage() {
   if (err || !tmi) {
     return (
       <Page>
-        <Brand>마케토리</Brand>
         <Stage>
           <PostCard>
             <TitleBar>
@@ -440,20 +470,19 @@ export default function TmiDetailPage() {
 
   return (
     <Page>
-      <Brand>마케토리</Brand>
       <Stage>
         {/* 좌측 카드 */}
         <PostCard>
           <TitleBar>
-            <Spacer />
             <Title>{tmi.title}</Title>
-            {tmi.category ? <CircleBadge>{tmi.category}</CircleBadge> : <Spacer />}
           </TitleBar>
-
-          {tmi.marketName && <SubMeta>{tmi.marketName}에서</SubMeta>}
-
+          <PlaceBar>
+          {tmi.marketName ? <place>{tmi.marketName}</place> : <Spacer />}
+          </PlaceBar>
+          <Spacer>
+          {tmi.category ? <CircleBadge>{tmi.category}</CircleBadge> : <Spacer />}
+          </Spacer>
           <Body>{tmi.content}</Body>
-
           <BottomRow>
             <HeartBtn
               onClick={onLike}
@@ -465,8 +494,8 @@ export default function TmiDetailPage() {
               <HeartIcon />
               <span>{(likes ?? 0).toLocaleString()}</span>
             </HeartBtn>
-            {/* 시안 상 조회수 텍스트 노출은 생략. 필요 시 아래 주석 해제 */}
-            {/* <span style={{ color: "#6A6A6A" }}>조회 {views.toLocaleString()}</span> */}
+            {/* 필요 시 조회수 표기
+            <span style={{ color: "#6A6A6A" }}>조회 {views.toLocaleString()}</span> */}
           </BottomRow>
         </PostCard>
 
@@ -475,7 +504,7 @@ export default function TmiDetailPage() {
           <PanelTitle>댓글</PanelTitle>
           <List ref={listRef}>
             {comments.length === 0 && (
-              <div style={{ color: "#999", fontSize: 13, padding: "6px" }}>
+              <div style={{ color: "#999", fontSize: 13, padding: 6 }}>
                 아직 댓글이 없습니다.
               </div>
             )}
