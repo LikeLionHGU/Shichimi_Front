@@ -166,7 +166,7 @@ function StoreDetail(){
   const thirdLabel = isFeeCase ? "이용요금" : "전화번호";
   const thirdValue = isFeeCase ? (info || "-") : (phoneNumber || "-");
 
-  // // console.log('api color:', color);
+  console.log('api color:', chipColor);
 
   return(
     <>
@@ -185,12 +185,12 @@ function StoreDetail(){
           </DetailHeader>
           
           <Detail_Left>
-            <Hist_Board $color={color} chipColor={chipColor} />
+            <Hist_Board $color={color}/>
             <Tops_Board $color={color} />
           </Detail_Left>
 
           <Detail_Right>
-            <Visit_Board $color={color} />
+            <Visit_Board $color={color}  chipColor={chipColor}  />
             <NextDoor_Board $color={color} />
           </Detail_Right>
         </TotalPage>
