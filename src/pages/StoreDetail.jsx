@@ -11,6 +11,31 @@ import crab from "../assets/images/Frame 35.svg";
 
 import Ex from "../assets/images/Back01.svg";
 import { getMarketInfo } from "../server/apis/api";
+
+const BgFixed = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  &::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+    linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url(${({ $bg }) => $bg});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  
+    filter: blur(8px);
+    transform: scale(1.05);
+    z-index: 0;
+  }
+
+`;
+
 const TotalPage = styled.div`
   display: grid;
   grid-template-columns: 1fr 55vw;          
@@ -19,18 +44,11 @@ const TotalPage = styled.div`
     "left   right";
   column-gap: 3%;
   align-items: start;
-
   margin-top: -5%;
   padding: 4.5% 0 5%;
   min-height: 100vh;
-
-  background:
-    linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-    url(${({ $bg }) => $bg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  position: relative;
+  z-index: 1;
 `;
 
 const DetailHeader = styled.div`
@@ -40,7 +58,6 @@ const DetailHeader = styled.div`
   margin-top: 2%;
   margin-left: 12.5%;
   margin-bottom: 2%; 
-  width: 100%;
 `;
 
 const Detail_Left = styled.div`
@@ -59,9 +76,9 @@ const StoreTitle = styled.div`
 `;
 
 const StoreTitle_left_icon = styled.div`
-  min-width: 3vw;
-  height: 9vh;
-  padding: 0 8%;
+  height: 8vh;
+  width: 5vw;
+  padding: 0 9%;
   
   display: flex;
   align-items: center;
@@ -74,8 +91,8 @@ const StoreTitle_left_icon = styled.div`
 `;
 const StoreTitle_right_name = styled.div`
   width: auto;
-  height: 9vh;
-  padding: 0 5%;
+  height: 8vh;
+  padding: 0 6%;
 
   white-space: nowrap;
   display: flex;
@@ -140,40 +157,43 @@ function StoreDetail(){
     marketLogo="",
     foodMenuImg="",
     color = themeColors.blue?.color,
+    raw = {},
   } = data ?? {};
+
+  const chipColor = data?.chipColor ?? raw?.chipColor ?? "";
 
   const isFeeCase = Number(marketId) === 4; 
   const thirdLabel = isFeeCase ? "이용요금" : "전화번호";
   const thirdValue = isFeeCase ? (info || "-") : (phoneNumber || "-");
 
-  // // console.log('api color:', color);
+  console.log('api color:', chipColor);
 
   return(
     <>
-      <TotalPage $bg ={foodMenuImg}>
+      <BgFixed $bg ={foodMenuImg}/>
+        <TotalPage >
+          <DetailHeader>
+            <StoreTitle>
+              <StoreTitle_left_icon><img src={marketLogo} alt="ICON" /></StoreTitle_left_icon>
+              <StoreTitle_right_name $color={color}>{name}</StoreTitle_right_name>
+            </StoreTitle>
+            <StoreInfo>
+              <h3>운영시간  {openTime}</h3>
+              <h3>가게주소  {address}</h3>
+              <h3>{thirdLabel}  {thirdValue}</h3>
+            </StoreInfo>            
+          </DetailHeader>
+          
+          <Detail_Left>
+            <Hist_Board $color={color}/>
+            <Tops_Board $color={color} />
+          </Detail_Left>
 
-        <DetailHeader>
-          <StoreTitle>
-            <StoreTitle_left_icon><img src={marketLogo} alt="ICON" /></StoreTitle_left_icon>
-            <StoreTitle_right_name $color={color}>{name}</StoreTitle_right_name>
-          </StoreTitle>
-          <StoreInfo>
-            <h3>운영시간  {openTime}</h3>
-            <h3>가게주소  {address}</h3>
-            <h3>{thirdLabel}  {thirdValue}</h3>
-          </StoreInfo>            
-        </DetailHeader>
-        
-        <Detail_Left>
-          <Hist_Board $color={color} />
-          <Tops_Board $color={color} />
-        </Detail_Left>
-
-        <Detail_Right>
-          <Visit_Board />
-          <NextDoor_Board $color={color} />
-        </Detail_Right>
-      </TotalPage>
+          <Detail_Right>
+            <Visit_Board $color={color}  chipColor={chipColor}  />
+            <NextDoor_Board $color={color} />
+          </Detail_Right>
+        </TotalPage>
     </>
   );
 };

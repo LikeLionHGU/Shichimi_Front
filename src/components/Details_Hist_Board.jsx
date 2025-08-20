@@ -15,7 +15,7 @@ const TopBoard = styled.div`
   align-content: center;
   
   border-radius: 12px 12px 0 0 ;
-  width: 11vw;
+  width: 9.5vw;
   height: 4vh;
   padding: 0.5% 0;
 
@@ -34,7 +34,8 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 25vw;
-  height: 62vh;
+  height: 63vh;
+  padding-bottom: 0.5%;
 `;
 
 const HistImg = styled.img`
