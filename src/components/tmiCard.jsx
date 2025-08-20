@@ -6,9 +6,10 @@ import { hexToRgba } from "../components/Details_Tops";
 
 const Card =styled.div`
   display: block;
+
   background-color: ${({ $color }) => hexToRgba($color, 0.1)};
   border-radius: 8px;
-  width: 90%;
+  width: 94%;
 
   h3{
     margin: 2% 5% 1% 2%;
