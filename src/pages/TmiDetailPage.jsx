@@ -180,15 +180,13 @@ letter-spacing: 0.7px;
 
 
 const Body = styled.div`
-width: 529px;
-max-width: 600px;
+display: flex;
+width: 620px;
 margin-top: 100px;
 height: 232px;
 flex-shrink: 0;
-overflow: hidden;
 color: var(--black, #2C2C2C);
 text-overflow: ellipsis;
-white-space: nowrap;
 font-family: Pretendard;
 font-size: 16px;
 font-style: normal;
