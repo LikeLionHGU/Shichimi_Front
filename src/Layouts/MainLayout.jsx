@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 
 const DefaultLayout = styled.main`
-  background-color: transparent;
+  background: #fffdf5;
 `;
 
 const MainLayout = () => {
