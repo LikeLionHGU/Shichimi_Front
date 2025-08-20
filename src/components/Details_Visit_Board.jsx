@@ -1,4 +1,4 @@
-import React, {useEffect , useState } from "react";
+import React, {useEffect , useState, useRef } from "react";
 import axios from 'axios';
 import styled from "styled-components";
 import {Link, NavLink, useNavigate, useParams } from "react-router-dom";
@@ -7,8 +7,6 @@ import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 import ScrollBar from "./common/ScrollBar";
 import TmiCard from "./tmiCard";
 import Detail_Tmi_Btn from "../components/common/detail_Tmi_btn";
-
-import { getMarketInfo } from "../server/apis/api";
 
 const TopBoard = styled.div`
   display: flex;
@@ -20,6 +18,7 @@ const TopBoard = styled.div`
   width: 13vw;
   height: 4vh;
 
+  margin-top: -0.5%;
   padding: 0.5% 0;
   background-color: ${({ $color }) => $color };
   color: ${themeColors.white.color};
@@ -35,7 +34,7 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 43vw;
-  height: 61.5vh;
+  padding-bottom: 2%;
 `;
 
 /* TMI 게시판 CARD 전체 Box */
@@ -49,6 +48,11 @@ const ThisTmi = styled.div`
 /* 카테고리 설정 - 근데 아직 색상 선정 XXXX!!!  */
 
 const TMICATEGORY = ["전체","썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
+
+const CATEGORY_TO_SERVER = {
+  "사건/사고": "사건사고",
+};
+
 
 const CateChip_Container = styled.div`
   display: flex;
@@ -84,66 +88,88 @@ const NoCenterHorizontalReverse = styled.div`
   width: 75%;
 `;
 
-function Detail_Visitory() {
+function Detail_Visitory({$color}) {
+
   const {marketId} = useParams();
   const navigate = useNavigate();
 
   const [category, setCategory] = useState("전체");
-  const [totalPost, setTotalPost] = useState([]);
-  const [color, setColor] = useState("");
+  const [items, setItems] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
+
+  const reqIdRef = useRef(0);
 
   const normalize = (arr = []) =>
     arr.map((x, i) => ({
       id: x?.tmiId ?? `noid-${i}`,
       title: String(x?.title ?? "").trim() || "제목 없음",
-      content: String(x?.content ?? "").trim() || "인기글 내용 없음",
+      content: String(x?.content ?? "").trim() || "내용 없음",
       category: String(x?.category ?? "").trim() || "카테고리 없음",
     }));
 
-    const getMarketTotalPost = async(marketId) => {
-      const {data} = await axios.get(`https://kihari.shop/market/tmi/${encodeURIComponent(marketId)}`, {timeout:20000});
-      return normalize(data);
-    };
+const getTmiCategory = async(marketId, categoryChip) => {
+  const totalEndPoint = encodeURIComponent(marketId);
 
-    useEffect(() => {
-        let alive = true;
-        (async() => {
-          try{
-            const [postRes, infoRes] = await Promise.all([
-              getMarketTotalPost(marketId),
-              getMarketInfo(marketId, {select: (d) => ({color: d.color})}),
-            ]);
-            if(!alive) return;
-              setTotalPost(postRes);
-              setColor(infoRes.color);
-          }catch(e){
-            console.error("API 호출 실패:",e?.message, e?.response?.data);
-            if(alive) setErr("인기글 정보를 불러오지 못했습니다.");
-          }finally{
-            if(alive) setLoading(false);
-          }
-        })();
-        return () => {alive = false};
-      }, [marketId]);
+  if (categoryChip === "전체"){
+    const urlALL = `https://kihari.shop/market/tmi/${totalEndPoint}`;
+    const {data} = await axios.get(urlALL, {timeout: 20000});
+    const raw = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+    return normalize(raw);
+  }
+
+  const serverKey = CATEGORY_TO_SERVER[categoryChip] ?? categoryChip;
+  const urlCat = `https://kihari.shop/tmi/market/${totalEndPoint}/category/${encodeURIComponent(serverKey)}`;
+
+  const { data } = await axios.get(urlCat, { timeout: 20000 });
+  const raw = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+  return normalize(raw);
+};
+  
+  useEffect(() => {
+    let canceled = false;
+    const myReqId = ++reqIdRef.current;
     
-      if (loading) return <>불러오는 중...</>;
-      if (err)     return <>{err}</>;
+    (async () => {
+      try {
+        setLoading(true);
+        setErr(null);
+        const list = await getTmiCategory(marketId, category );
+
+        console.log(list);
+
+          if (canceled || myReqId !== reqIdRef.current) return;
+          setItems(list);
+        } catch (e) {
+          if (canceled || myReqId !== reqIdRef.current) return;
+          console.error("데이터 로드 실패:", e?.message, e?.response?.data);
+          setErr("게시글을 불러오지 못했습니다.");
+        } finally {
+          if (canceled || myReqId !== reqIdRef.current) return;
+          setLoading(false);
+        }
+      })();
+      return () => { canceled = true; };
+    }, [marketId,category]);
+  
+
+  if (loading) return <>불러오는 중...</>;
+  if (err)     return <>{err}</>;
 
 
   return(
     <>
-      <TopBoard $color={color}>비지토리 게시판</TopBoard>
+      <TopBoard $color={$color}>비지토리 게시판</TopBoard>
       <BottomBoard>
         <CateChip_Container> 
             {TMICATEGORY.map((c) => (
               <CateChip 
-                $color={color}
+                $color={$color}
                 key={c} 
                 data-active={category === c} 
                 onClick={() => setCategory(c)}
+                aria-pressed={category === c}
               >
                 {c}
               </CateChip>              
@@ -152,20 +178,20 @@ function Detail_Visitory() {
         
         <ThisTmi>
           <ScrollBar>
-            {totalPost.map((p) => (
+            { !loading && !err && items.map((p) => (
               <TmiCard 
                 key={p.id}
                 title={p.title}
                 content={p.content}
                 onClick ={()=> navigate(`/records/${p.id}`)}
-                $color={color}
+                $color={$color}
                 
               />
           ))}
           </ScrollBar>
         </ThisTmi>
         <NoCenterHorizontalReverse>
-          <Detail_Tmi_Btn $color={color}/>
+          <Detail_Tmi_Btn $color={$color}/>
         </NoCenterHorizontalReverse>
         </BottomBoard>
     </>

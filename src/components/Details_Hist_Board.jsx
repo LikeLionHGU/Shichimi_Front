@@ -34,7 +34,8 @@ const BottomBoard = styled.div`
   background-color: ${themeColors.white.color};
   border-radius: 0 12px 12px 12px ;
   width: 25vw;
-  height: 62vh;
+  height: 63vh;
+  padding-bottom: 0.5%;
 `;
 
 const HistImg = styled.img`

@@ -1,7 +1,7 @@
 import React, {useEffect , useState } from "react";
 import styled from "styled-components";
 import {Link, NavLink } from "react-router-dom";
-
+import { GlobalStyle, themeColors } from "../assets/styles/StyledComponents";
 import { hexToRgba } from "../components/Details_Tops";
 
 const Card =styled.div`
@@ -32,6 +32,25 @@ const Card =styled.div`
   }
 
 `;
+const TMICATEGORY = ["전체","썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
+
+const CateChip = styled.button`
+  border-radius: 9999px;
+  padding: 1% 2%;
+  font-size: 0.8vw;
+  background-color: ${themeColors.white.color};
+  border: 1px solid ${themeColors.black.color};
+  
+  &:hover {
+    cursor: pointer;
+  }
+  &[data-active = "true"]{
+    background-color: ${({ $color }) => $color };
+    color: ${themeColors.white.color};
+    border: 1px solid  ${({ $color }) => $color };
+  }
+`;
+
 
 
 function TmiCard({title, content, onClick, $color}) {

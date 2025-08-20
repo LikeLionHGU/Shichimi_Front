@@ -46,6 +46,10 @@ const NextPost = styled.div`
   padding-top: 2%;
   height: auto;
 
+  &:hover{
+    cursor: pointer;
+  }
+
   img{
     display: flex;
     width: 13vw;
@@ -60,8 +64,13 @@ const NextPost = styled.div`
     font-weight: bold;
     color: ${({$color}) => $color};
   }
+  h3{
+    margin: 2% 0 2% 3%;
+    font-size: 0.9vw;
+    font-weight: bold;
+  }
   p{
-    margin: 4% 0 4% 3%;
+    margin: 0 0 4% 3%;
     font-size: 0.8vw;
 
     white-space: nowrap;
@@ -92,9 +101,9 @@ function NextDoor_Board ({$color}){
 
   const normalize = (arr = []) =>
     arr.map((x, i) => ({
-      id: x?.id ?? `noid-${i}`,
+      id: x?.tmiId ?? `noid-${i}`,
       name: String(x?.name ?? "").trim() || "이름 없음",
-      // title: String(x?.title ?? "").trim() || "제목 없음",
+      title: String(x?.title ?? "").trim() || "제목 없음",
       text: String(x?.text ?? "").trim() || "내용 없음",
       marketImg: toAbs(x?.marketImg ?? x?.imageUrl),
     }));
@@ -139,7 +148,7 @@ function NextDoor_Board ({$color}){
             >
               <img src={n.marketImg} alt="옆집"/>
               <h2 >{n.name}</h2>
-              {/* <h3>{n.title}</h3> */}
+              <h3>{n.title}</h3>
               <p>{n.text}</p>
             </NextPost>
           ))}
