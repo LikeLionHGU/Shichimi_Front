@@ -9,6 +9,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
+import tmiDetailUrl from "../assets/images/tmidetail.svg?url";
+import sendButtonUrl from "../assets/images/sendbutton.svg?url";
+
 
 /* ===================== 공통 유틸/설정 ===================== */
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
@@ -113,25 +116,60 @@ const Stage = styled.div`
   }
 `;
 
+ const CardSkin = styled.img`
+   position: absolute; inset: 0;
+   width: 100%; height: 100%;
+   object-fit: fill;        /* 100% 100%와 동일 효과 */
+   border-radius: inherit;
+   pointer-events: none;
+   z-index: 0;
+ `;
+
+
 /* 좌측 카드: 패딩/보더 포함 폭 계산을 위해 border-box 명시 */
 const PostCard = styled.article`
-  background: #fffdf5;
-width: 760px;
-height: 618px;
-flex-shrink: 0;
-  box-sizing: border-box;
-  flex: 1 1 0;               /* 남는 공간을 전부 사용 */
-  min-width: 620px;          /* 댓글 패널이 옆에 붙을 때의 최소 폭 */
+   position: relative;
+   isolation: isolate;       /* z-index:-1 배경이 카드 뒤로만 가도록(사파리 포함) */
+   overflow: hidden;         /* 둥근모서리로 배경 클리핑 */
+   background: transparent;
+
+   width: 760px;
+   height: 618px;
+   flex-shrink: 0;
+   box-sizing: border-box;
+   flex: 1 1 0;
+   min-width: 620px;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+
+   border: 0;                /* SVG가 테두리/모서리 포함, 실제 보더 제거 */
+   border-radius: 16px;
+   padding: 36px 80px 56px;
+
+ `;
+
+/* 카드의 틀 이미지(SVG) — 콘텐츠 아래쪽 레이어 */
+const CardFrame = styled.img`
+  position: absolute;
+  inset: 0;                /* top/right/bottom/left: 0 */
+  width: 100%;
+  height: 618px;
+  z-index: 0;
+`;
+
+/* 프레임 위에 올라갈 실제 내용 */
+const CardInner = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  /* 프레임 안쪽 여백(프레임 디자인에 맞춰 조절) */
+  padding: 36px 80px 56px;
   gap: 10px;
-
-  border: 1.5px solid #2c2c2c;
-  border-radius: 16px;
-  padding: 36px 44px 56px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-  
 `;
+
 
 /* 제목 줄: 좌측 스페이서 · 중앙 제목 · 우측 원형 배지 */
 const TitleBar = styled.div`
@@ -169,49 +207,62 @@ const Title = styled.h2`
   margin: 0;
   text-align: center;
   color: #2c2c2c;
-  font-size: 28px;
+  font-size: 30px;
   line-height: 1.35;
   letter-spacing: 0.1px;
   font-weight: 700;
 
 `;
-const CircleBadge = styled.div`
-display: flex;
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  display: flex;
+
+const CircleBadge = styled.span`
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100px;
-border: 1px solid rgba(44, 44, 44, 0.50);
-background: var(--white, #FFFDF5);
-color: rgba(44, 44, 44, 0.50);
-text-align: right;
-font-family: Pretendard;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-letter-spacing: 0.7px;
+  height: 32px;
+  min-width: 32px;          /* 한 글자일 땐 원형 유지 */
+  padding: 0 10px;           /* 내용 길이에 따라 가로로 늘어남 */
+  box-sizing: border-box;
+  border-radius: 9999px;     /* 캡슐 모양 */
+  border: 1px solid rgba(44, 44, 44, 0.50);
+  background: var(--white, #FFFDF5);
+  color: rgba(44, 44, 44, 0.50);
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.7px;
+  white-space: nowrap;       /* 줄바꿈 방지 */
 `;
-
 
 const Body = styled.div`
-display: flex;
-width: 620px;
-margin-top: 100px;
-height: 232px;
-flex-shrink: 0;
-color: var(--black, #2C2C2C);
-text-overflow: ellipsis;
-font-family: Pretendard;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 180%; /* 28.8px */
-letter-spacing: 0.48px;
+  position: relative;
+  width: 620px;
+  max-width: 100%;
+  height: 232px;
+  margin-top: 50px;
+  flex-shrink: 0;
+  box-sizing: border-box;
 `;
+
+const BodyText = styled.div`
+  color: var(--black, #2C2C2C);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 180%;
+  letter-spacing: 0.48px;
+  white-space: pre-wrap;
+  max-height: 100%;
+  overflow: auto;
+`;
+
+ const BodyImg = styled.img`
+   width: 620px;
+   max-width: 100%;
+   height: 232px;
+   display: block;
+   object-fit: contain; /* SVG 비율 유지 */
+ `;
+
 
 const BottomRow = styled.div`
   margin-top: auto; /* 카드 하단 고정 */
@@ -229,7 +280,7 @@ const HeartBtn = styled.button`
   background: transparent;
   border: 0;
   padding: 6px 8px;
-  color: #7fa889; /* 기본 초록톤(외곽선/텍스트) */
+  color: #BABABA; /* 기본 초록톤(외곽선/텍스트) */
   cursor: pointer;
   transition: color .15s ease, opacity .15s ease, transform .05s ease;
 
@@ -240,17 +291,16 @@ const HeartBtn = styled.button`
   &[data-active="true"]:disabled { opacity: 1; }
 `;
 
+
 function HeartIcon({ size = 18, filled = false })  {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M12.1 8.64l-.1.1-.11-.11C10.14 6.96 7.4 6.91 5.64 8.67c-1.77 1.77-1.77 4.64 0 6.41l5.78 5.78c.32.32.84.32 1.16 0l5.78-5.78c1.77-1.77 1.77-4.64 0-6.41-1.77-1.77-4.5-1.72-6.26.04z"
-        fill={filled ? "currentColor" : "none"}
-       stroke="currentColor"
-        strokeWidth="1.7"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
+      <path d="M6.80556 1C3.59967 1 1 3.65882 1 6.93765C1 13.5 12 21 12 21C12 21 23 13.5 23 6.93765C23 2.87529 20.4003 1 17.1944 1C14.9211 1 12.9533 2.33647 12 4.28235C11.0467 2.33647 9.07889 1 6.80556 1Z" stroke="#588B49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width={"22px"} height={"20px"}
+      fill={filled ? "currentColor" : "none"}
+    /* stroke="currentColor" */
+        strokeWidth="1.7"/>
     </svg>
-  );
+      );
 }
 
 /* 우측 댓글 패널: 고정폭 + border-box 로 합산폭 정확히 맞춤 */
@@ -266,20 +316,23 @@ flex-shrink: 0;
   background: #fffdf5;
   border: 1.5px solid #2c2c2c;
   border-radius: 16px;
-  padding: 3px;
+  padding: 7px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
   height: 700px;
   max-height: 618px;
 `;
 
 const PanelTitle = styled.div`
+  font-family: Pretendard;
   display: flex;
-  margin: 6px 6px 10px;
+  margin: 10px 6px 10px;
   font-size: 18px;
   color: #2c2c2c;
-  font-weight: 700;
+  font-weight: 600;
   align-items: center;
   flex-direction: column;
+  line-height: normal;
+  letter-spacing: 0.9px;
 `;
 
 const List = styled.div`
@@ -331,7 +384,6 @@ const SendBtn = styled.button`
   height: 52px;
   border-radius: 15px;
 
-  /* 테두리를 내가 지정(검정 기본 테두리 덮어쓰기) */
   border: 1.5px solid #588b49;
   background: #588b49;
   color: #fffdf5;
@@ -343,19 +395,22 @@ const SendBtn = styled.button`
   align-items: center;
   justify-content: center;
 
-  /* 브라우저 기본 버튼/포커스 스타일 제거 */
   appearance: none;
   -webkit-appearance: none;
   outline: none;
   &::-moz-focus-inner { border: 0; padding: 0; }
 
-  /* 접근성 유지: 키보드 포커스일 때만 커스텀 포커스 표시 */
   &:focus-visible {
     box-shadow: 0 0 0 3px rgba(88, 139, 73, 0.35);
   }
 
-  /* 완전히 없애고 싶다면 위 box-shadow를 주석 처리하고 이것만 남겨도 됨 */
-  /* &:focus-visible { outline: none; box-shadow: none; } */
+  /* 아이콘 이미지 크기/정렬 */
+  & > img {
+    width: 52px;   /* 필요하면 20~28px로 조정 */
+    height: 52px;
+    display: block;
+    pointer-events: none;
+  }
 `;
 
 
@@ -508,7 +563,9 @@ export default function TmiDetailPage() {
     <LocalBG/>
       <Stage>
         {/* 좌측 카드 */}
+        
         <PostCard>
+         <CardFrame src={tmiDetailUrl} alt="" aria-hidden="true" />
           <TitleBar>
             <Title>{tmi.title}</Title>
           </TitleBar>
@@ -518,7 +575,13 @@ export default function TmiDetailPage() {
           <Spacer>
           {tmi.category ? <CircleBadge>{tmi.category}</CircleBadge> : <Spacer />}
           </Spacer>
-          <Body>{tmi.content}</Body>
+          <Body>
+          
+          <BodyText>{tmi.content}</BodyText>
+          
+          </Body>
+          
+
           <BottomRow>
             <HeartBtn
               onClick={onLike}
@@ -568,9 +631,10 @@ export default function TmiDetailPage() {
                 }
               }}
             />
-            <SendBtn>
-            ↑
+            <SendBtn aria-label="보내기">
+              <img src={sendButtonUrl} alt="" />
             </SendBtn>
+
           </InputRow>
         </Panel>
       </Stage>
