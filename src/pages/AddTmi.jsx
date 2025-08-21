@@ -11,6 +11,7 @@ import xUrl from "../assets/images/x.svg?url";
 import searchUrl from "../assets/images/search.svg?url";
 import placetri1Url from "../assets/images/placetri1.svg?url"; // 닫힘(펼치기 전) 아이콘
 import placetri2Url from "../assets/images/placetri2.svg?url"; // 열림(펼쳐짐) 아이콘
+import { useLocation } from "react-router-dom";
 
 
 // ------ 환경변수로 API 베이스 설정(끝 슬래시 제거) ------
@@ -812,6 +813,8 @@ function ConfirmDialog({ open, onCancel, onConfirm, busy }){
 
 /* 상수 */
 const MAX_BODY = 400;
+const MAX_TITLE = 30;           // 제목 최대 30자
+const MIN_BODY_FOR_SUBMIT = 10; // 본문은 "10자 초과"일 때 가능(>10)
 const CATEGORY_OPTIONS = [
   { id: "1", label: "썰" },
   { id: "2", label: "팁" },
@@ -826,6 +829,7 @@ const CATEGORY_OPTIONS = [
 /* 페이지 컴포넌트 */
 export default function AddTmiPage(){
   const nav = useNavigate();
+  const { state } = useLocation();
 
   const [title, setTitle] = useState("");
   const [infoOpen, setInfoOpen] = useState(false);
@@ -894,11 +898,37 @@ export default function AddTmiPage(){
     if(found) setPlace(found); else setPlace({ id: "", name: "" });
   }, [placeText]);
 
+  useEffect(() => {
+        if (state?.prefillPlaceId) {
+          setPlace({ id: state.prefillPlaceId, name: state.prefillPlaceName || "" });
+          setPlaceText(state.prefillPlaceName || "");
+        }
+      }, [state]);
+
   /* 버튼 활성화 조건: 제목 + 장소 텍스트 + 본문만 충족하면 활성화(입력 편의성) */
-  const canSubmit = useMemo(() => {
-    const requiredOk = title.trim() && placeText.trim() && body.trim() && bodyCount <= MAX_BODY;
-    return !!requiredOk;
-  }, [title, placeText, body, bodyCount]);
+  // const canSubmit = useMemo(() => {
+  //   const requiredOk = title.trim() && placeText.trim() && !!category && bodyCount > MIN_BODY_FOR_SUBMIT && bodyCount <= MAX_BODY;
+  //   return !!requiredOk;
+  // }, [title, placeText, body, bodyCount])
+  // ;
+
+  /* 버튼 활성화 조건: 제목 + 장소 + 카테고리 + 본문(>10자, 최대 400자) */
+const MAX_TITLE = 30;
+const canSubmit = useMemo(() => {
+  const tLen = title.trim().length;
+  const bLen = body.trim().length;
+
+  const requiredOk =
+    tLen > 0 &&
+    tLen <= MAX_TITLE &&         // 제목 30자 제한
+    placeText.trim().length > 0 &&
+    !!category &&                // ← 칩(카테고리) 선택 필수
+    bLen > 10 &&                 // 본문 10자 “초과”
+    bLen <= MAX_BODY;
+
+  return requiredOk;
+}, [title, placeText, category, body]);
+
 
   /* 제출 시 검증(엄격): 실제 선택한 장소 id 필요, 이메일은 선택 */
   function validate(){
@@ -992,10 +1022,10 @@ export default function AddTmiPage(){
               <div style={{ display: 'grid', gap: 80 }}>
                 <Field>
                   <Label htmlFor="title">제목을 입력해주세요*</Label>
-                  <Input id="title" placeholder="글의 핵심이 잘 드러나도록 작성해주세요." value={title} onChange={(e)=> setTitle(e.target.value)} />
+                  <Input id="title" placeholder="글의 핵심이 잘 드러나도록 작성해주세요." value={title} onChange={(e)=> setTitle(e.target.value)} maxLength={MAX_TITLE}/>
                   {errors.title && <ErrorText>{errors.title}</ErrorText>}
                 </Field>
-
+            
                 <Field>
                   <Label htmlFor="place">장소를 입력해주세요*</Label>
                   <SelectWrap ref={placeWrapRef}>
