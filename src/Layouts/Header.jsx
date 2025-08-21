@@ -30,15 +30,24 @@ const LogoBtn = styled.button`
   height: 40px;
 `;
 
+const LogoImg = styled.img`
+  height: 38px;     
+  width: auto;       
+  display: block;    
+  object-fit: contain;
+`;
 
 const Header = () => {
   return(
     <>
       <NoCenterHorizontal>
         <LogoBtn>
-          <Link to='/' style={{ textDecoration: 'none' }}>
+          {/* <Link to='/' style={{ textDecoration: 'none' }}>
             <img src={MainLogo} alt="LOGO" />
-          </Link>
+          </Link> */}
+          <Link to='/' style={{ textDecoration: 'none' }}>
+          <LogoImg src={MainLogo} alt="LOGO" />
+        </Link>
         </LogoBtn>
       </NoCenterHorizontal>
     </>
