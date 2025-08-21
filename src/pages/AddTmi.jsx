@@ -41,13 +41,14 @@ const Page = styled.main`
   overflow: auto;
 `;
 
-/* Stage — 내부 콘텐츠 래퍼(1200px 고정, 가운데 정렬) */
 const Stage = styled.div`
   width: 1200px;
-  margin: 0 auto;
+ margin: 0;           /* 가운데 정렬 제거 */
+ margin-left: 12%;    /* 헤더 padding-left와 동일 값 */
   display: grid;
   row-gap: 60px;
 `;
+
 
 /* Header — 타이틀 배지 + 정보 아이콘 가로 정렬 */
 const Header = styled.header`
