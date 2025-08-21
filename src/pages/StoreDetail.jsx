@@ -11,6 +11,8 @@ import crab from "../assets/images/Frame 35.svg";
 
 import Ex from "../assets/images/Back01.svg";
 import { getMarketInfo } from "../server/apis/api";
+import { useNavigate } from "react-router-dom";
+
 
 const BgFixed = styled.div`
   position: fixed;
@@ -194,8 +196,7 @@ function StoreDetail(){
           </Detail_Left>
 
           <Detail_Right>
-            <Visit_Board $color={color}  chipColor={chipColor}  />
-            <NextDoor_Board $color={color} />
+          <Visit_Board $color={color} chipColor={chipColor} marketName={name} />            <NextDoor_Board $color={color} />
           </Detail_Right>
         </TotalPage>
     </>
