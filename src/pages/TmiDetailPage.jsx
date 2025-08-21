@@ -7,7 +7,7 @@
 // - 한국 로케일 및 Asia/Seoul 고정 / 에러 메시지 정리
 
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 
 /* ===================== 공통 유틸/설정 ===================== */
@@ -45,6 +45,7 @@ function sortCommentsDesc(list) {
   });
 }
 
+
 /* ===================== API 호출 (스펙 고정) ===================== */
 async function fetchTmi(tmiId) {
   const url = apiUrl(`/tmi/records/${tmiId}`);
@@ -77,22 +78,39 @@ async function createComment(tmiId, content) {
 
 /* ===================== 스타일(모두 flex, 박스사이징 통일) ===================== */
 const Page = styled.main`
-  min-height: 100vh;
-  background: #fffdf5;
-  display: flex;
-  flex-direction: column;
-  font-family: Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+  display: block;
+  background: var(--white, #FFFDF5);
+  width: 1720px;
+  height: 1080px;
+  max-width: 100%;
+
+
+  margin: 0 auto;
 `;
 
+/* 페이지 전용 전역 배경: html/body/#root를 #FFFDF5로 고정 */
+const LocalBG = createGlobalStyle`
+  html, body, #root { min-height: 100%; background: #FFFDF5; }
+  body { margin: 0; }
+`;
+
+
+/* 레이아웃 컨테이너 */
 const Stage = styled.div`
-  /* 디자인 컨테이너: 폭은 이미지 기준으로 최적화, 작은 화면에서는 1열로 스택 */
   width: min(1100px, 95vw);
-  margin: 24px auto 80px;
+  margin: auto 80px;
   display: flex;
   align-items: flex-start;
-  gap: 28px;                 /* 시안 간격 */
-  flex-wrap: nowrap;         /* 2열 배치 강제 */
+  gap: 50px;
   box-sizing: border-box;
+  margin-top: 100px;
+  margin-left: 12.5%;    /* 헤더 padding-left와 동일 값 */
+
+
+  /* 작은 화면: 1열 스택 */
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
 `;
 
 /* 좌측 카드: 패딩/보더 포함 폭 계산을 위해 border-box 명시 */
@@ -128,7 +146,7 @@ const PlaceBar = styled.div`
 `
 ;
 
-const place = styled.div`
+const PlaceName = styled.div`
 color: var(--black, #2C2C2C);
 text-align: right;
 
@@ -211,19 +229,24 @@ const HeartBtn = styled.button`
   background: transparent;
   border: 0;
   padding: 6px 8px;
-  color: #7fa889;
+  color: #7fa889; /* 기본 초록톤(외곽선/텍스트) */
   cursor: pointer;
+  transition: color .15s ease, opacity .15s ease, transform .05s ease;
+
   &:hover { opacity: 0.9; }
-  &[data-active="true"] { color: #5e8a6b; }
+  &:active { transform: scale(0.98); }
+  &[data-active="true"] { color: #5e8a6b; } /* 활성화 시 더 진한 초록 */
   &:disabled { opacity: 0.85; cursor: default; }
+  &[data-active="true"]:disabled { opacity: 1; }
 `;
-function HeartIcon({ size = 18 }) {
+
+function HeartIcon({ size = 18, filled = false })  {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
       <path
         d="M12.1 8.64l-.1.1-.11-.11C10.14 6.96 7.4 6.91 5.64 8.67c-1.77 1.77-1.77 4.64 0 6.41l5.78 5.78c.32.32.84.32 1.16 0l5.78-5.78c1.77-1.77 1.77-4.64 0-6.41-1.77-1.77-4.5-1.72-6.26.04z"
-        fill="none"
-        stroke="#7FA889"
+        fill={filled ? "currentColor" : "none"}
+       stroke="currentColor"
         strokeWidth="1.7"
       />
     </svg>
@@ -232,7 +255,7 @@ function HeartIcon({ size = 18 }) {
 
 /* 우측 댓글 패널: 고정폭 + border-box 로 합산폭 정확히 맞춤 */
 const Panel = styled.aside`
-width: 424px;
+width: 444px;
 height: 618px;
 flex-shrink: 0;
   box-sizing: border-box;
@@ -243,17 +266,20 @@ flex-shrink: 0;
   background: #fffdf5;
   border: 1.5px solid #2c2c2c;
   border-radius: 16px;
-  padding: 16px;
+  padding: 3px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
   height: 700px;
   max-height: 618px;
 `;
 
-const PanelTitle = styled.h3`
+const PanelTitle = styled.div`
+  display: flex;
   margin: 6px 6px 10px;
   font-size: 18px;
   color: #2c2c2c;
   font-weight: 700;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const List = styled.div`
@@ -266,7 +292,8 @@ const List = styled.div`
 `;
 
 const Bubble = styled.div`
-  background: #e8f1e7;
+  border-radius: 8px;
+  background: rgba(88, 139, 73, 0.10);
   color: #2c2c2c;
   border-radius: 12px;
   padding: 12px 14px;
@@ -286,31 +313,51 @@ const CommentInput = styled.textarea`
   height: 44px;
   resize: none;
   border-radius: 12px;
-  border: 1.5px solid #2c2c2c;
+  border: 1.5px solid #fffdf5;
   background: #fffdf5;
   padding: 12px 14px;
-  font-size: 14px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 270%; /* 24px */
+  letter-spacing: 0.48px;
   outline: none;
-  &::placeholder { color: #b7b7b7; }
-  &:focus { box-shadow: 0 0 0 3px rgba(88, 139, 73, 0.15); }
+  &::placeholder { color: #BABABA; }
 `;
 
 const SendBtn = styled.button`
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  border-radius: 9999px;
-  border: 1.5px solid #2c2c2c;
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+
+  /* 테두리를 내가 지정(검정 기본 테두리 덮어쓰기) */
+  border: 1.5px solid #588b49;
   background: #588b49;
   color: #fffdf5;
+
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  &:disabled { background: #cfcfcf; border-color: #cfcfcf; cursor: not-allowed; }
+
+  /* 브라우저 기본 버튼/포커스 스타일 제거 */
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  &::-moz-focus-inner { border: 0; padding: 0; }
+
+  /* 접근성 유지: 키보드 포커스일 때만 커스텀 포커스 표시 */
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(88, 139, 73, 0.35);
+  }
+
+  /* 완전히 없애고 싶다면 위 box-shadow를 주석 처리하고 이것만 남겨도 됨 */
+  /* &:focus-visible { outline: none; box-shadow: none; } */
 `;
+
 
 /* ===================== 페이지 ===================== */
 export default function TmiDetailPage() {
@@ -448,17 +495,7 @@ export default function TmiDetailPage() {
             </TitleBar>
             <Body>{err || "존재하지 않는 글입니다."}</Body>
             <div style={{ marginTop: 16, display: "flex" }}>
-              <button
-                onClick={() => nav(-1)}
-                style={{
-                  padding: "8px 12px",
-                  borderRadius: 8,
-                  border: "1px solid #2C2C2C",
-                  background: "#FFF",
-                }}
-              >
-                뒤로가기
-              </button>
+              
             </div>
           </PostCard>
         </Stage>
@@ -468,6 +505,7 @@ export default function TmiDetailPage() {
 
   return (
     <Page>
+    <LocalBG/>
       <Stage>
         {/* 좌측 카드 */}
         <PostCard>
@@ -475,7 +513,7 @@ export default function TmiDetailPage() {
             <Title>{tmi.title}</Title>
           </TitleBar>
           <PlaceBar>
-          {tmi.marketName ? <place>{tmi.marketName}</place> : <Spacer />}
+          {tmi.marketName ? <PlaceName>{tmi.marketName}</PlaceName> : <Spacer />}
           </PlaceBar>
           <Spacer>
           {tmi.category ? <CircleBadge>{tmi.category}</CircleBadge> : <Spacer />}
@@ -489,7 +527,7 @@ export default function TmiDetailPage() {
               disabled={liking || liked}
               data-active={liked}
             >
-              <HeartIcon />
+            <HeartIcon filled={liked} />
               <span>{(likes ?? 0).toLocaleString()}</span>
             </HeartBtn>
             {/* 필요 시 조회수 표기
@@ -530,17 +568,13 @@ export default function TmiDetailPage() {
                 }
               }}
             />
-            <SendBtn
-              type="submit"
-              aria-label="댓글 전송"
-              title="댓글 전송"
-              disabled={!commentText.trim() || sending}
-            >
-              ↑
+            <SendBtn>
+            ↑
             </SendBtn>
           </InputRow>
         </Panel>
       </Stage>
     </Page>
+    
   );
 }

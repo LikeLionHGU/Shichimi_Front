@@ -792,7 +792,7 @@ function ConfirmDialog({ open, onCancel, onConfirm, busy }){
     <Backdrop onClick={onCancel}>
       <Dialog role="dialog" aria-modal="true" onClick={(e)=> e.stopPropagation()}>
         <h3 style={{ marginTop: 40, marginBottom:-30, fontSize: 24, fontWeight: 600, textAlign: "center" }}>
-          TMI 작성을 완료하시겠습니까?
+          비지토리 작성을 완료하시겠습니까?
         </h3>
         <p style={{ margin: "6px 0 0 0", textAlign: "center", color: "#555" }}>
           완료 시, 해당 글은 수정이 불가능합니다.
