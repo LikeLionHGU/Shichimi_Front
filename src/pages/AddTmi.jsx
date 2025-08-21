@@ -815,7 +815,7 @@ const MAX_BODY = 400;
 const CATEGORY_OPTIONS = [
   { id: "1", label: "썰" },
   { id: "2", label: "팁" },
-  { id: "3", label: "사건/사고" },
+  { id: "3", label: "사건/사고", value: "사건사고" },
   { id: "4", label: "기념" },
   { id: "5", label: "자랑" },
   { id: "6", label: "리뷰" },
@@ -922,12 +922,15 @@ export default function AddTmiPage(){
       else if(lowered.includes("리뷰")) finalCategory = "리뷰";
      else                           finalCategory = "전체";
    }
+   const sel = CATEGORY_OPTIONS.find(o => o.label === finalCategory);
+   const categoryForServer = sel?.value ?? finalCategory.replace(/\//g, "");
+
     try {
       const payload = {
         marketId: Number(place.id),               // 서버 요구 키
         title: title.trim(),
         content: body.trim(),                     // 서버 요구 키
-        category: finalCategory,                  // 문자열 전송
+        category: categoryForServer,                  // 문자열 전송
         ...(email.trim() ? { email: email.trim() } : {}), // 서버가 email 수용하면 포함
       };
       if (import.meta.env.DEV) console.debug("[DEBUG] payload ready", payload);
