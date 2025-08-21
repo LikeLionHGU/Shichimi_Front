@@ -34,9 +34,11 @@ const GlobalStyle = createGlobalStyle`
 const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
-  /* width: 1720px;
-  height: 1080px; */
+  width: 1720px;
+  height: 1080px;
   max-width: 100%;
+
+
   margin: 0 auto;
   overflow: auto;
 `;
