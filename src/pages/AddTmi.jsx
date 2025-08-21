@@ -6,10 +6,11 @@ import { themeColors } from "../assets/styles/StyledComponents";
 import ellipse21Url from "../assets/images/Ellipse 21.svg?url";
 import rectangle184Url from "../assets/images/Rectangle 184.svg?url";
 import infoCircleUrl from "../assets/images/info.svg?url";
-import infoGlyphUrl from "../assets/images/info1.svg?url";
 import checkUrl from "../assets/images/check.svg?url";
 import xUrl from "../assets/images/x.svg?url";
 import searchUrl from "../assets/images/search.svg?url";
+import placetri1Url from "../assets/images/placetri1.svg?url"; // 닫힘(펼치기 전) 아이콘
+import placetri2Url from "../assets/images/placetri2.svg?url"; // 열림(펼쳐짐) 아이콘
 
 
 // ------ 환경변수로 API 베이스 설정(끝 슬래시 제거) ------
@@ -33,8 +34,8 @@ const GlobalStyle = createGlobalStyle`
 const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
-  width: 1720px;
-  height: 1080px;
+  /* width: 1720px;
+  height: 1080px; */
   max-width: 100%;
   margin: 0 auto;
   overflow: auto;
@@ -119,6 +120,7 @@ const InfoIcon = styled.button`
   background-color: #FFFDF5;
   box-shadow: inset 0 0 0 1px ${themeColors.gray.color};
   overflow: hidden;
+  cursor: pointer;
 `;
 
 const InfoCircleImg = styled.img`
@@ -487,25 +489,43 @@ const PlacePanel = styled.div`
   grid-template-rows: auto 1fr;
   gap: 12px;
 `;
+// 스타일 — Row 컨테이너는 기준점만 잡아줍니다.
 const PlaceSearchRow = styled.div`
   position: relative;
 `;
+
+// 스타일 — 입력창 오른쪽 패딩을 '아이콘 2개 + 여백'만큼 넉넉히
 const PlaceSearchInput = styled.input`
   border: 0;
   background: transparent;
   outline: none;
   font-size: 16px;
   color: #2C2C2C;
-  padding-right: 32px;
+  padding-right: 64px; /* (약 24.6px × 2) + 여백 */
   &::placeholder{ color:#9CB0A1; }
 `;
+
+// 스타일 — 검색 아이콘(맨 오른쪽)
 const PlaceSearchIcon = styled.span`
   position: absolute; right: 0; top: 0;
   width: 24.593px;
   height: 24.593px;
   flex-shrink: 0;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
 `;
+
+// 스타일 — 토글 아이콘(검색 아이콘 '옆')
+const PlaceToggleIcon = styled.button`
+  position: absolute; right: 32px; top: 0;  /* 검색 아이콘에서 32px 왼쪽 */
+  width: 24.593px;
+  height: 24.593px;
+  aspect-ratio: 1 / 1;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+`;
+
 const PlaceList = styled.div`
   overflow: auto; padding-right: 8px;
 `;
@@ -562,48 +582,89 @@ const Counter = styled.span`
   letter-spacing: 0.42px;
 `;
 
+
+
 /* Fake API */
 const fakePlaces = [
-  { id: "1", name: "포항대게" },
-  { id: "2", name: "대화식당" },
-  { id: "3", name: "옥수수" },
-  { id: "4", name: "죽도어시장 공영 P" },
-  { id: "5", name: "과메기마트" },
-  { id: "6", name: "대동전집" },
-  { id: "7", name: "강원전집" },
-  { id: "8", name: "동양횟집" },
-  { id: "9", name: "미소과메기" },
-  { id: "10", name: "밀밭분식" },
-  { id: "11", name: "바다건어물" },
-  { id: "12", name: "벧엘건어물" },
-  { id: "13", name: "부산밀면" },
-  { id: "14", name: "삼일과메기" },
-  { id: "15", name: "수정농산물" },
-  { id: "16", name: "승리회맛집" },
-  { id: "17", name: "영광회대게센타" },
-  { id: "18", name: "영일만건어물" },
-  { id: "19", name: "경주전집" },
-  { id: "20", name: "웰빙농산물" },
-  { id: "21", name: "은아건어물" },
-  { id: "22", name: "장기식당" },
-  { id: "23", name: "죽도시장 공영 P" },
-  { id: "24", name: "골드과메기" },
-  { id: "25", name: "죽도포포" },
-  { id: "26", name: "진분식" },
-  { id: "27", name: "태성청과" },
-  { id: "28", name: "포원청과" },
-  { id: "29", name: "가족식당" },
-  { id: "30", name: "한성식품" },
-];
+  
+    {
+        "id": 1,
+        "name": "포항대게"
+    },
+    {
+        "id": 2,
+        "name": "대화식당"
+    },
+    {
+        "id": 3,
+        "name": "옥수수"
+    },
+    {
+        "id": 4,
+        "name": "죽도어시장 공영주차장"
+    },
+    {
+        "id": 5,
+        "name": "영광회대게센타"
+    },
+    {
+        "id": 6,
+        "name": "승리회맛집"
+    },
+    {
+        "id": 7,
+        "name": "동양횟집"
+    },
+    {
+        "id": 8,
+        "name": "장기식당"
+    },
+    {
+        "id": 9,
+        "name": "죽도포포"
+    },
+    {
+        "id": 10,
+        "name": "부산밀면"
+    },
+    {
+        "id": 11,
+        "name": "밀밭분식"
+    },
+    {
+        "id": 12,
+        "name": "가족식당"
+    },
+    {
+        "id": 13,
+        "name": "진분식"
+    },
+    {
+        "id": 14,
+        "name": "죽도시장 공영주차장"
+    },
+    {
+        "id": 15,
+        "name": "포원청과"
+    },
+    {
+        "id": 16,
+        "name": "태성청과"
+    }
 
-function searchPlaces(q){
-  return new Promise((resolve)=>{
-    setTimeout(()=>{
-      const res = fakePlaces.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
-      resolve(res);
-    }, 300);
-  });
-}
+  ];
+
+  function searchPlaces(q){
+    return new Promise((resolve)=>{
+      setTimeout(()=>{
+        const res = fakePlaces
+          .filter(p => p.name.toLowerCase().includes(q.toLowerCase()))
+          .sort((a,b)=> a.name.localeCompare(b.name, "ko-KR", { sensitivity:"base", numeric:true }));
+        resolve(res);
+      }, 300);
+    });
+  }
+  
 
 /* API 명세: POST /tmi/records */
 /* API 명세: POST /tmi/records (절대 URL + 환경변수 사용) */
@@ -784,17 +845,32 @@ export default function AddTmiPage(){
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+
   /* 확인 모달 표시 상태 */
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const bodyCount = body.length;
 
-  /* 인라인 패널 필터 */
+  // ➊ 한국어 정렬기(숫자도 자연스럽게)
+  const koCollator = useMemo(
+    () => new Intl.Collator("ko-KR", { sensitivity: "base", numeric: true }),
+    []
+  );
+
+  // ➋ 항상 가나다 순으로 정렬된 기준 배열
+  const placesSorted = useMemo(
+    () => [...fakePlaces].sort((a, b) => koCollator.compare(a.name, b.name)),
+    [koCollator]
+  );
+
+  // ➌ 필터도 정렬된 배열을 기준으로 (검색어 없으면 전체 정렬 목록)
   const filteredPlaces = useMemo(() => {
-    const q = placeQuery.trim().toLowerCase();
-    if(!q) return fakePlaces;
-    return fakePlaces.filter(p => p.name.toLowerCase().includes(q));
-  }, [placeQuery]);
+    const q = placeQuery.trim();
+    if (!q) return placesSorted;
+    const lower = q.toLowerCase();
+    return placesSorted.filter(p => p.name.toLowerCase().includes(lower));
+  }, [placeQuery, placesSorted]);
+
 
   /* 패널 외부 클릭시 닫기 */
   useEffect(()=>{
@@ -862,6 +938,8 @@ export default function AddTmiPage(){
     }
   };
 
+  
+
   /* 폼 submit — 검증 후 확인 모달 */
   async function onSubmit(e){
     e.preventDefault();
@@ -922,6 +1000,19 @@ export default function AddTmiPage(){
                       onChange={(e)=>{ setPlaceText(e.target.value); setPlaceQuery(e.target.value); setPlaceOpen(true); }}
                       onClick={()=> setPlaceOpen(true)}
                     />
+
+                        <PlaceToggleIcon
+                          type="button"
+                          aria-label={placeOpen ? "검색 패널 접기" : "검색 패널 펼치기"}
+                          onClick={()=> setPlaceOpen(o => !o)}
+                        >
+                          <img
+                            src={placeOpen ? placetri2Url : placetri1Url}
+                            alt=""
+                            style={{ width: "10px", height: "6px", objectFit: "contain", marginTop: "20px", marginRight: "-30px" }}
+                          />
+                        </PlaceToggleIcon>
+
                     <InlineIconBtn type="button" aria-label="장소 검색 열기" onClick={()=> setPlaceOpen(v=>!v)} title="검색">
                       <img src = {searchUrl}/>
                     </InlineIconBtn>
@@ -937,25 +1028,51 @@ export default function AddTmiPage(){
 
                     {placeOpen && (
                       <PlacePanel>
-                        <PlaceSearchRow>
-                          <PlaceSearchInput
-                            placeholder="상점 이름을 검색해주세요."
-                            value={placeQuery}
-                            onChange={(e)=> setPlaceQuery(e.target.value)}
-                            autoFocus
+                      <PlaceSearchRow>
+                        <PlaceSearchInput
+                          placeholder="상점 이름을 검색해주세요."
+                          value={placeQuery}
+                          onChange={(e)=> setPlaceQuery(e.target.value)}
+                          autoFocus
+                        />
+                        {/* 토글 아이콘: placeOpen 상태에 따라 변경 */}
+                        <PlaceToggleIcon
+                          type="button"
+                          aria-label={placeOpen ? "검색 패널 접기" : "검색 패널 펼치기"}
+                          onClick={()=> setPlaceOpen(o => !o)}
+                        >
+                          <img
+                            src={placeOpen ? placetri2Url : placetri1Url}
+                            alt=""
+                            style={{ width: "10px", height: "6px", objectFit: "contain", marginBottom: "5px"}}
                           />
-                          <PlaceSearchIcon>
-                            <img src = {searchUrl}/>
-                          </PlaceSearchIcon>
-                        </PlaceSearchRow>
+                        </PlaceToggleIcon>
+                    
+                        {/* 검색 아이콘(맨 오른쪽) */}
+                        <PlaceSearchIcon aria-hidden="true">
+                          <img src={searchUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", pointerEvents: "none" }}/>
+                        </PlaceSearchIcon>
+                      </PlaceSearchRow>
+                    
+                      {/* 리스트는 열렸을 때만 */}
+                      {placeOpen && (
                         <PlaceList>
                           {filteredPlaces.map(p => (
-                            <PlaceItem key={p.id} onClick={()=>{ setPlace(p); setPlaceText(p.name); setPlaceOpen(false); setPlaceQuery(""); }}>
+                            <PlaceItem
+                              key={p.id}
+                              onClick={()=>{
+                                setPlace(p);
+                                setPlaceText(p.name);
+                                setPlaceOpen(false);
+                                setPlaceQuery("");
+                              }}
+                            >
                               {p.name}
                             </PlaceItem>
                           ))}
                         </PlaceList>
-                      </PlacePanel>
+                      )}
+                    </PlacePanel>
                     )}
                   </SelectWrap>
                   {errors.place && <ErrorText>{errors.place}</ErrorText>}
@@ -993,7 +1110,7 @@ export default function AddTmiPage(){
                 <Field>
                   <Label htmlFor="body">이야기를 입력해주세요*</Label>
                   <TextareaBox>
-                    <Textarea id="body" placeholder="비지토리를 작성해주세요. (최대 400자)" value={body} onChange={(e)=> setBody(e.target.value)} maxLength={MAX_BODY+50} />
+                    <Textarea id="body" placeholder="비지토리를 작성해주세요. (최대 400자)" value={body} onChange={(e)=> setBody(e.target.value)} maxLength={MAX_BODY} />
                     <Counter>{Math.min(bodyCount, MAX_BODY)}/{MAX_BODY}</Counter>
                   </TextareaBox>
                   {errors.body && <ErrorText>{errors.body}</ErrorText>}
