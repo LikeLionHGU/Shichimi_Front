@@ -8,9 +8,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import tmiDetailUrl from "../assets/images/tmidetail.svg?url";
 import sendButtonUrl from "../assets/images/sendbutton.svg?url";
+import bottomImageUrl from "../assets/images/bottomimage.svg?url";
 
 
 /* ===================== 공통 유틸/설정 ===================== */
@@ -25,22 +26,31 @@ function cleanMsg(txt) {
 }
 function fmtKST(iso) {
   try {
-    return new Date(iso).toLocaleString("ko-KR", {
-      timeZone: "Asia/Seoul",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return "";
-  }
+        const d = parseKSTDate(iso);
+        if (!d) return "";
+        return new Intl.DateTimeFormat("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(d);
+      } catch { return ""; }
 }
+
+function parseKSTDate(s) {
+    if (!s) return null;
+    if (/[zZ]|[+-]\d{2}:\d{2}$/.test(s)) return new Date(s); // ISO + TZ
+    const normalized = String(s).replace(" ", "T");
+    return new Date(normalized + "+00:00");
+  }
+
+
 function sortCommentsDesc(list) {
   return [...(list || [])].sort((a, b) => {
-    const ta = Date.parse(a?.createdDate || "") || 0;
-    const tb = Date.parse(b?.createdDate || "") || 0;
+    const ta = parseKSTDate(a?.createdDate)?.getTime?.() || 0;
+    const tb = parseKSTDate(b?.createdDate)?.getTime?.() || 0;
     if (tb !== ta) return tb - ta;
     const ia = Number(a?.id) || 0;
     const ib = Number(b?.id) || 0;
@@ -84,10 +94,7 @@ const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
   width: 1720px;
-  height: 1080px;
   max-width: 100%;
-
-
   margin: 0 auto;
 `;
 
@@ -107,6 +114,7 @@ const Stage = styled.div`
   gap: 50px;
   box-sizing: border-box;
   margin-top: 100px;
+  margin-bottom: -15%;
   margin-left: 12.5%;    /* 헤더 padding-left와 동일 값 */
 
 
@@ -156,6 +164,7 @@ const CardFrame = styled.img`
   width: 100%;
   height: 618px;
   z-index: 0;
+  pointer-events: none;
 `;
 
 /* 프레임 위에 올라갈 실제 내용 */
@@ -197,6 +206,20 @@ line-height: normal;
 letter-spacing: 0.9px;
 `
 ;
+
+const PlaceNameLink = styled(Link)`
+  color: var(--black, #2C2C2C);
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.9px;
+  text-decoration: none;
+  cursor: pointer;
+`;
+
 
 const Spacer = styled.div`
 display: flex;
@@ -413,6 +436,35 @@ const SendBtn = styled.button`
   }
 `;
 
+// 비지토리에 실제 데이터가 있는 4곳만 링크 허용
+const MARKET_NAME_TO_ID = {
+  "포항대게": 1,
+  "대화식당": 2,
+  "옥수수": 3,
+  "죽도어시장 공영주차장": 4,
+};
+const KNOWN_MARKET_IDS = new Set([1, 2, 3, 4]);
+
+function resolveMarketId(tmi) {
+  const byId = Number(tmi?.marketId);
+  if (KNOWN_MARKET_IDS.has(byId)) return String(byId);
+  const name = tmi?.marketName?.trim?.() || "";
+  const fromName = MARKET_NAME_TO_ID[name];
+  return fromName ? String(fromName) : null;
+}
+
+const PageFooter = styled.footer`
+  width: 100%;
+  margin-top: 300px;
+`;
+
+const BottomImg = styled.img`
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;     /* 가로는 꽉, 세로는 크롭 */
+  border-radius: 12px;
+`;
 
 /* ===================== 페이지 ===================== */
 export default function TmiDetailPage() {
@@ -570,8 +622,20 @@ export default function TmiDetailPage() {
             <Title>{tmi.title}</Title>
           </TitleBar>
           <PlaceBar>
-          {tmi.marketName ? <PlaceName>{tmi.marketName}</PlaceName> : <Spacer />}
+            {(() => {
+              const name = tmi.marketName?.trim();
+              const marketId = resolveMarketId(tmi); // 1~4일 때만 값이 나옴
+              if (!name) return <Spacer />;
+              return marketId ? (
+                <PlaceNameLink to={`/info/${marketId}`} aria-label={`${name} 상세보기로 이동`}>
+                  {name}
+                </PlaceNameLink>
+              ) : (
+                <PlaceName>{name}</PlaceName>
+              );
+            })()}
           </PlaceBar>
+
           <Spacer>
           {tmi.category ? <CircleBadge>{tmi.category}</CircleBadge> : <Spacer />}
           </Spacer>
@@ -638,6 +702,15 @@ export default function TmiDetailPage() {
           </InputRow>
         </Panel>
       </Stage>
+      {/* 페이지 푸터 이미지: 서버가 내려주는 bottomImageUrl(없으면 imageUrl) */}
+      {(() => {
+        const footSrc = tmi?.bottomImageUrl || tmi?.imageUrl || bottomImageUrl;
+        return footSrc ? (
+          <PageFooter aria-label="페이지 푸터">
+            <BottomImg src={footSrc} alt="" />
+          </PageFooter>
+        ) : null;
+      })()}
     </Page>
     
   );

@@ -86,7 +86,7 @@ const NoCenterHorizontalReverse = styled.div`
   width: 82%;
 `;
 
-function Detail_Visitory({$color, chipColor}) {
+function Detail_Visitory({ $color, chipColor, marketName }) {
 
   const {marketId} = useParams();
   const navigate = useNavigate();
@@ -181,7 +181,18 @@ const getTmiCategory = async(marketId, categoryChip) => {
           </ScrollBar>
         </ThisTmi>
         <NoCenterHorizontalReverse>
-          <Detail_Tmi_Btn $color={$color}/>
+          <div
+            role="button">
+          <Detail_Tmi_Btn $color={$color}
+          onClick={() =>
+              navigate("/add", {
+                state: {
+                  prefillPlaceId: Number(marketId),
+                  prefillPlaceName: marketName || "",
+                },
+              })
+            }
+            /></div>
         </NoCenterHorizontalReverse>
         </BottomBoard>
     </>
