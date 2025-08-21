@@ -10,6 +10,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import tmiDetailUrl from "../assets/images/tmidetail.svg?url";
+import sendButtonUrl from "../assets/images/sendbutton.svg?url";
+
 
 /* ===================== 공통 유틸/설정 ===================== */
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
@@ -114,6 +116,16 @@ const Stage = styled.div`
   }
 `;
 
+ const CardSkin = styled.img`
+   position: absolute; inset: 0;
+   width: 100%; height: 100%;
+   object-fit: fill;        /* 100% 100%와 동일 효과 */
+   border-radius: inherit;
+   pointer-events: none;
+   z-index: 0;
+ `;
+
+
 /* 좌측 카드: 패딩/보더 포함 폭 계산을 위해 border-box 명시 */
 const PostCard = styled.article`
    position: relative;
@@ -134,18 +146,29 @@ const PostCard = styled.article`
    border: 0;                /* SVG가 테두리/모서리 포함, 실제 보더 제거 */
    border-radius: 16px;
    padding: 36px 80px 56px;
-   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
 
-   /* SVG 배경 스킨 */
-   &::before{
-     content: "";
-     position: absolute; inset: 0;
-     border-radius: inherit;
-     background: url(${tmiDetailUrl}) center / 100% 100% no-repeat;
-     z-index: -1;           /* 콘텐츠 아래 레이어 */
-     pointer-events: none;
-   }
  `;
+
+/* 카드의 틀 이미지(SVG) — 콘텐츠 아래쪽 레이어 */
+const CardFrame = styled.img`
+  position: absolute;
+  inset: 0;                /* top/right/bottom/left: 0 */
+  width: 100%;
+  height: 618px;
+  z-index: 0;
+`;
+
+/* 프레임 위에 올라갈 실제 내용 */
+const CardInner = styled.div`
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* 프레임 안쪽 여백(프레임 디자인에 맞춰 조절) */
+  padding: 36px 80px 56px;
+  gap: 10px;
+`;
 
 
 /* 제목 줄: 좌측 스페이서 · 중앙 제목 · 우측 원형 배지 */
@@ -210,53 +233,27 @@ const CircleBadge = styled.span`
   white-space: nowrap;       /* 줄바꿈 방지 */
 `;
 
-/* 
 const Body = styled.div`
-overflow: hidden;
-display: flex;
-width: 620px;
-max-width: 100%;
-margin-top: 50px;
-height: 232px;
-flex-shrink: 0;
-color: var(--black, #2C2C2C);
-text-overflow: ellipsis;
-font-family: Pretendard;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 180%; 
-letter-spacing: 0.48px;
-`; */
+  position: relative;
+  width: 620px;
+  max-width: 100%;
+  height: 232px;
+  margin-top: 50px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+`;
 
- const Body = styled.div`
-   position: relative;
-   width: 620px;
-   max-width: 100%;
-   height: 232px;
-   margin-top: 50px;
-   flex-shrink: 0;
-   box-sizing: border-box;
-   /* 배경 이미지 박스 */
-   background: url(${tmiDetailUrl}) center/cover no-repeat;
-   /* 이미지 안에 내용이 들어가도록 내부 여백 설정(필요시 조절) */
-   /* padding: 16px 20px; */
- `;
-
- const BodyText = styled.div`
-   /* 기존 텍스트 스타일 유지 + 줄바꿈 보존 */
-   color: var(--black, #2C2C2C);
-   font-family: Pretendard;
-   font-size: 16px;
-   font-weight: 500;
-   line-height: 180%;
-   letter-spacing: 0.48px;
-   white-space: pre-wrap;
-   /* 내용이 길 경우 스크롤/잘림 중 택1 */
-   max-height: 100%;
-   overflow: auto;          /* 길면 스크롤 */
-   /* overflow: hidden;    /* 길면 잘라내기 원하면 이걸로 교체 */
- `;
+const BodyText = styled.div`
+  color: var(--black, #2C2C2C);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 180%;
+  letter-spacing: 0.48px;
+  white-space: pre-wrap;
+  max-height: 100%;
+  overflow: auto;
+`;
 
  const BodyImg = styled.img`
    width: 620px;
@@ -319,7 +316,7 @@ flex-shrink: 0;
   background: #fffdf5;
   border: 1.5px solid #2c2c2c;
   border-radius: 16px;
-  padding: 3px;
+  padding: 7px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
   height: 700px;
   max-height: 618px;
@@ -387,7 +384,6 @@ const SendBtn = styled.button`
   height: 52px;
   border-radius: 15px;
 
-  /* 테두리를 내가 지정(검정 기본 테두리 덮어쓰기) */
   border: 1.5px solid #588b49;
   background: #588b49;
   color: #fffdf5;
@@ -399,19 +395,22 @@ const SendBtn = styled.button`
   align-items: center;
   justify-content: center;
 
-  /* 브라우저 기본 버튼/포커스 스타일 제거 */
   appearance: none;
   -webkit-appearance: none;
   outline: none;
   &::-moz-focus-inner { border: 0; padding: 0; }
 
-  /* 접근성 유지: 키보드 포커스일 때만 커스텀 포커스 표시 */
   &:focus-visible {
     box-shadow: 0 0 0 3px rgba(88, 139, 73, 0.35);
   }
 
-  /* 완전히 없애고 싶다면 위 box-shadow를 주석 처리하고 이것만 남겨도 됨 */
-  /* &:focus-visible { outline: none; box-shadow: none; } */
+  /* 아이콘 이미지 크기/정렬 */
+  & > img {
+    width: 52px;   /* 필요하면 20~28px로 조정 */
+    height: 52px;
+    display: block;
+    pointer-events: none;
+  }
 `;
 
 
@@ -566,6 +565,7 @@ export default function TmiDetailPage() {
         {/* 좌측 카드 */}
         
         <PostCard>
+         <CardFrame src={tmiDetailUrl} alt="" aria-hidden="true" />
           <TitleBar>
             <Title>{tmi.title}</Title>
           </TitleBar>
@@ -631,9 +631,10 @@ export default function TmiDetailPage() {
                 }
               }}
             />
-            <SendBtn>
-            ↑
+            <SendBtn aria-label="보내기">
+              <img src={sendButtonUrl} alt="" />
             </SendBtn>
+
           </InputRow>
         </Panel>
       </Stage>
