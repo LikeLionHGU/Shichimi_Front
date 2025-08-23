@@ -125,6 +125,7 @@ const StoreInfo = styled.div`
     font-size: 0.8vw;
     font-weight: 400;
     white-space: nowrap;
+    line-height: 1.6;
   }
 `;
 

@@ -41,9 +41,10 @@ const BottomBoard = styled.div`
 const HistImg = styled.img`
   display: flex;
   
+  transform: scale(0.98);
   width: 90%;
   margin-top:4% ;
-  margin-bottom:4% ;  
+  margin-bottom:2.5% ;  
   border: 2px solid black;
   border-radius: 10px;
 `;
@@ -54,6 +55,7 @@ const HistText = styled.div`
   p{
     margin-top: 2%;
     font-size: 0.8vw;
+    line-height: 1.5;
   }
 `
 
@@ -97,7 +99,7 @@ function Details_History({$color}) {
       <BottomBoard>
         <HistImg src={marketImg } alt ="가게 이미지"/>
         <HistText>
-          (AI가 들려주는 가게 이야기)
+          AI가 들려주는 가게 이야기
           <p>{history}</p>
         </HistText>
       </BottomBoard>
