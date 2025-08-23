@@ -14,7 +14,7 @@ const NoCenterHorizontal = styled.header`
   display: flex;
   align-items: center;
   /* padding: 1.5% 0 1% 12%; */
-  padding-left: 12%;
+  padding-left: 13%;
   padding-top: 1%;
   height: 72px;
   background: transparent !important;
@@ -32,7 +32,8 @@ const LogoBtn = styled.button`
 
 const LogoImg = styled.img`
   height: 38px;     
-  width: auto;       
+  width: auto;
+  transform: scale(0.9);
   display: block;    
   object-fit: contain;
 `;
