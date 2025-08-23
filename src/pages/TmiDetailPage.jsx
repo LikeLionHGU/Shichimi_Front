@@ -12,6 +12,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import tmiDetailUrl from "../assets/images/tmidetail.svg?url";
 import sendButtonUrl from "../assets/images/sendbutton.svg?url";
 import bottomImageUrl from "../assets/images/bottomimage.svg?url";
+import viewsIconUrl from "../assets/images/views.svg?url";
 
 
 /* ===================== 공통 유틸/설정 ===================== */
@@ -292,7 +293,7 @@ const BottomRow = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #7fa889;
+  color: #BABABA;
   font-size: 14px;
 `;
 
@@ -318,13 +319,26 @@ const HeartBtn = styled.button`
 function HeartIcon({ size = 18, filled = false })  {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
-      <path d="M6.80556 1C3.59967 1 1 3.65882 1 6.93765C1 13.5 12 21 12 21C12 21 23 13.5 23 6.93765C23 2.87529 20.4003 1 17.1944 1C14.9211 1 12.9533 2.33647 12 4.28235C11.0467 2.33647 9.07889 1 6.80556 1Z" stroke="#588B49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width={"22px"} height={"20px"}
+      <path d="M6.80556 1C3.59967 1 1 3.65882 1 6.93765C1 13.5 12 21 12 21C12 21 23 13.5 23 6.93765C23 2.87529 20.4003 1 17.1944 1C14.9211 1 12.9533 2.33647 12 4.28235C11.0467 2.33647 9.07889 1 6.80556 1Z" stroke="#588B49" width={"22px"} height={"20px"}
       fill={filled ? "currentColor" : "none"}
     /* stroke="currentColor" */
         strokeWidth="1.7"/>
     </svg>
       );
 }
+
+const ViewBtn = styled(HeartBtn).attrs({ as: "div" })`
+   color: #BABABA;        /* 항상 회색(비활성 느낌) */
+   pointer-events: none;  /* 클릭/포커스 불가 */
+   &[data-active="true"] { color: #BABABA; } /* 상태 영향 X */
+   margin-bottom: 5px;
+   margin-right: -8px;
+ `;
+
+function ViewsIcon({ width = 25, height = 25 }) {
+   return <img src={viewsIconUrl} alt="" width={width} height={height} />;
+ }
+
 
 /* 우측 댓글 패널: 고정폭 + border-box 로 합산폭 정확히 맞춤 */
 const Panel = styled.aside`
@@ -471,6 +485,8 @@ export default function TmiDetailPage() {
   const { id: paramId } = useParams();
   const tmiId = String(paramId);
   const nav = useNavigate();
+  const viewKey  = `tmi-viewed:${tmiId}`;   // DEV 재마운트 가드
+  const cacheKey = `tmi-cache:${tmiId}`;    // 데이터 재수화 캐시
 
   const [tmi, setTmi] = useState(null);
   const [likes, setLikes] = useState(0);
@@ -488,35 +504,75 @@ export default function TmiDetailPage() {
   // 좋아요 중복 방지(LocalStorage)
   const likedKey = `tmi-liked:${tmiId}`;
   const [liked, setLiked] = useState(false);
+  
   useEffect(() => {
     setLiked(!!localStorage.getItem(likedKey));
   }, [tmiId]);
 
-  // 상세 조회(조회수 자동 증가)
+  const mem = (window.__tmiMem ??= { inflight: new Map(), cache: new Map() });
+
   useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        setLoading(true);
-        const data = await fetchTmi(tmiId);
-        if (!alive) return;
-        setTmi(data);
-        setLikes(data?.likes ?? 0);
-        setViews(data?.views ?? 0);
-        const initial = Array.isArray(data?.tmiCommentList) ? data.tmiCommentList : [];
-        setComments(sortCommentsDesc(initial));
-        requestAnimationFrame(() => {
-          listRef.current?.scrollTo({ top: 0 });
-        });
-      } catch (e) {
-        console.error(e);
-        setErr("글을 불러오지 못했습니다.");
-      } finally {
-        if (alive) setLoading(false);
-      }
-    })();
-    return () => { alive = false; };
-  }, [tmiId]);
+  let alive = true;
+
+  (async () => {
+    try {
+      setLoading(true);
+
+     // --- DEV에서 StrictMode 이중 마운트 중복 방지(+재사용/재수화) ---
+     if (import.meta.env.DEV) {
+       // 1) 이미 받아둔 캐시가 있으면 즉시 렌더
+       const cached = mem.cache.get(tmiId);
+       if (cached) {
+         if (!alive) return;
+         setTmi(cached);
+         setLikes(cached?.likes ?? 0);
+         setViews(cached?.views ?? 0);
+         setComments(sortCommentsDesc(Array.isArray(cached?.tmiCommentList) ? cached.tmiCommentList : []));
+         setLoading(false);
+         return;
+       }
+       // 2) 첫 마운트가 시작한 fetch가 진행 중이면 그 Promise 재사용
+       const inflight = mem.inflight.get(tmiId);
+       if (inflight) {
+         const data = await inflight;
+         if (!alive) return;
+         setTmi(data);
+         setLikes(data?.likes ?? 0);
+         setViews(data?.views ?? 0);
+         setComments(sortCommentsDesc(Array.isArray(data?.tmiCommentList) ? data.tmiCommentList : []));
+         setLoading(false);
+         return;
+       }
+     }
+
+     // 3) 최초 호출만 실제 네트워크 요청(= 조회수 +1)
+     const p = fetchTmi(tmiId);
+     if (import.meta.env.DEV) mem.inflight.set(tmiId, p);
+     const data = await p;
+
+      if (!alive) return;
+      setTmi(data);
+      setLikes(data?.likes ?? 0);
+      setViews(data?.views ?? 0);
+      const initial = Array.isArray(data?.tmiCommentList) ? data.tmiCommentList : [];
+      setComments(sortCommentsDesc(initial));
+     if (import.meta.env.DEV) mem.cache.set(tmiId, data); // 재마운트 시 재수화용
+
+      requestAnimationFrame(() => {
+        listRef.current?.scrollTo({ top: 0 });
+      });
+    } catch (e) {
+      console.error(e);
+      setErr("글을 불러오지 못했습니다.");
+    } finally {
+     if (import.meta.env.DEV) mem.inflight.delete(tmiId);
+      if (alive) setLoading(false);
+    }
+  })();
+
+  return () => { alive = false; };
+}, [tmiId]);
+
 
   // 좋아요
   async function onLike() {
@@ -659,6 +715,12 @@ export default function TmiDetailPage() {
             </HeartBtn>
             {/* 필요 시 조회수 표기
             <span style={{ color: "#6A6A6A" }}>조회 {views.toLocaleString()}</span> */}
+            {/* 필요 시 조회수 표기
+            <span style={{ color: "#6A6A6A" }}>조회 {views.toLocaleString()}</span> */}
+            <ViewBtn aria-label="조회수" title="조회수">
+              <ViewsIcon />
+            </ViewBtn>
+            <span>{(views ?? 0).toLocaleString()}</span>
           </BottomRow>
         </PostCard>
 

@@ -92,7 +92,9 @@ const StoreTitle_left_icon = styled.div`
   background-color: ${themeColors.white.color};
   border: none;
   img{
+
     transform: scale(0.8);
+
   }
 `;
 const StoreTitle_right_name = styled.div`
@@ -123,9 +125,11 @@ const StoreInfo = styled.div`
     color: ${themeColors.white.color};
     margin: 0;
     font-size: 0.8vw;
+
     font-weight: 400;
     white-space: nowrap;
     line-height: 1.8;
+
   }
 `;
 

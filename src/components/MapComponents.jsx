@@ -25,7 +25,6 @@ import axios from "axios";
 const MapContainer = styled.div`
   position: relative;
   display: block;
-
   margin-top: 1%;
 `;
 
@@ -40,6 +39,7 @@ const MapImg = styled.img`
 const Map_Top = styled.div`
   display: flex;
   justify-content: center;
+
   align-content: center;
   margin-bottom: 2.5%;
   img{
@@ -53,6 +53,7 @@ const Map_Top = styled.div`
     position: relative;
     font-size: 1.5vw;
     font-weight: 1000;
+
 
   }
 `;
@@ -83,7 +84,9 @@ const Store_icon = styled.img`
 const Store_name = styled.div`
   margin-top: 3%;
   font-size: 0.8vw;
+
   font-weight: 900;
+
 `;
 
 /* 가로로 1~5열 */
@@ -92,7 +95,9 @@ const Row1_icon = styled.div`
   display: flex;
   flex-direction: row;
 
+
   top: 20%;
+
   left: 4%;
   justify-content: space-evenly;
   align-items: center;
@@ -103,6 +108,7 @@ const Row2_icon = styled.div`
   position: absolute;
   display: flex;
   flex-direction: row;
+
 
   top: 39%;
   left: 3.5%;
@@ -127,6 +133,7 @@ const Row4_icon = styled.div`
   position: absolute;
   display: flex;
   flex-direction: row;
+
 
   top: 73%;
   left: 3.5%;

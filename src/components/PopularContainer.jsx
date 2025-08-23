@@ -26,7 +26,9 @@ const Top_PopContainer = styled.div`
   width: 23vw;
   height: 10vh;
 
+
   margin-top: -1.3%;
+
 `;
 
 const Top_Circle = styled.div`

@@ -181,6 +181,7 @@ const getTmiCategory = async(marketId, categoryChip) => {
           </ScrollBar>
         </ThisTmi>
         <NoCenterHorizontalReverse>
+
           <Detail_Tmi_Btn $color={$color}
           onClick={() =>
               navigate("/add", {

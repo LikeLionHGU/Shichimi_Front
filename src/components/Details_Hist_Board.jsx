@@ -41,6 +41,7 @@ const BottomBoard = styled.div`
 const HistImg = styled.img`
   display: flex;
   
+
   transform: scale(0.98);
   width: 90%;
   margin-top:4% ;
@@ -55,6 +56,7 @@ const HistText = styled.div`
   p{
     margin-top: 2%;
     font-size: 0.8vw;
+
     line-height: 1.5;
   }
 `

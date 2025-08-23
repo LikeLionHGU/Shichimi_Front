@@ -36,7 +36,7 @@ const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
   width: 1720px;
-  height: 1080px;
+  height: 1220px;
   max-width: 100%;
 
 
@@ -153,7 +153,7 @@ const InfoBubble = styled.div`
   font-size: 16px; line-height: 24px;
 `;
 const InfoBubbleArrow = styled.div`
-  position: absolute; left: -6px; top: 1.5;
+  position: absolute; left: -6px; top: 8.5px;
   width: 20px; height: 20px; transform: rotate(45deg);
   background: #FFFDF5;
   box-shadow: -3px 3px 8px rgba(0,0,0,0.06);
@@ -844,6 +844,9 @@ export default function AddTmiPage(){
   const [category, setCategory] = useState("");
   const [body, setBody] = useState("");
 
+  const [userPickedCategory, setUserPickedCategory] = useState(false);
+  const [aiSuggested, setAiSuggested] = useState("");
+
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
@@ -913,7 +916,6 @@ export default function AddTmiPage(){
   // ;
 
   /* 버튼 활성화 조건: 제목 + 장소 + 카테고리 + 본문(>10자, 최대 400자) */
-const MAX_TITLE = 30;
 const canSubmit = useMemo(() => {
   const tLen = title.trim().length;
   const bLen = body.trim().length;
@@ -922,7 +924,7 @@ const canSubmit = useMemo(() => {
     tLen > 0 &&
     tLen <= MAX_TITLE &&         // 제목 30자 제한
     placeText.trim().length > 0 &&
-    !!category &&                // ← 칩(카테고리) 선택 필수
+    // !!category &&                // ← 칩(카테고리) 선택 필수
     bLen > 10 &&                 // 본문 10자 “초과”
     bLen <= MAX_BODY;
 
@@ -945,13 +947,14 @@ const canSubmit = useMemo(() => {
   const doSubmit = async () => {
     setSubmitting(true);
   /* 실제 저장 로직(모달 '확인'에서 호출) */
-  let finalCategory = category;
-   if(!finalCategory){
-     const lowered = body.toLowerCase();
-     if(lowered.includes("?"))      finalCategory = "질문";
-      else if(lowered.includes("리뷰")) finalCategory = "리뷰";
-     else                           finalCategory = "전체";
-   }
+  // let finalCategory = category;
+  //  if(!finalCategory){
+  //    const lowered = body.toLowerCase();
+  //    if(lowered.includes("?"))      finalCategory = "질문";
+  //     else if(lowered.includes("리뷰")) finalCategory = "리뷰";
+  //    else                           finalCategory = "전체";
+  //  }
+   let finalCategory = category || suggestCategoryFromBody(body) || "썰";
    const sel = CATEGORY_OPTIONS.find(o => o.label === finalCategory);
    const categoryForServer = sel?.value ?? finalCategory.replace(/\//g, "");
 
@@ -973,6 +976,52 @@ const canSubmit = useMemo(() => {
       setSubmitting(false);
     }
   };
+
+   // ====== 파일 어디든(컴포넌트 밖) 유틸로 추가 ======
+  function suggestCategoryFromBody(text) {
+    const t = (text || "").toLowerCase();
+    if (t.includes("?") || t.includes("왜") || t.includes("어떻게")) return "질문";
+    if (t.includes("리뷰") || t.includes("맛있") || t.includes("친절") || t.includes("불친절")) return "리뷰";
+    if (t.includes("분실") || t.includes("도난") || t.includes("사고") || t.includes("환불") || t.includes("신고")) return "사건/사고";
+    if (t.includes("팁") || t.includes("주의") || t.includes("꿀팁")) return "팁";
+    if (t.includes("기념") || t.includes("축하") || t.includes("생일")) return "기념";
+    return "썰";
+  }
+
+    useEffect(() => {
+        if (userPickedCategory) return;      // 사람이 고르면 AI 개입 X
+        if (category) return;                // 이미 정해졌으면 X
+        if (body.trim().length <= 10) return;
+    
+        const ctrl = new AbortController();
+        const id = setTimeout(async () => {
+          try {
+            const res = await fetch("/.netlify/functions/classify-category", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: body }),
+              signal: ctrl.signal
+            });
+            if (!res.ok) throw new Error("bad-status");
+            const { label } = await res.json();
+            if (!userPickedCategory && !category && label) {
+              setAiSuggested(label);
+              setCategory(label);
+            }
+          } catch {
+            // 서버 실패 → 폴백 휴리스틱
+            const fallback = suggestCategoryFromBody(body);
+            if (!userPickedCategory && !category && fallback) {
+              setAiSuggested(fallback);
+              setCategory(fallback);
+            }
+          }
+        }, 400);
+    
+        return () => { clearTimeout(id); ctrl.abort(); };
+      }, [body, userPickedCategory, category]);
+    
+  
 
   
 
@@ -1136,8 +1185,13 @@ const canSubmit = useMemo(() => {
                   <ChipWrap>
                     {CATEGORY_OPTIONS.map((opt)=> (
                       <Chip key={opt.id} type="button" data-active={category === opt.label}
-                         onClick={()=> setCategory(prev=> prev === opt.label ? "" : opt.label)}>
+                      onClick={()=>{
+                           const next = (category === opt.label) ? "" : opt.label;
+                           setCategory(next);
+                           setUserPickedCategory(next !== ""); // 해제되면 false → AI 다시 개입
+                        }}>
                          {opt.label}
+                         
                        </Chip>
                     ))}
                   </ChipWrap>
@@ -1151,6 +1205,8 @@ const canSubmit = useMemo(() => {
                   </TextareaBox>
                   {errors.body && <ErrorText>{errors.body}</ErrorText>}
                 </Field>
+
+                
               </div>
             </Grid>
 

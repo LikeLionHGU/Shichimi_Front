@@ -14,7 +14,9 @@ const Card =styled.div`
   h3{
     margin: 2% 5% 1% 2%;
     font-size: 0.8vw;
+
     font-weight: 600;
+
   }
 
   p{

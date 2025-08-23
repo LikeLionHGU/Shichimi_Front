@@ -14,7 +14,6 @@ const GrayTmiBtn = styled.button`
   justify-content: center;
   align-content: center;
   align-items: center;
-  
   margin-top: 3%;
   border: 1px solid  ${({ $color }) => $color };
   border-radius: 10px;
@@ -24,9 +23,7 @@ const GrayTmiBtn = styled.button`
   color: ${themeColors.white.color};
   font-weight: bold;
   font-size: 1vw;
-
   font-family: 'BMHANNA', sans-serif;
-
   &:hover{
     cursor: pointer;
     box-shadow: 0 1px 0 ${themeColors.black.color};
