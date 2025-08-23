@@ -1,7 +1,7 @@
-// netlify/functions/classify-category.js
+// ESM 버전 (Netlify Functions에서 잘 동작)
 import OpenAI from "openai";
 
-const CATEGORY_LABELS = ["썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
+const CATEGORY_LABELS = ["썰","팁","사건/사고","기념","자랑","리뷰","질문","인사이트"];
 const SERVER_LABEL_MAP = { "사건/사고": "사건사고" };
 
 export async function handler(event) {
@@ -36,15 +36,12 @@ export async function handler(event) {
 
     const prompt = [
       { role: "system", content: "너는 한국어 글을 아래 카테고리 중 하나로 분류하는 분류기야." },
-      {
-        role: "user",
-        content:
+      { role: "user", content:
 `카테고리 후보: ${CATEGORY_LABELS.join(", ")}
 본문을 읽고 label을 하나만 골라줘. 반드시 후보 중 하나여야 해.
 
 본문:
-${text}`
-      }
+${text}` }
     ];
 
     const r = await client.responses.create({
@@ -53,7 +50,7 @@ ${text}`
       response_format: { type: "json_schema", json_schema: jsonSchema }
     });
 
-    // 안전한 파싱 (SDK 버전 차이 대비)
+    // 안전 파싱
     let parsed = r?.output_parsed;
     if (!parsed) {
       const outText =
@@ -73,7 +70,6 @@ ${text}`
 
     return { statusCode: 200, body: JSON.stringify({ label, serverLabel, confidence }) };
   } catch (e) {
-    // ➜ 디버깅을 위해 detail 노출 (원인 잡히면 이 부분은 간략화해도 됨)
     return { statusCode: 500, body: JSON.stringify({ error: "openai-error", detail: e?.message || String(e) }) };
   }
 }
