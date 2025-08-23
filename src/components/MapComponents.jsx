@@ -25,6 +25,8 @@ import axios from "axios";
 const MapContainer = styled.div`
   position: relative;
   display: block;
+
+
 `;
 
 const MapImg = styled.img`
@@ -81,6 +83,7 @@ const Store_icon = styled.img`
 const Store_name = styled.div`
   margin-top: 3%;
   font-size: 0.8vw;
+  font-weight: 900;
 `;
 
 /* 가로로 1~5열 */

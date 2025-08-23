@@ -123,6 +123,7 @@ const StoreInfo = styled.div`
     color: ${themeColors.white.color};
     margin: 0;
     font-size: 0.8vw;
+    font-weight: 400;
     white-space: nowrap;
   }
 `;
