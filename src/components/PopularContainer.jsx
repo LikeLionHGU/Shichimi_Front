@@ -102,7 +102,7 @@ const SectionPost = styled.div`
     font-size: 0.7vw;
     display: block;
     align-self: stretch;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1;
     
     white-space: nowrap;
