@@ -47,9 +47,26 @@ ${text}` }
     const r = await client.responses.create({
       model: "gpt-4o-mini",
       input: prompt,
-      // 🔧 바뀐 위치: response_format → text.format
-      text: { format: { type: "json_schema", json_schema: jsonSchema } }
+     // (신) text.format에 name/schema/strict가 직접 위치
+     text: {
+       format: {
+         type: "json_schema",
+         name: "CategoryPrediction",
+         schema: {
+           type: "object",
+           properties: {
+             label: { type: "string", enum: CATEGORY_LABELS },
+             confidence: { type: "number", minimum: 0, maximum: 1 }
+           },
+           required: ["label"],
+           additionalProperties: false
+         },
+         strict: true
+       }
+     }
     });
+    
+
 
     // 구조화 출력 파싱
     let parsed = r?.output_parsed;
