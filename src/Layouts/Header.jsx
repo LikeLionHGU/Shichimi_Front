@@ -14,7 +14,7 @@ const NoCenterHorizontal = styled.header`
   display: flex;
   align-items: center;
   /* padding: 1.5% 0 1% 12%; */
-  padding-left: 13%;
+  padding-left: 12%;
   padding-top: 1%;
   height: 72px;
   background: transparent !important;
