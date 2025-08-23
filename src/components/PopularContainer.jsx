@@ -26,7 +26,9 @@ const Top_PopContainer = styled.div`
   width: 23vw;
   height: 10vh;
 
-  margin-top: -5.5%;
+
+  margin-top: -1.3%;
+
 `;
 
 const Top_Circle = styled.div`
@@ -102,7 +104,7 @@ const SectionPost = styled.div`
     font-size: 0.7vw;
     display: block;
     align-self: stretch;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1;
     
     white-space: nowrap;

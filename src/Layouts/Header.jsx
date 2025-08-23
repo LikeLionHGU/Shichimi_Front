@@ -32,7 +32,8 @@ const LogoBtn = styled.button`
 
 const LogoImg = styled.img`
   height: 38px;     
-  width: auto;       
+  width: auto;
+  transform: scale(0.9);
   display: block;    
   object-fit: contain;
 `;

@@ -25,6 +25,7 @@ import axios from "axios";
 const MapContainer = styled.div`
   position: relative;
   display: block;
+  margin-top: 1%;
 `;
 
 const MapImg = styled.img`
@@ -38,20 +39,22 @@ const MapImg = styled.img`
 const Map_Top = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  align-content: center;
 
+  align-content: center;
+  margin-bottom: 2.5%;
   img{
     position: absolute;
     margin: 2% 0 3% 0;
-    width: 36vw;
-    height: auto;
+    transform: scale(0.9);
   }
 
   h2{
+    padding-top: 1%;
     position: relative;
     font-size: 1.5vw;
-    font-weight: 800;
+    font-weight: 1000;
+
+
   }
 `;
 
@@ -81,6 +84,9 @@ const Store_icon = styled.img`
 const Store_name = styled.div`
   margin-top: 3%;
   font-size: 0.8vw;
+
+  font-weight: 900;
+
 `;
 
 /* 가로로 1~5열 */
@@ -89,7 +95,9 @@ const Row1_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 17%;
+
+  top: 20%;
+
   left: 4%;
   justify-content: space-evenly;
   align-items: center;
@@ -101,7 +109,8 @@ const Row2_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 37%;
+
+  top: 39%;
   left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
@@ -113,7 +122,7 @@ const Row3_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 53%;
+  top: 54%;
   left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
@@ -125,7 +134,8 @@ const Row4_icon = styled.div`
   display: flex;
   flex-direction: row;
 
-  top: 72%;
+
+  top: 73%;
   left: 3.5%;
   justify-content: space-evenly;
   align-items: center;
