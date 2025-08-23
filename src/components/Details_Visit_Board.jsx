@@ -181,8 +181,6 @@ const getTmiCategory = async(marketId, categoryChip) => {
           </ScrollBar>
         </ThisTmi>
         <NoCenterHorizontalReverse>
-          <div
-            role="button">
           <Detail_Tmi_Btn $color={$color}
           onClick={() =>
               navigate("/add", {
@@ -192,7 +190,7 @@ const getTmiCategory = async(marketId, categoryChip) => {
                 },
               })
             }
-            /></div>
+          />
         </NoCenterHorizontalReverse>
         </BottomBoard>
     </>
