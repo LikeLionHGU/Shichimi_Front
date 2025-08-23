@@ -20,20 +20,6 @@ export async function handler(event) {
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    const jsonSchema = {
-      name: "CategoryPrediction",
-      schema: {
-        type: "object",
-        properties: {
-          label: { type: "string", enum: CATEGORY_LABELS },
-          confidence: { type: "number", minimum: 0, maximum: 1 }
-        },
-        required: ["label"],
-        additionalProperties: false
-      },
-      strict: true
-    };
-
     const prompt = [
       { role: "system", content: "너는 한국어 글을 아래 카테고리 중 하나로 분류하는 분류기야." },
       { role: "user", content:
@@ -44,29 +30,23 @@ export async function handler(event) {
 ${text}` }
     ];
 
+    const schema = {
+      type: "object",
+      properties: {
+        label: { type: "string", enum: CATEGORY_LABELS },
+        confidence: { type: "number", minimum: 0, maximum: 1 }
+      },
+      required: ["label", "confidence"], // ← 여기!
+      additionalProperties: false
+    };
+
     const r = await client.responses.create({
       model: "gpt-4o-mini",
       input: prompt,
-     // (신) text.format에 name/schema/strict가 직접 위치
-     text: {
-       format: {
-         type: "json_schema",
-         name: "CategoryPrediction",
-         schema: {
-           type: "object",
-           properties: {
-             label: { type: "string", enum: CATEGORY_LABELS },
-             confidence: { type: "number", minimum: 0, maximum: 1 }
-           },
-           required: ["label"],
-           additionalProperties: false
-         },
-         strict: true
-       }
-     }
+      // 새 스펙: text.format 안에 name/schema/strict
+      text: { format: { type: "json_schema", name: "CategoryPrediction", schema, strict: true } }
+      // (선택) temperature: 0.2
     });
-    
-
 
     // 구조화 출력 파싱
     let parsed = r?.output_parsed;
@@ -88,7 +68,6 @@ ${text}` }
 
     return { statusCode: 200, body: JSON.stringify({ label, serverLabel, confidence }) };
   } catch (e) {
-    // 문제 원인 보이도록 detail 유지(해결 후 깔끔히 줄여도 됨)
     return { statusCode: 500, body: JSON.stringify({ error: "openai-error", detail: e?.message || String(e) }) };
   }
 }
