@@ -1,7 +1,7 @@
-// ESM 버전 (Netlify Functions에서 잘 동작)
+// netlify/functions/classify-category.js
 import OpenAI from "openai";
 
-const CATEGORY_LABELS = ["썰","팁","사건/사고","기념","자랑","리뷰","질문","인사이트"];
+const CATEGORY_LABELS = ["썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
 const SERVER_LABEL_MAP = { "사건/사고": "사건사고" };
 
 export async function handler(event) {
@@ -47,10 +47,11 @@ ${text}` }
     const r = await client.responses.create({
       model: "gpt-4o-mini",
       input: prompt,
-      response_format: { type: "json_schema", json_schema: jsonSchema }
+      // 🔧 바뀐 위치: response_format → text.format
+      text: { format: { type: "json_schema", json_schema: jsonSchema } }
     });
 
-    // 안전 파싱
+    // 구조화 출력 파싱
     let parsed = r?.output_parsed;
     if (!parsed) {
       const outText =
@@ -70,6 +71,7 @@ ${text}` }
 
     return { statusCode: 200, body: JSON.stringify({ label, serverLabel, confidence }) };
   } catch (e) {
+    // 문제 원인 보이도록 detail 유지(해결 후 깔끔히 줄여도 됨)
     return { statusCode: 500, body: JSON.stringify({ error: "openai-error", detail: e?.message || String(e) }) };
   }
 }
