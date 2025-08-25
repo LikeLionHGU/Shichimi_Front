@@ -35,7 +35,7 @@ function parseKSTDate(s) {
     if (!s) return null;
     if (/[zZ]|[+-]\d{2}:\d{2}$/.test(s)) return new Date(s); 
     const normalized = String(s).replace(" ", "T");
-    return new Date(normalized + "+00:00");
+    return new Date(normalized + "+09:00");
   }
 
 
@@ -112,15 +112,6 @@ const Stage = styled.div`
   }
 `;
 
- const CardSkin = styled.img`
-   position: absolute; inset: 0;
-   width: 100%; height: 100%;
-   object-fit: fill;        
-   border-radius: inherit;
-   pointer-events: none;
-   z-index: 0;
- `;
-
 
 const PostCard = styled.article`
    position: relative;
@@ -151,16 +142,6 @@ const CardFrame = styled.img`
   height: 618px;
   z-index: 0;
   pointer-events: none;
-`;
-
-const CardInner = styled.div`
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 36px 80px 56px;
-  gap: 10px;
 `;
 
 
@@ -259,14 +240,6 @@ const BodyText = styled.div`
   overflow: auto;
 `;
 
- const BodyImg = styled.img`
-   width: 620px;
-   max-width: 100%;
-   height: 232px;
-   display: block;
-   object-fit: contain; 
- `;
-
 
 const BottomRow = styled.div`
   margin-top: auto; 
@@ -296,16 +269,18 @@ const HeartBtn = styled.button`
 `;
 
 
-function HeartIcon({ size = 18, filled = false })  {
+
+function HeartIcon({ size = 24, filled = false }) {
+  const h = Math.round(size * 22 / 24);
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
-      <path d="M6.80556 1C3.59967 1 1 3.65882 1 6.93765C1 13.5 12 21 12 21C12 21 23 13.5 23 6.93765C23 2.87529 20.4003 1 17.1944 1C14.9211 1 12.9533 2.33647 12 4.28235C11.0467 2.33647 9.07889 1 6.80556 1Z" stroke="#588B49" width={"22px"} height={"20px"}
-      fill={filled ? "currentColor" : "none"}
-    /* stroke="currentColor" */
-        strokeWidth="1.7"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={h} viewBox="0 0 24 22" fill="none">
+      <path d="M6.80556 1C3.59967 1 1 3.65882 1 6.93765C1 13.5 12 21 12 21C12 21 23 13.5 23 6.93765C23 2.87529 20.4003 1 17.1944 1C14.9211 1 12.9533 2.33647 12 4.28235C11.0467 2.33647 9.07889 1 6.80556 1Z"
+        stroke="#588B49"
+        fill={filled ? "currentColor" : "none"}
+        strokeWidth="1.7" />
     </svg>
-      );
-}
+  );
+} 
 
 const ViewBtn = styled(HeartBtn).attrs({ as: "div" })`
    color: #BABABA;        
@@ -324,18 +299,17 @@ const Panel = styled.aside`
 width: 444px;
 height: 618px;
 flex-shrink: 0;
-  box-sizing: border-box;
-  flex: 0 0 360px;          
-  display: flex;
-  flex-direction: column;
+box-sizing: border-box;
+flex: 0 0 360px;          
+display: flex;
+flex-direction: column;
 
-  background: #fffdf5;
-  border: 1.5px solid #2c2c2c;
-  border-radius: 16px;
-  padding: 7px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-  height: 700px;
-  max-height: 618px;
+background: #fffdf5;
+border: 1.5px solid #2c2c2c;
+border-radius: 16px;
+padding: 7px;
+box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+max-height: 618px;
 `;
 
 const PanelTitle = styled.div`
@@ -461,9 +435,7 @@ const BottomImg = styled.img`
 export default function TmiDetailPage() {
   const { id: paramId } = useParams();
   const tmiId = String(paramId);
-  const nav = useNavigate();
-  const viewKey  = `tmi-viewed:${tmiId}`;   
-  const cacheKey = `tmi-cache:${tmiId}`;    
+  
 
   const [tmi, setTmi] = useState(null);
   const [likes, setLikes] = useState(0);
@@ -722,7 +694,7 @@ export default function TmiDetailPage() {
                 }
               }}
             />
-            <SendBtn aria-label="보내기">
+            <SendBtn aria-label="보내기" disabled={sending || !commentText.trim()}>
               <img src={sendButtonUrl} alt="" />
             </SendBtn>
 
