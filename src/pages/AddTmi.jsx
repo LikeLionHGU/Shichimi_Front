@@ -900,7 +900,7 @@ const canSubmit = useMemo(() => {
 
   const doSubmit = async () => {
     setSubmitting(true);
-   let finalCategory = category || suggestCategoryFromBody(body) || "썰";
+   let finalCategory = category || "썰";
    const sel = CATEGORY_OPTIONS.find(o => o.label === finalCategory);
    const categoryForServer = sel?.value ?? finalCategory.replace(/\//g, "");
 
@@ -921,15 +921,6 @@ const canSubmit = useMemo(() => {
     }
   };
 
-  function suggestCategoryFromBody(text) {
-    const t = (text || "").toLowerCase();
-    if (t.includes("?") || t.includes("왜") || t.includes("어떻게")) return "질문";
-    if (t.includes("리뷰") || t.includes("맛있") || t.includes("친절") || t.includes("불친절")) return "리뷰";
-    if (t.includes("분실") || t.includes("도난") || t.includes("사고") || t.includes("환불") || t.includes("신고")) return "사건/사고";
-    if (t.includes("팁") || t.includes("주의") || t.includes("꿀팁")) return "팁";
-    if (t.includes("기념") || t.includes("축하") || t.includes("생일")) return "기념";
-    return "썰";
-  }
 
     useEffect(() => {
         if (userPickedCategory) return;      
@@ -952,11 +943,7 @@ const canSubmit = useMemo(() => {
               setCategory(label);
             }
           } catch {
-            const fallback = suggestCategoryFromBody(body);
-            if (!userPickedCategory && !category && fallback) {
-              setAiSuggested(fallback);
-              setCategory(fallback);
-            }
+            
           }
         }, 400);
     
