@@ -1,11 +1,3 @@
-// src/pages/TmiDetailPage.jsx
-// - 라우트: /records/:id
-// - API: GET /tmi/records/{tmiId} (조회수 자동 증가)
-//        POST /tmi/{tmiId}/like
-//        POST /tmi/{tmiId}/comments  body: { content }
-// - 전부 flex 레이아웃 / 댓글 최신순 상단 / 등록 시 스크롤 최상단 / 좋아요 중복 방지+롤백
-// - 한국 로케일 및 Asia/Seoul 고정 / 에러 메시지 정리
-
 import React, { useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -15,7 +7,6 @@ import bottomImageUrl from "../assets/images/bottomimage.svg?url";
 import viewsIconUrl from "../assets/images/views.svg?url";
 
 
-/* ===================== 공통 유틸/설정 ===================== */
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
 function apiUrl(path) {
   if (!API_BASE) throw new Error("VITE_API_BASE_URL이 비어 있습니다.");
@@ -42,7 +33,7 @@ function fmtKST(iso) {
 
 function parseKSTDate(s) {
     if (!s) return null;
-    if (/[zZ]|[+-]\d{2}:\d{2}$/.test(s)) return new Date(s); // ISO + TZ
+    if (/[zZ]|[+-]\d{2}:\d{2}$/.test(s)) return new Date(s); 
     const normalized = String(s).replace(" ", "T");
     return new Date(normalized + "+00:00");
   }
@@ -60,12 +51,11 @@ function sortCommentsDesc(list) {
 }
 
 
-/* ===================== API 호출 (스펙 고정) ===================== */
 async function fetchTmi(tmiId) {
   const url = apiUrl(`/tmi/records/${tmiId}`);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`GET ${url} ${res.status}`);
-  return res.json(); // { tmiId, title, content, category, email, likes, views, marketId, marketName, tmiCommentList: [...] }
+  return res.json();
 }
 async function likeTmi(tmiId) {
   const url = apiUrl(`/tmi/${tmiId}/like`);
@@ -74,7 +64,7 @@ async function likeTmi(tmiId) {
     const msg = cleanMsg(await res.text().catch(() => ""));
     throw new Error(`POST ${url} ${res.status} ${msg}`);
   }
-  return res.json(); // 갱신된 TMI 객체
+  return res.json(); 
 }
 async function createComment(tmiId, content) {
   const url = apiUrl(`/tmi/${tmiId}/comments`);
@@ -87,10 +77,9 @@ async function createComment(tmiId, content) {
     const msg = cleanMsg(await res.text().catch(() => ""));
     throw new Error(`POST ${url} ${res.status} ${msg}`);
   }
-  return res.json(); // { id, content, createdDate }
+  return res.json(); 
 }
 
-/* ===================== 스타일(모두 flex, 박스사이징 통일) ===================== */
 const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
@@ -99,14 +88,12 @@ const Page = styled.main`
   margin: 0 auto;
 `;
 
-/* 페이지 전용 전역 배경: html/body/#root를 #FFFDF5로 고정 */
 const LocalBG = createGlobalStyle`
   html, body, #root { min-height: 100%; background: #FFFDF5; }
   body { margin: 0; }
 `;
 
 
-/* 레이아웃 컨테이너 */
 const Stage = styled.div`
   width: min(1100px, 95vw);
   margin: auto 80px;
@@ -116,7 +103,7 @@ const Stage = styled.div`
   box-sizing: border-box;
   margin-top: 100px;
   margin-bottom: -15%;
-  margin-left: 12.5%;    /* 헤더 padding-left와 동일 값 */
+  margin-left: 12.5%;    
 
 
   /* 작은 화면: 1열 스택 */
@@ -128,18 +115,17 @@ const Stage = styled.div`
  const CardSkin = styled.img`
    position: absolute; inset: 0;
    width: 100%; height: 100%;
-   object-fit: fill;        /* 100% 100%와 동일 효과 */
+   object-fit: fill;        
    border-radius: inherit;
    pointer-events: none;
    z-index: 0;
  `;
 
 
-/* 좌측 카드: 패딩/보더 포함 폭 계산을 위해 border-box 명시 */
 const PostCard = styled.article`
    position: relative;
-   isolation: isolate;       /* z-index:-1 배경이 카드 뒤로만 가도록(사파리 포함) */
-   overflow: hidden;         /* 둥근모서리로 배경 클리핑 */
+   isolation: isolate;       
+   overflow: hidden;         
    background: transparent;
 
    width: 760px;
@@ -152,36 +138,32 @@ const PostCard = styled.article`
    flex-direction: column;
    gap: 10px;
 
-   border: 0;                /* SVG가 테두리/모서리 포함, 실제 보더 제거 */
+   border: 0;                
    border-radius: 16px;
    padding: 36px 80px 56px;
 
  `;
 
-/* 카드의 틀 이미지(SVG) — 콘텐츠 아래쪽 레이어 */
 const CardFrame = styled.img`
   position: absolute;
-  inset: 0;                /* top/right/bottom/left: 0 */
+  inset: 0;                
   width: 100%;
   height: 618px;
   z-index: 0;
   pointer-events: none;
 `;
 
-/* 프레임 위에 올라갈 실제 내용 */
 const CardInner = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* 프레임 안쪽 여백(프레임 디자인에 맞춰 조절) */
   padding: 36px 80px 56px;
   gap: 10px;
 `;
 
 
-/* 제목 줄: 좌측 스페이서 · 중앙 제목 · 우측 원형 배지 */
 const TitleBar = styled.div`
   display: flex;
   align-items: center;
@@ -197,8 +179,6 @@ const PlaceBar = styled.div`
 const PlaceName = styled.div`
 color: var(--black, #2C2C2C);
 text-align: right;
-
-/* 본문 제목 */
 font-family: Pretendard;
 font-size: 18px;
 font-style: normal;
@@ -243,10 +223,10 @@ const CircleBadge = styled.span`
   align-items: center;
   justify-content: center;
   height: 32px;
-  min-width: 32px;          /* 한 글자일 땐 원형 유지 */
-  padding: 0 10px;           /* 내용 길이에 따라 가로로 늘어남 */
+  min-width: 32px;          
+  padding: 0 10px;           
   box-sizing: border-box;
-  border-radius: 9999px;     /* 캡슐 모양 */
+  border-radius: 9999px;     
   border: 1px solid rgba(44, 44, 44, 0.50);
   background: var(--white, #FFFDF5);
   color: rgba(44, 44, 44, 0.50);
@@ -254,7 +234,7 @@ const CircleBadge = styled.span`
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.7px;
-  white-space: nowrap;       /* 줄바꿈 방지 */
+  white-space: nowrap;       
 `;
 
 const Body = styled.div`
@@ -284,12 +264,12 @@ const BodyText = styled.div`
    max-width: 100%;
    height: 232px;
    display: block;
-   object-fit: contain; /* SVG 비율 유지 */
+   object-fit: contain; 
  `;
 
 
 const BottomRow = styled.div`
-  margin-top: auto; /* 카드 하단 고정 */
+  margin-top: auto; 
   display: flex;
   align-items: center;
   gap: 8px;
@@ -304,13 +284,13 @@ const HeartBtn = styled.button`
   background: transparent;
   border: 0;
   padding: 6px 8px;
-  color: #BABABA; /* 기본 초록톤(외곽선/텍스트) */
+  color: #BABABA; 
   cursor: pointer;
   transition: color .15s ease, opacity .15s ease, transform .05s ease;
 
   &:hover { opacity: 0.9; }
   &:active { transform: scale(0.98); }
-  &[data-active="true"] { color: #5e8a6b; } /* 활성화 시 더 진한 초록 */
+  &[data-active="true"] { color: #5e8a6b; } 
   &:disabled { opacity: 0.85; cursor: default; }
   &[data-active="true"]:disabled { opacity: 1; }
 `;
@@ -328,9 +308,9 @@ function HeartIcon({ size = 18, filled = false })  {
 }
 
 const ViewBtn = styled(HeartBtn).attrs({ as: "div" })`
-   color: #BABABA;        /* 항상 회색(비활성 느낌) */
-   pointer-events: none;  /* 클릭/포커스 불가 */
-   &[data-active="true"] { color: #BABABA; } /* 상태 영향 X */
+   color: #BABABA;        
+   pointer-events: none;  
+   &[data-active="true"] { color: #BABABA; } 
    margin-bottom: 5px;
    margin-right: -8px;
  `;
@@ -340,13 +320,12 @@ function ViewsIcon({ width = 25, height = 25 }) {
  }
 
 
-/* 우측 댓글 패널: 고정폭 + border-box 로 합산폭 정확히 맞춤 */
 const Panel = styled.aside`
 width: 444px;
 height: 618px;
 flex-shrink: 0;
   box-sizing: border-box;
-  flex: 0 0 360px;           /* 패딩/보더 포함 폭 360px로 고정(시안 느낌) */
+  flex: 0 0 360px;          
   display: flex;
   flex-direction: column;
 
@@ -410,7 +389,7 @@ const CommentInput = styled.textarea`
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 270%; /* 24px */
+  line-height: 270%; 
   letter-spacing: 0.48px;
   outline: none;
   &::placeholder { color: #BABABA; }
@@ -441,9 +420,8 @@ const SendBtn = styled.button`
     box-shadow: 0 0 0 3px rgba(88, 139, 73, 0.35);
   }
 
-  /* 아이콘 이미지 크기/정렬 */
   & > img {
-    width: 52px;   /* 필요하면 20~28px로 조정 */
+    width: 52px;   
     height: 52px;
     display: block;
     pointer-events: none;
@@ -476,17 +454,16 @@ const BottomImg = styled.img`
   display: block;
   width: 100%;
   height: 150px;
-  object-fit: cover;     /* 가로는 꽉, 세로는 크롭 */
+  object-fit: cover;     
   border-radius: 12px;
 `;
 
-/* ===================== 페이지 ===================== */
 export default function TmiDetailPage() {
   const { id: paramId } = useParams();
   const tmiId = String(paramId);
   const nav = useNavigate();
-  const viewKey  = `tmi-viewed:${tmiId}`;   // DEV 재마운트 가드
-  const cacheKey = `tmi-cache:${tmiId}`;    // 데이터 재수화 캐시
+  const viewKey  = `tmi-viewed:${tmiId}`;   
+  const cacheKey = `tmi-cache:${tmiId}`;    
 
   const [tmi, setTmi] = useState(null);
   const [likes, setLikes] = useState(0);
@@ -501,7 +478,6 @@ export default function TmiDetailPage() {
 
   const listRef = useRef(null);
 
-  // 좋아요 중복 방지(LocalStorage)
   const likedKey = `tmi-liked:${tmiId}`;
   const [liked, setLiked] = useState(false);
   
@@ -518,9 +494,7 @@ export default function TmiDetailPage() {
     try {
       setLoading(true);
 
-     // --- DEV에서 StrictMode 이중 마운트 중복 방지(+재사용/재수화) ---
      if (import.meta.env.DEV) {
-       // 1) 이미 받아둔 캐시가 있으면 즉시 렌더
        const cached = mem.cache.get(tmiId);
        if (cached) {
          if (!alive) return;
@@ -531,7 +505,6 @@ export default function TmiDetailPage() {
          setLoading(false);
          return;
        }
-       // 2) 첫 마운트가 시작한 fetch가 진행 중이면 그 Promise 재사용
        const inflight = mem.inflight.get(tmiId);
        if (inflight) {
          const data = await inflight;
@@ -545,7 +518,6 @@ export default function TmiDetailPage() {
        }
      }
 
-     // 3) 최초 호출만 실제 네트워크 요청(= 조회수 +1)
      const p = fetchTmi(tmiId);
      if (import.meta.env.DEV) mem.inflight.set(tmiId, p);
      const data = await p;
@@ -556,7 +528,7 @@ export default function TmiDetailPage() {
       setViews(data?.views ?? 0);
       const initial = Array.isArray(data?.tmiCommentList) ? data.tmiCommentList : [];
       setComments(sortCommentsDesc(initial));
-     if (import.meta.env.DEV) mem.cache.set(tmiId, data); // 재마운트 시 재수화용
+     if (import.meta.env.DEV) mem.cache.set(tmiId, data); 
 
       requestAnimationFrame(() => {
         listRef.current?.scrollTo({ top: 0 });
@@ -574,12 +546,11 @@ export default function TmiDetailPage() {
 }, [tmiId]);
 
 
-  // 좋아요
   async function onLike() {
     if (liking || liked) return;
     setLiking(true);
     const prev = likes;
-    setLikes(prev + 1);       // 낙관적 업데이트
+    setLikes(prev + 1);      
     setLiked(true);
     localStorage.setItem(likedKey, "1");
     try {
@@ -589,7 +560,7 @@ export default function TmiDetailPage() {
       setTmi((p) => (updated ? { ...(p || {}), ...updated } : p));
     } catch (e) {
       console.error(e);
-      setLikes(prev);         // 롤백
+      setLikes(prev);         
       setLiked(false);
       localStorage.removeItem(likedKey);
       alert("좋아요 처리에 실패했습니다. 잠시 후 다시 시도해주세요.");
@@ -598,7 +569,6 @@ export default function TmiDetailPage() {
     }
   }
 
-  // 댓글 전송(최상단 추가 + 스크롤 맨 위)
   async function onSendComment(e) {
     e.preventDefault();
     const text = commentText.trim();
@@ -680,7 +650,7 @@ export default function TmiDetailPage() {
           <PlaceBar>
             {(() => {
               const name = tmi.marketName?.trim();
-              const marketId = resolveMarketId(tmi); // 1~4일 때만 값이 나옴
+              const marketId = resolveMarketId(tmi); 
               if (!name) return <Spacer />;
               return marketId ? (
                 <PlaceNameLink to={`/info/${marketId}`} aria-label={`${name} 상세보기로 이동`}>
@@ -713,10 +683,6 @@ export default function TmiDetailPage() {
             <HeartIcon filled={liked} />
               <span>{(likes ?? 0).toLocaleString()}</span>
             </HeartBtn>
-            {/* 필요 시 조회수 표기
-            <span style={{ color: "#6A6A6A" }}>조회 {views.toLocaleString()}</span> */}
-            {/* 필요 시 조회수 표기
-            <span style={{ color: "#6A6A6A" }}>조회 {views.toLocaleString()}</span> */}
             <ViewBtn aria-label="조회수" title="조회수">
               <ViewsIcon />
             </ViewBtn>
@@ -724,7 +690,6 @@ export default function TmiDetailPage() {
           </BottomRow>
         </PostCard>
 
-        {/* 우측 댓글 패널 */}
         <Panel>
           <PanelTitle>댓글</PanelTitle>
           <List ref={listRef}>
@@ -764,7 +729,6 @@ export default function TmiDetailPage() {
           </InputRow>
         </Panel>
       </Stage>
-      {/* 페이지 푸터 이미지: 서버가 내려주는 bottomImageUrl(없으면 imageUrl) */}
       {(() => {
         const footSrc = tmi?.bottomImageUrl || tmi?.imageUrl || bottomImageUrl;
         return footSrc ? (

@@ -9,12 +9,11 @@ import infoCircleUrl from "../assets/images/info.svg?url";
 import checkUrl from "../assets/images/check.svg?url";
 import xUrl from "../assets/images/x.svg?url";
 import searchUrl from "../assets/images/search.svg?url";
-import placetri1Url from "../assets/images/placetri1.svg?url"; // 닫힘(펼치기 전) 아이콘
-import placetri2Url from "../assets/images/placetri2.svg?url"; // 열림(펼쳐짐) 아이콘
+import placetri1Url from "../assets/images/placetri1.svg?url"; 
+import placetri2Url from "../assets/images/placetri2.svg?url";
 import { useLocation } from "react-router-dom";
 
 
-// ------ 환경변수로 API 베이스 설정(끝 슬래시 제거) ------
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
  function apiUrl(path) {
    if (!API_BASE) throw new Error("VITE_API_BASE_URL이 비어 있습니다.");
@@ -25,13 +24,11 @@ if (import.meta.env.DEV) {
      console.info("[CONFIG] API_BASE =", API_BASE);
   }
 
-/* GlobalStyle — html, body, #root 전역 배경/리셋 (#FFFDF5, min-height:100%) */
 const GlobalStyle = createGlobalStyle`
   html, body, #root { min-height: 100%; background: #FFFDF5; }
   body { margin: 0; }
 `;
 
-/* Page — 메인 레이아웃 컨테이너 (1720×1080 고정, 중앙 정렬, 배경 #FFFDF5) */
 const Page = styled.main`
   display: block;
   background: var(--white, #FFFDF5);
@@ -46,14 +43,13 @@ const Page = styled.main`
 
 const Stage = styled.div`
   width: 1200px;
- margin: 0;           /* 가운데 정렬 제거 */
- margin-left: 12%;    /* 헤더 padding-left와 동일 값 */
+ margin: 0;           
+ margin-left: 12%;    
   display: grid;
   row-gap: 60px;
 `;
 
 
-/* Header — 타이틀 배지 + 정보 아이콘 가로 정렬 */
 const Header = styled.header`
   display: flex;
   align-items: flex-start;
@@ -62,7 +58,6 @@ const Header = styled.header`
   margin: 50px 0 8px;
 
 `;
-/* 컨테이너: 크기와 상대배치만 */
 const TitleBadge = styled.div`
   position: relative;
   width: 286px;
@@ -70,13 +65,12 @@ const TitleBadge = styled.div`
 `;
 
 
-/* 1층: 초록 사각형 이미지 */
 const TitleBadgeOuter = styled.img`
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill;   /* 비율 유지 원하면 contain */
+  object-fit: fill;   
   z-index: 0;
   pointer-events: none;
 `;
@@ -84,7 +78,7 @@ const TitleBadgeOuter = styled.img`
 /* 2층 래퍼: 안쪽 여백만 담당 */
 const TitleBadgeInner = styled.div`
   position: absolute;
-  inset: 7px 10px;    /* 상하 7, 좌우 10 → 초록 테두리 두께 */
+  inset: 7px 10px;    
   display: grid;
   place-items: center;
   z-index: 1;
@@ -96,7 +90,7 @@ const TitleBadgeInnerImg = styled.img`
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill;   /* 비율 유지 원하면 contain */
+  object-fit: fill;   
   pointer-events: none;
 `;
 
@@ -108,8 +102,8 @@ const Title = styled.h1`
   font-size: 35px;
   font-weight: 400;
   line-height: 1;
-  position: relative; /* 래퍼 기준 */
-  z-index: 2;         /* 타원 위로 */
+  position: relative; 
+  z-index: 2;       
 `;
 
 
@@ -135,7 +129,6 @@ const InfoCircleImg = styled.img`
 `;
 
 
-/* Info tooltip overlay/background (click outside to close) */
 const InfoOverlay = styled.div`
   position: fixed; inset: 0px; background: transparent; z-index: 70;
 `;
@@ -165,7 +158,6 @@ const InfoCloseBtn = styled.button`
   font-size: 18px; line-height: 1; color: #2C2C2C;
 `;
 
-/* Tooltip component */
 function InfoTooltip({ anchorRef, onClose }){
   const [pos, setPos] = React.useState({ top: 0, left: 0 });
 
@@ -265,7 +257,7 @@ const Helper = styled.p`
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 150%; /* 24px */
+  line-height: 150%; 
   letter-spacing: 0.48px;
 `;
 
@@ -304,13 +296,13 @@ const Textarea = styled.textarea`
   box-sizing: border-box;
 `;
 
-/* TextareaBox — 글자수 카운터 우하단 고정용 래퍼 */
+/* TextareaBox */
 const TextareaBox = styled.div`
   position: relative;
   display: grid;
 `;
 
-/* Actions — 폼 하단 버튼 영역 */
+/* Actions */
 const Actions = styled.div`
   display: flex;
   gap: 12px;
@@ -401,10 +393,8 @@ const PageButton = styled.button`
   font-family: "BM HANNA 11yrs old OTF"; font-size: 22px; font-weight: 400; line-height: 1;
   cursor: pointer; transition: transform 120ms ease, background-color 120ms ease, color 120ms ease, border-color 120ms ease;
 
-  /* 비활성(회색) */
   background: #CFCFCF; color: #FFFFFF; border-color: #CFCFCF;
 
-  /* 활성화되면 초록 */
   &:not(:disabled){
     background: #588B49; color: #FFFDF5; border-color: #3D5F33;
   }
@@ -433,7 +423,6 @@ const DialogButton = styled.button`
 `;
 
 
-/* 장소 선택 입력/패널 */
 const SelectWrap = styled.div`
   position: relative;
   width: 400px;
@@ -450,10 +439,8 @@ const InlineIconBtn = styled.button`
   font-size: 18px;
   line-height: 1;
 `;
-// (기존 StatusBadge 전체 교체)
 const StatusBadge = styled.span`
 
-  /* 안에 들어가는 아이콘 이미지 크기 고정 */
   & > img {
     width: 30px;
     height: 30px;
@@ -493,23 +480,20 @@ const PlacePanel = styled.div`
   grid-template-rows: auto 1fr;
   gap: 12px;
 `;
-// 스타일 — Row 컨테이너는 기준점만 잡아줍니다.
 const PlaceSearchRow = styled.div`
   position: relative;
 `;
 
-// 스타일 — 입력창 오른쪽 패딩을 '아이콘 2개 + 여백'만큼 넉넉히
 const PlaceSearchInput = styled.input`
   border: 0;
   background: transparent;
   outline: none;
   font-size: 16px;
   color: #2C2C2C;
-  padding-right: 64px; /* (약 24.6px × 2) + 여백 */
+  padding-right: 64px; 
   &::placeholder{ color:#9CB0A1; }
 `;
 
-// 스타일 — 검색 아이콘(맨 오른쪽)
 const PlaceSearchIcon = styled.span`
   position: absolute; right: 0; top: 0;
   width: 24.593px;
@@ -518,9 +502,8 @@ const PlaceSearchIcon = styled.span`
   aspect-ratio: 1 / 1;
 `;
 
-// 스타일 — 토글 아이콘(검색 아이콘 '옆')
 const PlaceToggleIcon = styled.button`
-  position: absolute; right: 32px; top: 0;  /* 검색 아이콘에서 32px 왼쪽 */
+  position: absolute; right: 32px; top: 0;  
   width: 24.593px;
   height: 24.593px;
   aspect-ratio: 1 / 1;
@@ -540,18 +523,6 @@ const PlaceItem = styled.button`
   align-items: center; 
   min-height: 40px;    
   &:hover{ background: rgba(0,0,0,0.05); }
-`;
-
-/* IconBtn — 미사용 */
-const IconBtn = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid ${themeColors.gray.color};
-  border-radius: 12px;
-  background: ${themeColors.white.color};
 `;
 
 /* Chip */
@@ -588,7 +559,6 @@ const Counter = styled.span`
 
 
 
-/* Fake API */
 const fakePlaces = [
   
     {
@@ -670,8 +640,6 @@ const fakePlaces = [
   }
   
 
-/* API 명세: POST /tmi/records */
-/* API 명세: POST /tmi/records (절대 URL + 환경변수 사용) */
 async function createPost(payload){
    const url = apiUrl("/tmi/records");
    if (import.meta.env.DEV) console.debug("[DEBUG] POST", url, payload);
@@ -679,23 +647,20 @@ async function createPost(payload){
      method: "POST",
      headers: { "Content-Type": "application/json" },
      body: JSON.stringify(payload),
-     // (쿠키 인증이 필요하면) 아래 주석 해제 + 백엔드 CORS에 Credentials 허용:
-     // credentials: "include",
+    
    });
    if (!res.ok) {
      const msg = await res.text().catch(() => "");
      throw new Error(`POST ${url} failed: ${res.status} ${msg}`);
    }
-   // 204/빈 본문 대비
    const txt = await res.text().catch(() => "");
    return txt ? JSON.parse(txt) : null;
  }
 
-/* 공용 모달 베이스 */
 const Backdrop = styled.div`
   position: fixed; inset: 0px; background: rgba(0,0,0,0.35);
   display: grid; place-items: center;
-  z-index: 1000; /* 최상단에 뜨도록 충분히 크게 */
+  z-index: 1000; 
 `;
 const Dialog = styled.div`
   width: 500px;
@@ -740,13 +705,11 @@ function PrivacyModal({ open, onClose, anchorRef }){
     const update = ()=>{
       const el = anchorRef?.current; if(!el) return;
       const r = el.getBoundingClientRect();
-      // viewport 좌표계로 계산 (scrollX/Y 더하지 않음)
      let top = r.bottom + 8;
      let left = r.left;
 
-     // (선택) 화면 밖으로 나가는 것 최소 보정
      const padding = 8;
-     const maxLeft = window.innerWidth - 520 - padding; // 카드 폭이 520px인 경우
+     const maxLeft = window.innerWidth - 520 - padding; 
      left = Math.max(padding, Math.min(left, maxLeft));
 
       setPos({ top, left });
@@ -811,10 +774,9 @@ function ConfirmDialog({ open, onCancel, onConfirm, busy }){
   );
 }
 
-/* 상수 */
 const MAX_BODY = 400;
-const MAX_TITLE = 30;           // 제목 최대 30자
-const MIN_BODY_FOR_SUBMIT = 10; // 본문은 "10자 초과"일 때 가능(>10)
+const MAX_TITLE = 30;          
+const MIN_BODY_FOR_SUBMIT = 10; 
 const CATEGORY_OPTIONS = [
   { id: "1", label: "썰" },
   { id: "2", label: "팁" },
@@ -861,19 +823,16 @@ export default function AddTmiPage(){
 
   const bodyCount = body.length;
 
-  // ➊ 한국어 정렬기(숫자도 자연스럽게)
   const koCollator = useMemo(
     () => new Intl.Collator("ko-KR", { sensitivity: "base", numeric: true }),
     []
   );
 
-  // ➋ 항상 가나다 순으로 정렬된 기준 배열
   const placesSorted = useMemo(
     () => [...fakePlaces].sort((a, b) => koCollator.compare(a.name, b.name)),
     [koCollator]
   );
 
-  // ➌ 필터도 정렬된 배열을 기준으로 (검색어 없으면 전체 정렬 목록)
   const filteredPlaces = useMemo(() => {
     const q = placeQuery.trim();
     if (!q) return placesSorted;
@@ -882,7 +841,6 @@ export default function AddTmiPage(){
   }, [placeQuery, placesSorted]);
 
 
-  /* 패널 외부 클릭시 닫기 */
   useEffect(()=>{
     const onDoc = (e)=>{
       if(placeOpen && placeWrapRef.current && !placeWrapRef.current.contains(e.target)){
@@ -893,7 +851,6 @@ export default function AddTmiPage(){
     return ()=> document.removeEventListener('mousedown', onDoc);
   }, [placeOpen]);
 
-  /* 입력 텍스트가 목록과 정확히 일치하면 선택 인정 */
   useEffect(()=>{
     const t = placeText.trim();
     if(!t){ setPlace({ id: "", name: "" }); return; }
@@ -908,31 +865,21 @@ export default function AddTmiPage(){
         }
       }, [state]);
 
-  /* 버튼 활성화 조건: 제목 + 장소 텍스트 + 본문만 충족하면 활성화(입력 편의성) */
-  // const canSubmit = useMemo(() => {
-  //   const requiredOk = title.trim() && placeText.trim() && !!category && bodyCount > MIN_BODY_FOR_SUBMIT && bodyCount <= MAX_BODY;
-  //   return !!requiredOk;
-  // }, [title, placeText, body, bodyCount])
-  // ;
-
-  /* 버튼 활성화 조건: 제목 + 장소 + 카테고리 + 본문(>10자, 최대 400자) */
 const canSubmit = useMemo(() => {
   const tLen = title.trim().length;
   const bLen = body.trim().length;
 
   const requiredOk =
     tLen > 0 &&
-    tLen <= MAX_TITLE &&         // 제목 30자 제한
+    tLen <= MAX_TITLE &&         
     placeText.trim().length > 0 &&
-    // !!category &&                // ← 칩(카테고리) 선택 필수
-    bLen > 10 &&                 // 본문 10자 “초과”
+    bLen > 10 &&                 
     bLen <= MAX_BODY;
 
   return requiredOk;
 }, [title, placeText, category, body]);
 
 
-  /* 제출 시 검증(엄격): 실제 선택한 장소 id 필요, 이메일은 선택 */
   function validate(){
     const e = {};
     if(!title.trim()) e.title = "제목을 입력해주세요.";
@@ -946,25 +893,17 @@ const canSubmit = useMemo(() => {
 
   const doSubmit = async () => {
     setSubmitting(true);
-  /* 실제 저장 로직(모달 '확인'에서 호출) */
-  // let finalCategory = category;
-  //  if(!finalCategory){
-  //    const lowered = body.toLowerCase();
-  //    if(lowered.includes("?"))      finalCategory = "질문";
-  //     else if(lowered.includes("리뷰")) finalCategory = "리뷰";
-  //    else                           finalCategory = "전체";
-  //  }
    let finalCategory = category || suggestCategoryFromBody(body) || "썰";
    const sel = CATEGORY_OPTIONS.find(o => o.label === finalCategory);
    const categoryForServer = sel?.value ?? finalCategory.replace(/\//g, "");
 
     try {
       const payload = {
-        marketId: Number(place.id),               // 서버 요구 키
+        marketId: Number(place.id),              
         title: title.trim(),
-        content: body.trim(),                     // 서버 요구 키
-        category: categoryForServer,                  // 문자열 전송
-        ...(email.trim() ? { email: email.trim() } : {}), // 서버가 email 수용하면 포함
+        content: body.trim(),                     
+        category: categoryForServer,                  
+        ...(email.trim() ? { email: email.trim() } : {}), 
       };
       if (import.meta.env.DEV) console.debug("[DEBUG] payload ready", payload);
       await createPost(payload);
@@ -977,7 +916,6 @@ const canSubmit = useMemo(() => {
     }
   };
 
-   // ====== 파일 어디든(컴포넌트 밖) 유틸로 추가 ======
   function suggestCategoryFromBody(text) {
     const t = (text || "").toLowerCase();
     if (t.includes("?") || t.includes("왜") || t.includes("어떻게")) return "질문";
@@ -989,8 +927,8 @@ const canSubmit = useMemo(() => {
   }
 
     useEffect(() => {
-        if (userPickedCategory) return;      // 사람이 고르면 AI 개입 X
-        if (category) return;                // 이미 정해졌으면 X
+        if (userPickedCategory) return;      
+        if (category) return;               
         if (body.trim().length <= 10) return;
     
         const ctrl = new AbortController();
@@ -1009,7 +947,6 @@ const canSubmit = useMemo(() => {
               setCategory(label);
             }
           } catch {
-            // 서버 실패 → 폴백 휴리스틱
             const fallback = suggestCategoryFromBody(body);
             if (!userPickedCategory && !category && fallback) {
               setAiSuggested(fallback);
@@ -1025,23 +962,20 @@ const canSubmit = useMemo(() => {
 
   
 
-  /* 폼 submit — 검증 후 확인 모달 */
   async function onSubmit(e){
     e.preventDefault();
-    // 겹침/포커스 방지: 열려 있던 것들 먼저 닫기
   setPlaceOpen(false);
   setInfoOpen(false);
   setPrivacyOpen(false);
 
-  // (보정) 사용자가 텍스트만 입력했지만 정확히 일치하면 자동 선택
   const t = placeText.trim().toLowerCase();
   if(!place.id && t){
     const exact = fakePlaces.find(p => p.name.toLowerCase() === t);
     if(exact) setPlace(exact);
   }
 
-  if(!validate()) return;   // 검증 실패 시 에러 표시만 하고 종료
-  setConfirmOpen(true);     // 검증 통과 시 확인 모달 표시
+  if(!validate()) return;   
+  setConfirmOpen(true);    
   }
 
   return (
@@ -1120,7 +1054,6 @@ const canSubmit = useMemo(() => {
                           onChange={(e)=> setPlaceQuery(e.target.value)}
                           autoFocus
                         />
-                        {/* 토글 아이콘: placeOpen 상태에 따라 변경 */}
                         <PlaceToggleIcon
                           type="button"
                           aria-label={placeOpen ? "검색 패널 접기" : "검색 패널 펼치기"}
@@ -1133,13 +1066,11 @@ const canSubmit = useMemo(() => {
                           />
                         </PlaceToggleIcon>
                     
-                        {/* 검색 아이콘(맨 오른쪽) */}
                         <PlaceSearchIcon aria-hidden="true">
                           <img src={searchUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", pointerEvents: "none" }}/>
                         </PlaceSearchIcon>
                       </PlaceSearchRow>
                     
-                      {/* 리스트는 열렸을 때만 */}
                       {placeOpen && (
                         <PlaceList>
                           {filteredPlaces.map(p => (
@@ -1188,7 +1119,7 @@ const canSubmit = useMemo(() => {
                       onClick={()=>{
                            const next = (category === opt.label) ? "" : opt.label;
                            setCategory(next);
-                           setUserPickedCategory(next !== ""); // 해제되면 false → AI 다시 개입
+                           setUserPickedCategory(next !== ""); 
                         }}>
                          {opt.label}
                          
@@ -1218,10 +1149,8 @@ const canSubmit = useMemo(() => {
 
           </form>
 
-          {/* 개인정보 팝오버 */}
           <PrivacyModal open={privacyOpen} anchorRef={privacyAnchorRef} onClose={()=> setPrivacyOpen(false)} />
 
-          {/* 확인 모달 */}
           <ConfirmDialog
             open={confirmOpen}
             onCancel={()=> setConfirmOpen(false)}
