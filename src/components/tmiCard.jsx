@@ -49,7 +49,6 @@ const CateChip = styled.button`
 
 function TmiCard({title, content, onClick, $color, chipColor, category}) {
 
-  console.log("TmiCard chipColor:", chipColor, "category:", category);
 
   return (
     <>

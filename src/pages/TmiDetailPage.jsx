@@ -506,7 +506,6 @@ export default function TmiDetailPage() {
         listRef.current?.scrollTo({ top: 0 });
       });
     } catch (e) {
-      console.error(e);
       setErr("글을 불러오지 못했습니다.");
     } finally {
      if (import.meta.env.DEV) mem.inflight.delete(tmiId);
@@ -531,7 +530,6 @@ export default function TmiDetailPage() {
       if (typeof updated?.views === "number") setViews(updated.views);
       setTmi((p) => (updated ? { ...(p || {}), ...updated } : p));
     } catch (e) {
-      console.error(e);
       setLikes(prev);         
       setLiked(false);
       localStorage.removeItem(likedKey);
@@ -554,7 +552,6 @@ export default function TmiDetailPage() {
         listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
       });
     } catch (e) {
-      console.error(e);
       alert("댓글 등록에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
       setSending(false);
