@@ -452,6 +452,7 @@ const StatusPos = styled.div`
   position: absolute;
   top: 8px;
   right: -70px;
+  z-index: 61;
 `;
 const PlaceInput = styled.input`
   width: 400px;
@@ -815,6 +816,10 @@ export default function AddTmiPage(){
   const [submitting, setSubmitting] = useState(false);
   const [confirmBusy, setConfirmBusy] = useState(false);
 
+  const [placeDirty, setPlaceDirty] = useState(false);
+  const normalize = (s) => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+
+
 
   /* 확인 모달 표시 상태 */
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -849,12 +854,15 @@ export default function AddTmiPage(){
     return ()=> document.removeEventListener('mousedown', onDoc);
   }, [placeOpen]);
 
+  
+
   useEffect(()=>{
-    const t = placeText.trim();
-    if(!t){ setPlace({ id: "", name: "" }); return; }
-    const found = fakePlaces.find(p => p.name === t);
-    if(found) setPlace(found); else setPlace({ id: "", name: "" });
-  }, [placeText]);
+      const t = placeText;
+      if (!t.trim()) { setPlace({ id: "", name: "" }); return; }
+      const norm = normalize(t);
+      const found = fakePlaces.find(p => normalize(p.name) === norm);
+      setPlace(found ? found : { id: "", name: "" });
+    }, [placeText]);
 
   useEffect(() => {
         if (state?.prefillPlaceId) {
@@ -1018,7 +1026,7 @@ const canSubmit = useMemo(() => {
                       id="place"
                       placeholder="해당 이야기가 일어난 가게를 입력해주세요."
                       value={placeText}
-                      onChange={(e)=>{ setPlaceText(e.target.value); setPlaceQuery(e.target.value); setPlaceOpen(true); }}
+                      onChange={(e)=>{ setPlaceDirty(true); setPlaceText(e.target.value); setPlaceQuery(e.target.value); setPlaceOpen(true); }}
                       onClick={()=> setPlaceOpen(true)}
                     />
 
@@ -1038,8 +1046,7 @@ const canSubmit = useMemo(() => {
                       <img src = {searchUrl}/>
                     </InlineIconBtn>
 
-                    {placeText.trim() !== '' && (
-                      <StatusPos>
+                    {placeDirty && (placeText.trim() !== '' || placeQuery.trim() !== '') && (                      <StatusPos>
                         <StatusBadge $ok={!!place.id}>
                           <img src={place.id ? checkUrl : xUrl} alt="" aria-hidden="true" />
                         </StatusBadge>
@@ -1053,7 +1060,7 @@ const canSubmit = useMemo(() => {
                         <PlaceSearchInput
                           placeholder="상점 이름을 검색해주세요."
                           value={placeQuery}
-                          onChange={(e)=> setPlaceQuery(e.target.value)}
+                          onChange={(e)=> { setPlaceDirty(true); setPlaceQuery(e.target.value); }}
                           autoFocus
                         />
                         <PlaceToggleIcon
