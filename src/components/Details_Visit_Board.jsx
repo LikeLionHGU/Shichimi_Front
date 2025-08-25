@@ -125,7 +125,6 @@ const getTmiCategory = async(marketId, categoryChip) => {
         setLoading(true);
         setErr(null);
         const list = await getTmiCategory(marketId, category );
-        console.log(list);
           if (canceled || myReqId !== reqIdRef.current) return;
           setItems(list);
         } catch (e) {
@@ -143,8 +142,6 @@ const getTmiCategory = async(marketId, categoryChip) => {
 
   if (loading) return <>불러오는 중...</>;
   if (err)     return <>{err}</>;
-
-    console.log("TmiCard chipColor:", chipColor);
 
   return(
     <>

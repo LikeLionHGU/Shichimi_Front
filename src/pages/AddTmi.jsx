@@ -20,9 +20,6 @@ const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
    return `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-if (import.meta.env.DEV) {
-     console.info("[CONFIG] API_BASE =", API_BASE);
-  }
 
 const GlobalStyle = createGlobalStyle`
   html, body, #root { min-height: 100%; background: #FFFDF5; }
@@ -632,7 +629,6 @@ const fakePlaces = [
 
 async function createPost(payload){
    const url = apiUrl("/tmi/records");
-   if (import.meta.env.DEV) console.debug("[DEBUG] POST", url, payload);
    const res = await fetch(url, {
      method: "POST",
      headers: { "Content-Type": "application/json" },
@@ -817,6 +813,7 @@ export default function AddTmiPage(){
   const [confirmBusy, setConfirmBusy] = useState(false);
 
   const [placeDirty, setPlaceDirty] = useState(false);
+
   const normalize = (s) => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
 
 
@@ -915,12 +912,10 @@ const canSubmit = useMemo(() => {
         category: categoryForServer,                  
         ...(email.trim() ? { email: email.trim() } : {}), 
       };
-      if (import.meta.env.DEV) console.debug("[DEBUG] payload ready", payload);
       await createPost(payload);
       nav("/", { replace: true, state: { flash: "게시글이 등록되었어요." } });
     } catch (err){
       alert("저장 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.");
-      console.error("[CREATE_POST_ERROR]", err);
     } finally {
       setSubmitting(false);
     }
@@ -1028,6 +1023,7 @@ const canSubmit = useMemo(() => {
                       value={placeText}
                       onChange={(e)=>{ setPlaceDirty(true); setPlaceText(e.target.value); setPlaceQuery(e.target.value); setPlaceOpen(true); }}
                       onClick={()=> setPlaceOpen(true)}
+
                     />
 
                         <PlaceToggleIcon
@@ -1046,6 +1042,7 @@ const canSubmit = useMemo(() => {
                       <img src = {searchUrl}/>
                     </InlineIconBtn>
 
+
                     {placeDirty && (placeText.trim() !== '' || placeQuery.trim() !== '') && (                      <StatusPos>
                         <StatusBadge $ok={!!place.id}>
                           <img src={place.id ? checkUrl : xUrl} alt="" aria-hidden="true" />
@@ -1061,6 +1058,7 @@ const canSubmit = useMemo(() => {
                           placeholder="상점 이름을 검색해주세요."
                           value={placeQuery}
                           onChange={(e)=> { setPlaceDirty(true); setPlaceQuery(e.target.value); }}
+
                           autoFocus
                         />
                         <PlaceToggleIcon

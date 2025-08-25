@@ -118,7 +118,6 @@ function NextDoor_Board ({$color}){
     (async() => {
       try{
         const res = await getNextPost(marketId);
-        console.log(res);
         if(!alive) return
           setNexts(res);
       }catch(e){

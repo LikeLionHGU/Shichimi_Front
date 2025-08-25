@@ -144,11 +144,9 @@ function StoreDetail(){
     (async() => {
       try{
         const res = await getMarketInfo(marketId);
-        console.log(res);
         if(!alive) return
           setData(res);
       }catch(e){
-        console.error("API 호출 실패:",e?.message, e?.response?.data);
         if(alive) setErr("가게의 상세 정보를 불러오지 못했습니다.");
       }finally{
         if(alive) setLoading(false);
@@ -178,7 +176,6 @@ function StoreDetail(){
   const thirdLabel = isFeeCase ? "이용요금" : "전화번호";
   const thirdValue = isFeeCase ? (info || "-") : (phoneNumber || "-");
 
-  console.log('api color:', chipColor);
 
   return(
     <>
