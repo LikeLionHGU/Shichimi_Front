@@ -1,4 +1,3 @@
-// netlify/functions/classify-category.js
 import OpenAI from "openai";
 
 const CATEGORY_LABELS = ["썰", "팁", "사건/사고", "기념", "자랑", "리뷰", "질문", "인사이트"];
@@ -36,19 +35,16 @@ ${text}` }
         label: { type: "string", enum: CATEGORY_LABELS },
         confidence: { type: "number", minimum: 0, maximum: 1 }
       },
-      required: ["label", "confidence"], // ← 여기!
+      required: ["label", "confidence"], 
       additionalProperties: false
     };
 
     const r = await client.responses.create({
       model: "gpt-4o-mini",
       input: prompt,
-      // 새 스펙: text.format 안에 name/schema/strict
       text: { format: { type: "json_schema", name: "CategoryPrediction", schema, strict: true } }
-      // (선택) temperature: 0.2
     });
 
-    // 구조화 출력 파싱
     let parsed = r?.output_parsed;
     if (!parsed) {
       const outText =

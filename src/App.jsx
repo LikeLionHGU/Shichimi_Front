@@ -19,7 +19,6 @@ export default function App() {
               <Route path="/info/:marketId" element={<StoreDetail />} />
               <Route path="/add" element={<AddTmi />} />
               <Route path="/records/:id" element={<TmiDetailPage />} />
-              {/* <Route path="/tmi/:id" element={<Navigate replace to="/records/:id" />} /> */}
             </Route>
           </Routes>
       </BrowserRouter>
