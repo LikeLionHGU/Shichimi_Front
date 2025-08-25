@@ -804,7 +804,7 @@ export default function AddTmiPage(){
   const [body, setBody] = useState("");
 
   const [userPickedCategory, setUserPickedCategory] = useState(false);
-  const [setAiSuggested] = useState("");
+  const [,setAiSuggested] = useState("");
 
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
