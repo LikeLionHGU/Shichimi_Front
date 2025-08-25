@@ -331,7 +331,6 @@ const Button = styled.button`
   font-family: "BM HANNA 11yrs old OTF";
   font-size: 22px;
   font-style: normal;
-  font-weight: 400;
   line-height: normal;
 
   &[data-variant="primary"]{
@@ -628,16 +627,6 @@ const fakePlaces = [
 
   ];
 
-  function searchPlaces(q){
-    return new Promise((resolve)=>{
-      setTimeout(()=>{
-        const res = fakePlaces
-          .filter(p => p.name.toLowerCase().includes(q.toLowerCase()))
-          .sort((a,b)=> a.name.localeCompare(b.name, "ko-KR", { sensitivity:"base", numeric:true }));
-        resolve(res);
-      }, 300);
-    });
-  }
   
 
 async function createPost(payload){
@@ -700,6 +689,7 @@ const PrivacyTitle = styled.h2`
 
 /* 개인정보 팝오버 */
 function PrivacyModal({ open, onClose, anchorRef }){
+  const cardRef = useRef(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   useEffect(()=>{
     const update = ()=>{
@@ -730,7 +720,14 @@ function PrivacyModal({ open, onClose, anchorRef }){
   return createPortal(
     <PrivacyOverlay onClick={onClose}>
       <PrivacyWrap style={{ top: pos.top + 'px', left: pos.left + 'px' }} onClick={(e)=> e.stopPropagation()}>
-        <PrivacyCard role="dialog" aria-modal="false" aria-labelledby="privacy-title">
+        <PrivacyCard
+          ref={cardRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="privacy-title"
+          tabIndex={-1}
+          onKeyDown={(e)=>{ if(e.key==='Escape') onClose(); }}
+        >
           <InfoCloseBtn aria-label="닫기" onClick={onClose}>×</InfoCloseBtn>
           <PrivacyTitle id="privacy-title">개인정보 수집 및 이용 동의서</PrivacyTitle>
           <p style={{ marginTop: 0 }}>
@@ -807,7 +804,7 @@ export default function AddTmiPage(){
   const [body, setBody] = useState("");
 
   const [userPickedCategory, setUserPickedCategory] = useState(false);
-  const [aiSuggested, setAiSuggested] = useState("");
+  const [setAiSuggested] = useState("");
 
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
@@ -816,6 +813,7 @@ export default function AddTmiPage(){
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [confirmBusy, setConfirmBusy] = useState(false);
 
 
   /* 확인 모달 표시 상태 */
@@ -879,13 +877,17 @@ const canSubmit = useMemo(() => {
   return requiredOk;
 }, [title, placeText, category, body]);
 
-
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   function validate(){
     const e = {};
     if(!title.trim()) e.title = "제목을 입력해주세요.";
     if(!place.id) e.place = "장소를 검색 결과에서 선택해주세요.";
     if(!body.trim()) e.body = "이야기를 입력해주세요.";
     if(body.length > MAX_BODY) e.body = `최대 ${MAX_BODY}자까지 작성할 수 있어요.`;
+    if (email.trim()) {
+      if (!EMAIL_RE.test(email.trim())) e.email = "올바른 이메일 형식이 아니에요.";
+      if (!consent) e.consent = "이메일을 입력하면 개인정보 동의가 필요해요.";
+    }
 
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -1153,12 +1155,15 @@ const canSubmit = useMemo(() => {
 
           <ConfirmDialog
             open={confirmOpen}
-            onCancel={()=> setConfirmOpen(false)}
-            onConfirm={async ()=>{
-              setConfirmOpen(false);
-              await doSubmit();
-            }}
-            busy={submitting}
+                onCancel={()=> setConfirmOpen(false)}
+                onConfirm={async ()=>{
+                  if (confirmBusy) return;
+                  setConfirmBusy(true);
+                  setConfirmOpen(false);
+                  await doSubmit();
+                  setConfirmBusy(false);
+                }}
+                busy={confirmBusy || submitting}
           />
         </Stage>
       </Page>
