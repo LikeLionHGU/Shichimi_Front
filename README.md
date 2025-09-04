@@ -5,7 +5,8 @@
 
 ---
 
-<img src="./images/메인.svg" alt="마케토리 메인" width="600"/>
+![마케토리 메인](https://raw.githubusercontent.com/playoh/OSS_HTML_01/main/메인.svg)
+
 
 ## 🚀 서비스 개요
 **마케토리(Marketory)** 는 죽도시장 상인과 방문객을 연결하는 **스토리 큐레이팅 기반 웹 서비스**입니다.  
